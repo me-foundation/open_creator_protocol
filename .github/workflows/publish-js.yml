@@ -1,0 +1,61 @@
+name: Publish JS
+
+on:
+  workflow_dispatch: {}
+  push:
+    tags:
+      - "js-v*.*.*"
+
+env:
+  CARGO_TERM_COLOR: always
+  RUST_TOOLCHAIN: nightly
+  NPM_AUTH_TOKEN: ${{ secrets.NPM_PUBLISH_TOKEN }}
+
+jobs:
+  release-sdk:
+    runs-on: ubuntu-latest
+    name: Release SDK on NPM
+    steps:
+      - uses: actions/checkout@v3
+
+      - name: Get yarn cache directory path
+        id: yarn-cache-dir-path
+        run: echo "::set-output name=dir::$(yarn config get cacheFolder)"
+      - name: Yarn Cache
+        uses: actions/cache@v3
+        with:
+          path: ${{ steps.yarn-cache-dir-path.outputs.dir }}
+          key: ${{ runner.os }}-modules-${{ hashFiles('**/yarn.lock') }}
+          restore-keys: |
+            ${{ runner.os }}-modules-
+      - uses: actions/setup-node@v3
+        env:
+          FORCE_COLOR: 0
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+          cache: "yarn"
+          cache-dependency-path: ./yarn.lock
+
+      - name: Install Yarn dependencies
+        run: yarn install
+      - run: yarn build
+      - run: |
+          echo 'npmAuthToken: "${NPM_AUTH_TOKEN}"' >> .yarnrc.yml
+      - name: Publish
+        run: yarn publish
+  site:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+
+      - name: Install Yarn dependencies
+        run: yarn install
+      - run: yarn docs:generate
+      - run: cp -R images/ site/
+
+      - name: Deploy 🚀
+        uses: JamesIves/github-pages-deploy-action@v4.2.5
+        with:
+          branch: gh-pages
+          folder: site
