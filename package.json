@@ -15,7 +15,7 @@
   "devDependencies": {
     "@magiceden-oss/mtoken": "file:sdk",
     "@types/chai": "^4.2.21",
-    "@types/mocha": "^9.0.0",
+    "@types/mocha": "^10.0.0",
     "chai": "^4.3.4",
     "eslint-config-standard-with-typescript": "^21.0.1",
     "eslint-plugin-prettier": "^4.0.0",
