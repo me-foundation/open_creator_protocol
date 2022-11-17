@@ -5,7 +5,7 @@
     "idl": "cp target/types/mtoken.ts sdk/idl/mtoken.ts"
   },
   "dependencies": {
-    "@metaplex-foundation/js": "^0.17.1",
+    "@metaplex-foundation/js": "^0.17.6",
     "@metaplex-foundation/solita": "^0.19.0",
     "@project-serum/anchor": "^0.25.0",
     "@project-serum/serum": "^0.13.58",
