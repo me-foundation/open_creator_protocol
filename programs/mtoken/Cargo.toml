@@ -18,7 +18,7 @@ default = []
 [dependencies]
 anchor-lang = { version = "0.25.0", features = ["init-if-needed"] }
 anchor-spl = { version = "0.25.0" }
-community-managed-token = { path = "../../../community-managed-token/community-managed-token/program", features = ["no-entrypoint"] }
+community-managed-token = { version = "0.1.0", features = ["no-entrypoint"] }
 json-rules-engine = "0.9.4"
 mpl-token-metadata = "1.6.1"
 serde = "1.0.147"
