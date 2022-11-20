@@ -107,6 +107,11 @@
           "isSigner": false
         },
         {
+          "name": "cmtProgram",
+          "isMut": false,
+          "isSigner": false
+        },
+        {
           "name": "instructions",
           "isMut": false,
           "isSigner": false
@@ -163,6 +168,11 @@
           "isSigner": false
         },
         {
+          "name": "cmtProgram",
+          "isMut": false,
+          "isSigner": false
+        },
+        {
           "name": "instructions",
           "isMut": false,
           "isSigner": false
@@ -214,6 +224,11 @@
           "isSigner": false
         },
         {
+          "name": "cmtProgram",
+          "isMut": false,
+          "isSigner": false
+        },
+        {
           "name": "instructions",
           "isMut": false,
           "isSigner": false
@@ -256,6 +271,11 @@
         },
         {
           "name": "tokenProgram",
+          "isMut": false,
+          "isSigner": false
+        },
+        {
+          "name": "cmtProgram",
           "isMut": false,
           "isSigner": false
         },
@@ -306,6 +326,11 @@
           "isSigner": false
         },
         {
+          "name": "cmtProgram",
+          "isMut": false,
+          "isSigner": false
+        },
+        {
           "name": "instructions",
           "isMut": false,
           "isSigner": false
@@ -348,6 +373,11 @@
         },
         {
           "name": "tokenProgram",
+          "isMut": false,
+          "isSigner": false
+        },
+        {
+          "name": "cmtProgram",
           "isMut": false,
           "isSigner": false
         },
@@ -408,6 +438,11 @@
           "isSigner": false
         },
         {
+          "name": "cmtProgram",
+          "isMut": false,
+          "isSigner": false
+        },
+        {
           "name": "instructions",
           "isMut": false,
           "isSigner": false
@@ -449,6 +484,11 @@
           "isSigner": false
         },
         {
+          "name": "cmtProgram",
+          "isMut": false,
+          "isSigner": false
+        },
+        {
           "name": "instructions",
           "isMut": false,
           "isSigner": false
@@ -478,6 +518,11 @@
           "name": "from",
           "isMut": false,
           "isSigner": true
+        },
+        {
+          "name": "cmtProgram",
+          "isMut": false,
+          "isSigner": false
         },
         {
           "name": "instructions",
@@ -527,6 +572,11 @@
         },
         {
           "name": "systemProgram",
+          "isMut": false,
+          "isSigner": false
+        },
+        {
+          "name": "cmtProgram",
           "isMut": false,
           "isSigner": false
         },

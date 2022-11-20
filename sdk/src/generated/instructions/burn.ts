@@ -29,6 +29,7 @@ export const burnStruct = new beet.BeetArgsStruct<{
  * @property [] mintState
  * @property [**signer**] from
  * @property [_writable_] fromAccount
+ * @property [] cmtProgram
  * @property [] instructions
  * @category Instructions
  * @category Burn
@@ -42,6 +43,7 @@ export type BurnInstructionAccounts = {
   from: web3.PublicKey
   fromAccount: web3.PublicKey
   tokenProgram?: web3.PublicKey
+  cmtProgram: web3.PublicKey
   instructions: web3.PublicKey
 }
 
@@ -95,6 +97,11 @@ export function createBurnInstruction(
     },
     {
       pubkey: accounts.tokenProgram ?? splToken.TOKEN_PROGRAM_ID,
+      isWritable: false,
+      isSigner: false,
+    },
+    {
+      pubkey: accounts.cmtProgram,
       isWritable: false,
       isSigner: false,
     },

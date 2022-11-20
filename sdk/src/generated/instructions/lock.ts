@@ -28,6 +28,7 @@ export const lockStruct = new beet.BeetArgsStruct<{
  * @property [**signer**] from
  * @property [] fromAccount
  * @property [] to
+ * @property [] cmtProgram
  * @property [] instructions
  * @category Instructions
  * @category Lock
@@ -40,6 +41,7 @@ export type LockInstructionAccounts = {
   from: web3.PublicKey
   fromAccount: web3.PublicKey
   to: web3.PublicKey
+  cmtProgram: web3.PublicKey
   instructions: web3.PublicKey
 }
 
@@ -88,6 +90,11 @@ export function createLockInstruction(
     },
     {
       pubkey: accounts.to,
+      isWritable: false,
+      isSigner: false,
+    },
+    {
+      pubkey: accounts.cmtProgram,
       isWritable: false,
       isSigner: false,
     },

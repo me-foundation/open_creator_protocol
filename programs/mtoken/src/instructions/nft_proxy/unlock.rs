@@ -15,6 +15,9 @@ pub struct UnlockCtx<'info> {
     #[account(mut)]
     mint_state: Box<Account<'info, MintState>>,
     from: Signer<'info>,
+    /// CHECK: checked in cpi
+    #[account(address = community_managed_token::id())]
+    cmt_program: UncheckedAccount<'info>,
     /// CHECK: This is not dangerous because the ID is checked with instructions sysvar
     #[account(address = sysvar::instructions::id())]
     instructions: UncheckedAccount<'info>,

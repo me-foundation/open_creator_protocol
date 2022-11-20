@@ -30,6 +30,7 @@ export const initAccountStruct = new beet.BeetArgsStruct<{
  * @property [**signer**] from
  * @property [] fromAccount
  * @property [] associatedTokenProgram
+ * @property [] cmtProgram
  * @property [] instructions
  * @category Instructions
  * @category InitAccount
@@ -45,6 +46,7 @@ export type InitAccountInstructionAccounts = {
   tokenProgram?: web3.PublicKey
   systemProgram?: web3.PublicKey
   associatedTokenProgram: web3.PublicKey
+  cmtProgram: web3.PublicKey
   instructions: web3.PublicKey
 }
 
@@ -110,6 +112,11 @@ export function createInitAccountInstruction(
     },
     {
       pubkey: accounts.associatedTokenProgram,
+      isWritable: false,
+      isSigner: false,
+    },
+    {
+      pubkey: accounts.cmtProgram,
       isWritable: false,
       isSigner: false,
     },

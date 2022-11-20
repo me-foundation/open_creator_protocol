@@ -29,6 +29,9 @@ pub struct MintToCtx<'info> {
     from_account: UncheckedAccount<'info>,
     token_program: Program<'info, Token>,
     system_program: Program<'info, System>,
+    /// CHECK: checked in cpi
+    #[account(address = community_managed_token::id())]
+    cmt_program: UncheckedAccount<'info>,
     /// CHECK: This is not dangerous because the ID is checked with instructions sysvar
     #[account(address = sysvar::instructions::id())]
     instructions: UncheckedAccount<'info>,
@@ -69,6 +72,7 @@ pub fn handler<'info>(ctx: Context<'_, '_, '_, 'info, MintToCtx<'info>>) -> Resu
             ctx.accounts.policy.to_account_info(),
             ctx.accounts.freeze_authority.to_account_info(),
             ctx.accounts.token_program.to_account_info(),
+            ctx.accounts.cmt_program.to_account_info(),
         ],
         &[&policy.signer_seeds()],
     )?;

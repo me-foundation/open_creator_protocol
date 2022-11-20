@@ -31,6 +31,7 @@ export const transferStruct = new beet.BeetArgsStruct<{
  * @property [_writable_] fromAccount
  * @property [] to
  * @property [_writable_] toAccount
+ * @property [] cmtProgram
  * @property [] instructions
  * @category Instructions
  * @category Transfer
@@ -46,6 +47,7 @@ export type TransferInstructionAccounts = {
   to: web3.PublicKey
   toAccount: web3.PublicKey
   tokenProgram?: web3.PublicKey
+  cmtProgram: web3.PublicKey
   instructions: web3.PublicKey
 }
 
@@ -111,6 +113,11 @@ export function createTransferInstruction(
     },
     {
       pubkey: accounts.tokenProgram ?? splToken.TOKEN_PROGRAM_ID,
+      isWritable: false,
+      isSigner: false,
+    },
+    {
+      pubkey: accounts.cmtProgram,
       isWritable: false,
       isSigner: false,
     },

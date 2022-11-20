@@ -26,6 +26,9 @@ pub struct LockCtx<'info> {
     from_account: Box<Account<'info, TokenAccount>>,
     /// CHECK: Account is not read from
     to: UncheckedAccount<'info>,
+    /// CHECK: checked in cpi
+    #[account(address = community_managed_token::id())]
+    cmt_program: UncheckedAccount<'info>,
     /// CHECK: This is not dangerous because the ID is checked with instructions sysvar
     #[account(address = sysvar::instructions::id())]
     instructions: UncheckedAccount<'info>,

@@ -30,6 +30,7 @@ export const approveStruct = new beet.BeetArgsStruct<{
  * @property [**signer**] from
  * @property [_writable_] fromAccount
  * @property [] to
+ * @property [] cmtProgram
  * @property [] instructions
  * @category Instructions
  * @category Approve
@@ -44,6 +45,7 @@ export type ApproveInstructionAccounts = {
   fromAccount: web3.PublicKey
   to: web3.PublicKey
   tokenProgram?: web3.PublicKey
+  cmtProgram: web3.PublicKey
   instructions: web3.PublicKey
 }
 
@@ -104,6 +106,11 @@ export function createApproveInstruction(
     },
     {
       pubkey: accounts.tokenProgram ?? splToken.TOKEN_PROGRAM_ID,
+      isWritable: false,
+      isSigner: false,
+    },
+    {
+      pubkey: accounts.cmtProgram,
       isWritable: false,
       isSigner: false,
     },
