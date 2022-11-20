@@ -22,6 +22,7 @@ pub struct InitAccountCtx<'info> {
     )]
     mint: Box<Account<'info, Mint>>,
     mint_state: Box<Account<'info, MintState>>,
+    #[account(mut)]
     payer: Signer<'info>,
     /// CHECK: Not read from, and checked in cpi
     from: UncheckedAccount<'info>,
