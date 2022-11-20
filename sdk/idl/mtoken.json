@@ -143,9 +143,14 @@
           "isSigner": false
         },
         {
-          "name": "from",
+          "name": "payer",
           "isMut": false,
           "isSigner": true
+        },
+        {
+          "name": "from",
+          "isMut": false,
+          "isSigner": false
         },
         {
           "name": "fromAccount",

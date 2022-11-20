@@ -151,6 +151,7 @@ pub struct ActionCtx {
     pub mint: Pubkey,
     pub mint_state: MintState,
     pub mint_account: Option<MintAccountCtx>,
+    pub payer: Option<Pubkey>,
     pub from: Option<Pubkey>,
     pub from_account: Option<TokenAccountCtx>,
     pub to: Option<Pubkey>,

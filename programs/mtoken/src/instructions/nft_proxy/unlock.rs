@@ -29,6 +29,7 @@ impl From<&mut UnlockCtx<'_>> for ActionCtx {
             action: "unlock".to_string(),
             program_ids: get_program_ids_from_instructions(&ctx.instructions.to_account_info())
                 .unwrap(),
+            payer: None,
             from: Some(ctx.from.key()),
             from_account: None,
             to: None,

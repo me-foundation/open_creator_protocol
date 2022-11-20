@@ -22,7 +22,9 @@ pub struct InitAccountCtx<'info> {
     )]
     mint: Box<Account<'info, Mint>>,
     mint_state: Box<Account<'info, MintState>>,
-    from: Signer<'info>,
+    payer: Signer<'info>,
+    /// CHECK: Not read from, and checked in cpi
+    from: UncheckedAccount<'info>,
     /// CHECK: Not read from, and checked in cpi
     #[account(mut)]
     from_account: UncheckedAccount<'info>,
@@ -43,6 +45,7 @@ impl From<&mut InitAccountCtx<'_>> for ActionCtx {
             action: "init_account".to_string(),
             program_ids: get_program_ids_from_instructions(&ctx.instructions.to_account_info())
                 .unwrap(),
+            payer: Some(ctx.payer.key()),
             from: Some(ctx.from.key()),
             from_account: None,
             to: None,
@@ -63,16 +66,16 @@ pub fn handler<'info>(ctx: Context<'_, '_, '_, 'info, InitAccountCtx<'info>>) ->
         &create_initialize_account_instruction(
             &ctx.accounts.mint.key(),
             &ctx.accounts.from.key(),
-            &ctx.accounts.from.key(),
+            &ctx.accounts.payer.key(),
             &ctx.accounts.policy.key(),
         )?,
         &[
             ctx.accounts.from_account.to_account_info(),
             ctx.accounts.from.to_account_info(),
-            ctx.accounts.from.to_account_info(),
-            ctx.accounts.mint.to_account_info(),
+            ctx.accounts.payer.to_account_info(),
             ctx.accounts.policy.to_account_info(),
             ctx.accounts.freeze_authority.to_account_info(),
+            ctx.accounts.mint.to_account_info(),
             ctx.accounts.system_program.to_account_info(),
             ctx.accounts.token_program.to_account_info(),
             ctx.accounts.cmt_program.to_account_info(),
