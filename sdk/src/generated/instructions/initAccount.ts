@@ -28,7 +28,7 @@ export const initAccountStruct = new beet.BeetArgsStruct<{
  * @property [] mint
  * @property [] mintState
  * @property [**signer**] from
- * @property [] fromAccount
+ * @property [_writable_] fromAccount
  * @property [] associatedTokenProgram
  * @property [] cmtProgram
  * @property [] instructions
@@ -97,7 +97,7 @@ export function createInitAccountInstruction(
     },
     {
       pubkey: accounts.fromAccount,
-      isWritable: false,
+      isWritable: true,
       isSigner: false,
     },
     {
