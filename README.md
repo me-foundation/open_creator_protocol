@@ -18,14 +18,11 @@ Policy
 # Install deps
 npm i
 
-# To build
-anchor build
+# To build and generate the solitarc
+./build.sh
 
 # To test
 anchor test
-
-# To generate the solita anchor generated clients
-npx solita
 ```
 
 ## Licenses
