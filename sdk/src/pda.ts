@@ -3,6 +3,8 @@ import { PublicKey } from "@solana/web3.js";
 import { findProgramAddressSync } from "@project-serum/anchor/dist/cjs/utils/pubkey";
 import { PROGRAM_ID } from "./generated";
 
+export const CMT_PROGRAM = new PublicKey("CMTQqjzH6Anr9XcPVt73EFDTjWkJWPzH7H6DtvhHcyzV");
+
 export const findPolicyPk = (
   update_authority: PublicKey,
   update_authority_nonce = 0
@@ -24,9 +26,9 @@ export const findMintStatePk = (mint: PublicKey) => {
   )[0];
 };
 
-export const findFreezeAuthorityPk = (mint: PublicKey) => {
+export const findFreezeAuthorityPk = (policy: PublicKey) => {
   return findProgramAddressSync(
-    [findMintStatePk(mint).toBuffer()],
-    new PublicKey("CMTQqjzH6Anr9XcPVt73EFDTjWkJWPzH7H6DtvhHcyzV")
+    [policy.toBuffer()],
+    CMT_PROGRAM,
   )[0];
 };
