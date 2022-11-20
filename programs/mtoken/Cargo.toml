@@ -1,0 +1,27 @@
+[package]
+name = "mtoken"
+version = "0.1.0"
+description = "mtoken is a simple token wrapper standard"
+edition = "2021"
+license = "Apache-2.0"
+
+[lib]
+crate-type = ["cdylib", "lib"]
+name = "mtoken"
+
+[features]
+no-entrypoint = []
+no-idl = []
+cpi = ["no-entrypoint"]
+default = []
+
+[dependencies]
+anchor-lang = { version = "0.25.0", features = ["init-if-needed"] }
+anchor-spl = { version = "0.25.0" }
+community-managed-token = { path = "../../../community-managed-token/community-managed-token/program", features = ["no-entrypoint"] }
+json-rules-engine = "0.9.4"
+mpl-token-metadata = "1.6.1"
+serde = "1.0.147"
+serde_json = "1.0.88"
+solana-program = "1.10.41"
+spl-associated-token-account = { version = "~1.0.5", features = ["no-entrypoint"] }
