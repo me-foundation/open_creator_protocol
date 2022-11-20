@@ -25,11 +25,10 @@ pub struct RevokeCtx<'info> {
     mint: Box<Account<'info, Mint>>,
     mint_state: Box<Account<'info, MintState>>,
     from: Signer<'info>,
-    #[account(mut, constraint =
-        from_account.owner == from.key()
-        && from_account.amount == 1
-        && from_account.delegate.is_none()
-        @ MTokenErrorCode::InvalidTokenAccount
+    #[account(
+        mut,
+        constraint = from_account.owner == from.key() @ MTokenErrorCode::InvalidTokenAccount,
+        constraint = from_account.delegate.is_some() @ MTokenErrorCode::InvalidTokenAccount,
     )]
     from_account: Box<Account<'info, TokenAccount>>,
     token_program: Program<'info, Token>,
