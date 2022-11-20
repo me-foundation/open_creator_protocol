@@ -1,6 +1,6 @@
 # mtoken
 
-mtoken is a super flexible json-rules-engine extension of community-managed-token.
+mtoken is a super flexible json-rules-engine extension of [Community Managed Token (CMT)](https://github.com/magiceden-oss/community-managed-token).
 
 ## Architecture
 
