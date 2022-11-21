@@ -20,7 +20,7 @@ anchor-lang = { version = "0.25.0", features = ["init-if-needed"] }
 anchor-spl = { version = "0.25.0" }
 community-managed-token = { version = "0.1.0", features = ["no-entrypoint"] }
 json-rules-engine = { git = "https://github.com/nothing0012/json-rules-engine-rs.git", rev = "1a433bb7c14d9ca8edfaad6aa58fda926c3333b6" }
-mpl-token-metadata = "1.6.1"
+mpl-token-metadata = { version = "1.6.1", features = ["no-entrypoint"] }
 serde = { version = "1.0", features = ["derive"] }
 serde_json = "1.0.88"
 solana-program = "1.10.41"

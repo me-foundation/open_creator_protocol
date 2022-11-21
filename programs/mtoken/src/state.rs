@@ -5,6 +5,10 @@ use anchor_lang::prelude::*;
 use anchor_lang::solana_program::pubkey::Pubkey;
 use anchor_spl::token::{Mint, TokenAccount};
 use json_rules_engine::{Rule, Status};
+use mpl_token_metadata::{
+    pda::find_metadata_account,
+    state::{Metadata, TokenMetadataAccount},
+};
 use serde::{Deserialize, Serialize};
 use serde_json::Value;
 use solana_program::{
@@ -69,10 +73,10 @@ impl Policy {
         let rule: Rule = serde_json::from_str::<Rule>(&self.json_rule).unwrap();
         let fact: &Value = &serde_json::to_value::<ActionCtx>(ctx).unwrap();
         let result = rule.check_value(fact);
-        msg!("fact: {}", fact);
-        msg!("json_rule: {}", self.json_rule);
         if result.condition_result.status != Status::Met {
             msg!("Policy does not match: {}", result.condition_result.name);
+            msg!("fact: {}", fact);
+            msg!("json_rule: {}", self.json_rule);
             return Err(MTokenErrorCode::InvalidPolicyEvaluation.into());
         }
         Ok(())
@@ -101,6 +105,54 @@ fn to_option_str(c_option: COption<Pubkey>) -> Option<String> {
         COption::Some(pubkey) => Some(pubkey.to_string()),
         COption::None => None,
     }
+}
+
+#[derive(Default, Serialize, Deserialize)]
+pub struct MetadataCtx {
+    // root level
+    pub update_authority: String,
+    pub primary_sale_happened: bool,
+    pub is_mutable: bool,
+    pub collection_verified: bool,
+    pub collection_key: String,
+
+    // data
+    pub name: String,
+    pub symbol: String,
+    pub uri: String,
+    pub seller_fee_basis_points: u16,
+    pub creators: Option<Vec<String>>,
+    pub creators_verified: Option<Vec<bool>>,
+}
+
+pub fn to_metadata_ctx(mint: &Pubkey, metadata: &AccountInfo) -> Result<MetadataCtx> {
+    if find_metadata_account(mint).0 != metadata.key() {
+        return Err(MTokenErrorCode::InvalidMetadata.into());
+    }
+    let parsed_metadata = Metadata::from_account_info(metadata)?;
+    let collection = parsed_metadata.collection.as_ref();
+    let creators = parsed_metadata.data.creators.as_ref();
+    Ok(MetadataCtx {
+        update_authority: parsed_metadata.update_authority.to_string(),
+        primary_sale_happened: parsed_metadata.primary_sale_happened,
+        is_mutable: parsed_metadata.is_mutable,
+        collection_verified: collection.map(|c| c.verified).unwrap_or(false),
+        collection_key: collection
+            .map(|c| c.key.to_string())
+            .unwrap_or_else(|| "".to_owned()),
+        name: parsed_metadata.data.name,
+        uri: parsed_metadata.data.uri,
+        symbol: parsed_metadata.data.symbol,
+        seller_fee_basis_points: parsed_metadata.data.seller_fee_basis_points,
+        creators: creators.map(|creators| {
+            creators
+                .iter()
+                .map(|c| c.address.to_string())
+                .collect::<Vec<String>>()
+        }),
+        creators_verified: creators
+            .map(|creators| creators.iter().map(|c| c.verified).collect::<Vec<bool>>()),
+    })
 }
 
 #[derive(Default, Serialize, Deserialize)]
@@ -198,6 +250,7 @@ pub struct ActionCtx {
     pub mint: String,
     pub mint_state: MintStateCtx,
     pub mint_account: Option<MintAccountCtx>,
+    pub metadata: Option<MetadataCtx>,
     pub payer: Option<String>,
     pub from: Option<String>,
     pub from_account: Option<TokenAccountCtx>,
@@ -226,11 +279,34 @@ mod tests {
             mint: Pubkey::new_unique().to_string(),
             mint_state: MintState::default().into(),
             mint_account: None,
+            metadata: None,
             payer: None,
             from: None,
             from_account: None,
             to: None,
             to_account: None,
+        }
+    }
+
+    fn metadata_ctx_fixture() -> MetadataCtx {
+        MetadataCtx {
+            name: "Test".to_string(),
+            uri: "https://test.com".to_string(),
+            symbol: "TEST".to_string(),
+            seller_fee_basis_points: 500,
+            update_authority: Pubkey::new_unique().to_string(),
+            primary_sale_happened: true,
+            is_mutable: true,
+            creators: Some(
+                [
+                    Pubkey::new_unique().to_string(),
+                    Pubkey::new_unique().to_string(),
+                ]
+                .to_vec(),
+            ),
+            creators_verified: Some(vec![true, false]),
+            collection_verified: true,
+            collection_key: Pubkey::new_unique().to_string(),
         }
     }
 
@@ -330,5 +406,26 @@ mod tests {
             allowed_program_ids.clone()[0].clone(),
         ];
         assert!(policy.matches(action_ctx).is_err());
+    }
+
+    #[test]
+    fn test_policy_with_metadata_policy() {
+        let mut action_ctx = action_ctx_fixture();
+        let creators = [
+            Pubkey::new_unique().to_string(),
+            Pubkey::new_unique().to_string(),
+        ];
+        let mut metadata = metadata_ctx_fixture();
+        metadata.creators = Some(creators.clone().to_vec());
+        action_ctx.metadata = Some(metadata);
+        let mut policy = policy_fixture();
+        policy.json_rule = r#"
+          {"conditions":{"field":"metadata/creators","operator":"string_is_subset","value":[PLACEHOLDER]},"events":[]}
+        "#.replace(
+            "PLACEHOLDER",
+            &creators.clone().map(|x| format!("\"{}\"", x)).join(","),
+        );
+        assert!(policy.valid().is_ok());
+        assert!(policy.matches(action_ctx).is_ok());
     }
 }

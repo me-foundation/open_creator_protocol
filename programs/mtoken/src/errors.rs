@@ -4,6 +4,8 @@ use anchor_lang::prelude::*;
 pub enum MTokenErrorCode {
     #[msg("Invalid mint")]
     InvalidMint,
+    #[msg("Invalid metadata")]
+    InvalidMetadata,
     #[msg("Invalid token account")]
     InvalidTokenAccount,
     #[msg("Invalid authority address")]

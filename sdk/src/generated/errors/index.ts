@@ -32,13 +32,36 @@ createErrorFromCodeLookup.set(0x1770, () => new InvalidMintError())
 createErrorFromNameLookup.set('InvalidMint', () => new InvalidMintError())
 
 /**
+ * InvalidMetadata: 'Invalid metadata'
+ *
+ * @category Errors
+ * @category generated
+ */
+export class InvalidMetadataError extends Error {
+  readonly code: number = 0x1771
+  readonly name: string = 'InvalidMetadata'
+  constructor() {
+    super('Invalid metadata')
+    if (typeof Error.captureStackTrace === 'function') {
+      Error.captureStackTrace(this, InvalidMetadataError)
+    }
+  }
+}
+
+createErrorFromCodeLookup.set(0x1771, () => new InvalidMetadataError())
+createErrorFromNameLookup.set(
+  'InvalidMetadata',
+  () => new InvalidMetadataError()
+)
+
+/**
  * InvalidTokenAccount: 'Invalid token account'
  *
  * @category Errors
  * @category generated
  */
 export class InvalidTokenAccountError extends Error {
-  readonly code: number = 0x1771
+  readonly code: number = 0x1772
   readonly name: string = 'InvalidTokenAccount'
   constructor() {
     super('Invalid token account')
@@ -48,7 +71,7 @@ export class InvalidTokenAccountError extends Error {
   }
 }
 
-createErrorFromCodeLookup.set(0x1771, () => new InvalidTokenAccountError())
+createErrorFromCodeLookup.set(0x1772, () => new InvalidTokenAccountError())
 createErrorFromNameLookup.set(
   'InvalidTokenAccount',
   () => new InvalidTokenAccountError()
@@ -61,7 +84,7 @@ createErrorFromNameLookup.set(
  * @category generated
  */
 export class InvalidAuthorityError extends Error {
-  readonly code: number = 0x1772
+  readonly code: number = 0x1773
   readonly name: string = 'InvalidAuthority'
   constructor() {
     super('Invalid authority address')
@@ -71,7 +94,7 @@ export class InvalidAuthorityError extends Error {
   }
 }
 
-createErrorFromCodeLookup.set(0x1772, () => new InvalidAuthorityError())
+createErrorFromCodeLookup.set(0x1773, () => new InvalidAuthorityError())
 createErrorFromNameLookup.set(
   'InvalidAuthority',
   () => new InvalidAuthorityError()
@@ -84,7 +107,7 @@ createErrorFromNameLookup.set(
  * @category generated
  */
 export class InvalidPolicyCreationError extends Error {
-  readonly code: number = 0x1773
+  readonly code: number = 0x1774
   readonly name: string = 'InvalidPolicyCreation'
   constructor() {
     super('Invalid policy creation')
@@ -94,7 +117,7 @@ export class InvalidPolicyCreationError extends Error {
   }
 }
 
-createErrorFromCodeLookup.set(0x1773, () => new InvalidPolicyCreationError())
+createErrorFromCodeLookup.set(0x1774, () => new InvalidPolicyCreationError())
 createErrorFromNameLookup.set(
   'InvalidPolicyCreation',
   () => new InvalidPolicyCreationError()
@@ -107,7 +130,7 @@ createErrorFromNameLookup.set(
  * @category generated
  */
 export class InvalidPolicyEvaluationError extends Error {
-  readonly code: number = 0x1774
+  readonly code: number = 0x1775
   readonly name: string = 'InvalidPolicyEvaluation'
   constructor() {
     super('Invalid policy evaluation')
@@ -117,7 +140,7 @@ export class InvalidPolicyEvaluationError extends Error {
   }
 }
 
-createErrorFromCodeLookup.set(0x1774, () => new InvalidPolicyEvaluationError())
+createErrorFromCodeLookup.set(0x1775, () => new InvalidPolicyEvaluationError())
 createErrorFromNameLookup.set(
   'InvalidPolicyEvaluation',
   () => new InvalidPolicyEvaluationError()
@@ -130,7 +153,7 @@ createErrorFromNameLookup.set(
  * @category generated
  */
 export class InvalidPolicyMintAssociationError extends Error {
-  readonly code: number = 0x1775
+  readonly code: number = 0x1776
   readonly name: string = 'InvalidPolicyMintAssociation'
   constructor() {
     super('Invalid policy mint association')
@@ -141,7 +164,7 @@ export class InvalidPolicyMintAssociationError extends Error {
 }
 
 createErrorFromCodeLookup.set(
-  0x1775,
+  0x1776,
   () => new InvalidPolicyMintAssociationError()
 )
 createErrorFromNameLookup.set(
@@ -156,7 +179,7 @@ createErrorFromNameLookup.set(
  * @category generated
  */
 export class InvalidLockedByError extends Error {
-  readonly code: number = 0x1776
+  readonly code: number = 0x1777
   readonly name: string = 'InvalidLockedBy'
   constructor() {
     super('Invalid locked by')
@@ -166,7 +189,7 @@ export class InvalidLockedByError extends Error {
   }
 }
 
-createErrorFromCodeLookup.set(0x1776, () => new InvalidLockedByError())
+createErrorFromCodeLookup.set(0x1777, () => new InvalidLockedByError())
 createErrorFromNameLookup.set(
   'InvalidLockedBy',
   () => new InvalidLockedByError()
@@ -179,7 +202,7 @@ createErrorFromNameLookup.set(
  * @category generated
  */
 export class MintStateLockedError extends Error {
-  readonly code: number = 0x1777
+  readonly code: number = 0x1778
   readonly name: string = 'MintStateLocked'
   constructor() {
     super('Mint state is locked')
@@ -189,7 +212,7 @@ export class MintStateLockedError extends Error {
   }
 }
 
-createErrorFromCodeLookup.set(0x1777, () => new MintStateLockedError())
+createErrorFromCodeLookup.set(0x1778, () => new MintStateLockedError())
 createErrorFromNameLookup.set(
   'MintStateLocked',
   () => new MintStateLockedError()
@@ -202,7 +225,7 @@ createErrorFromNameLookup.set(
  * @category generated
  */
 export class UnknownAccountError extends Error {
-  readonly code: number = 0x1778
+  readonly code: number = 0x1779
   readonly name: string = 'UnknownAccount'
   constructor() {
     super('Unknown account found in instruction')
@@ -212,7 +235,7 @@ export class UnknownAccountError extends Error {
   }
 }
 
-createErrorFromCodeLookup.set(0x1778, () => new UnknownAccountError())
+createErrorFromCodeLookup.set(0x1779, () => new UnknownAccountError())
 createErrorFromNameLookup.set('UnknownAccount', () => new UnknownAccountError())
 
 /**
@@ -222,7 +245,7 @@ createErrorFromNameLookup.set('UnknownAccount', () => new UnknownAccountError())
  * @category generated
  */
 export class AccountNotFoundError extends Error {
-  readonly code: number = 0x1779
+  readonly code: number = 0x177a
   readonly name: string = 'AccountNotFound'
   constructor() {
     super('Account not found in instruction')
@@ -232,7 +255,7 @@ export class AccountNotFoundError extends Error {
   }
 }
 
-createErrorFromCodeLookup.set(0x1779, () => new AccountNotFoundError())
+createErrorFromCodeLookup.set(0x177a, () => new AccountNotFoundError())
 createErrorFromNameLookup.set(
   'AccountNotFound',
   () => new AccountNotFoundError()

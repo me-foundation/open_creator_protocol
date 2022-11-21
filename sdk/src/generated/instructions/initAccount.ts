@@ -26,6 +26,7 @@ export const initAccountStruct = new beet.BeetArgsStruct<{
  * @property [] policy
  * @property [] freezeAuthority
  * @property [] mint
+ * @property [] metadata
  * @property [] mintState
  * @property [_writable_, **signer**] payer
  * @property [] from
@@ -41,6 +42,7 @@ export type InitAccountInstructionAccounts = {
   policy: web3.PublicKey
   freezeAuthority: web3.PublicKey
   mint: web3.PublicKey
+  metadata: web3.PublicKey
   mintState: web3.PublicKey
   payer: web3.PublicKey
   from: web3.PublicKey
@@ -84,6 +86,11 @@ export function createInitAccountInstruction(
     },
     {
       pubkey: accounts.mint,
+      isWritable: false,
+      isSigner: false,
+    },
+    {
+      pubkey: accounts.metadata,
       isWritable: false,
       isSigner: false,
     },
