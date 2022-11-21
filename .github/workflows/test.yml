@@ -13,6 +13,6 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
-      - uses: metadaobuilders/anchor-test@v1.1
+      - uses: metadaobuilders/anchor-test@v1
       - run: cargo fmt -- --check && cargo clippy -- -Dwarnings
       - run: cargo test
