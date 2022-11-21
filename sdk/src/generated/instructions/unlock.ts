@@ -24,6 +24,7 @@ export const unlockStruct = new beet.BeetArgsStruct<{
  *
  * @property [] policy
  * @property [] mint
+ * @property [] metadata
  * @property [_writable_] mintState
  * @property [**signer**] from
  * @property [] cmtProgram
@@ -35,6 +36,7 @@ export const unlockStruct = new beet.BeetArgsStruct<{
 export type UnlockInstructionAccounts = {
   policy: web3.PublicKey
   mint: web3.PublicKey
+  metadata: web3.PublicKey
   mintState: web3.PublicKey
   from: web3.PublicKey
   cmtProgram: web3.PublicKey
@@ -68,6 +70,11 @@ export function createUnlockInstruction(
     },
     {
       pubkey: accounts.mint,
+      isWritable: false,
+      isSigner: false,
+    },
+    {
+      pubkey: accounts.metadata,
       isWritable: false,
       isSigner: false,
     },

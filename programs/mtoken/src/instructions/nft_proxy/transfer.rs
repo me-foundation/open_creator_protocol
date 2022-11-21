@@ -23,6 +23,8 @@ pub struct TransferCtx<'info> {
         constraint = policy.get_freeze_authority(policy.key()) == freeze_authority.key() @ MTokenErrorCode::InvalidPolicyMintAssociation,
     )]
     mint: Box<Account<'info, Mint>>,
+    /// CHECK: going to check in action ctx
+    metadata: UncheckedAccount<'info>,
     #[account(mut)]
     mint_state: Box<Account<'info, MintState>>,
     from: Signer<'info>,
@@ -53,6 +55,9 @@ impl From<&mut TransferCtx<'_>> for ActionCtx {
             to: Some(ctx.to.key().to_string()),
             to_account: Some(ctx.to_account.clone().into()),
             mint: ctx.mint.key().to_string(),
+            metadata: Some(
+                to_metadata_ctx(&ctx.mint.key(), &ctx.metadata).expect("invalid metadata"),
+            ),
             mint_account: Some(ctx.mint.clone().into()),
             mint_state: ctx.mint_state.clone().into_inner().into(),
         }

@@ -23,6 +23,8 @@ pub struct MintToCtx<'info> {
         constraint = policy.get_freeze_authority(policy.key()) == freeze_authority.key() @ MTokenErrorCode::InvalidPolicyMintAssociation,
     )]
     mint: Box<Account<'info, Mint>>,
+    /// CHECK: going to check in action ctx
+    metadata: UncheckedAccount<'info>,
     mint_state: Box<Account<'info, MintState>>,
     from: Signer<'info>,
     /// CHECK: Not read from, and checked in cpi
@@ -40,7 +42,7 @@ pub struct MintToCtx<'info> {
 impl From<&mut MintToCtx<'_>> for ActionCtx {
     fn from(ctx: &mut MintToCtx) -> Self {
         ActionCtx {
-            action: "init_account".to_string(),
+            action: "mint_to".to_string(),
             program_ids: get_program_ids_from_instructions(&ctx.instructions.to_account_info())
                 .unwrap(),
             payer: None,
@@ -49,6 +51,9 @@ impl From<&mut MintToCtx<'_>> for ActionCtx {
             to: None,
             to_account: None,
             mint: ctx.mint.key().to_string(),
+            metadata: Some(
+                to_metadata_ctx(&ctx.mint.key(), &ctx.metadata).expect("invalid metadata"),
+            ),
             mint_account: Some(ctx.mint.clone().into()),
             mint_state: ctx.mint_state.clone().into_inner().into(),
         }

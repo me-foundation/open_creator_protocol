@@ -43,7 +43,7 @@ pub struct WrapCtx<'info> {
 impl From<&mut WrapCtx<'_>> for ActionCtx {
     fn from(ctx: &mut WrapCtx) -> Self {
         ActionCtx {
-            action: "init_mint".to_string(),
+            action: "wrap".to_string(),
             program_ids: get_program_ids_from_instructions(&ctx.instructions.to_account_info())
                 .unwrap(),
             payer: None,
@@ -52,6 +52,7 @@ impl From<&mut WrapCtx<'_>> for ActionCtx {
             to: None,
             to_account: None,
             mint: ctx.mint.key().to_string(),
+            metadata: None,
             mint_account: None,
             mint_state: ctx.mint_state.clone().into_inner().into(),
         }

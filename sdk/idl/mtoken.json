@@ -1,5 +1,5 @@
 {
-  "version": "0.1.1",
+  "version": "0.1.2",
   "name": "mtoken",
   "instructions": [
     {
@@ -138,6 +138,11 @@
           "isSigner": false
         },
         {
+          "name": "metadata",
+          "isMut": false,
+          "isSigner": false
+        },
+        {
           "name": "mintState",
           "isMut": false,
           "isSigner": false
@@ -204,6 +209,11 @@
           "isSigner": false
         },
         {
+          "name": "metadata",
+          "isMut": false,
+          "isSigner": false
+        },
+        {
           "name": "mintState",
           "isMut": true,
           "isSigner": false
@@ -260,6 +270,11 @@
           "isSigner": false
         },
         {
+          "name": "metadata",
+          "isMut": false,
+          "isSigner": false
+        },
+        {
           "name": "mintState",
           "isMut": false,
           "isSigner": false
@@ -307,6 +322,11 @@
         },
         {
           "name": "mint",
+          "isMut": false,
+          "isSigner": false
+        },
+        {
+          "name": "metadata",
           "isMut": false,
           "isSigner": false
         },
@@ -362,6 +382,11 @@
           "isSigner": false
         },
         {
+          "name": "metadata",
+          "isMut": false,
+          "isSigner": false
+        },
+        {
           "name": "mintState",
           "isMut": false,
           "isSigner": false
@@ -409,6 +434,11 @@
         },
         {
           "name": "mint",
+          "isMut": false,
+          "isSigner": false
+        },
+        {
+          "name": "metadata",
           "isMut": false,
           "isSigner": false
         },
@@ -469,6 +499,11 @@
           "isSigner": false
         },
         {
+          "name": "metadata",
+          "isMut": false,
+          "isSigner": false
+        },
+        {
           "name": "mintState",
           "isMut": true,
           "isSigner": false
@@ -515,6 +550,11 @@
           "isSigner": false
         },
         {
+          "name": "metadata",
+          "isMut": false,
+          "isSigner": false
+        },
+        {
           "name": "mintState",
           "isMut": true,
           "isSigner": false
@@ -553,6 +593,11 @@
         {
           "name": "mint",
           "isMut": true,
+          "isSigner": false
+        },
+        {
+          "name": "metadata",
+          "isMut": false,
           "isSigner": false
         },
         {
@@ -719,46 +764,51 @@
     },
     {
       "code": 6001,
+      "name": "InvalidMetadata",
+      "msg": "Invalid metadata"
+    },
+    {
+      "code": 6002,
       "name": "InvalidTokenAccount",
       "msg": "Invalid token account"
     },
     {
-      "code": 6002,
+      "code": 6003,
       "name": "InvalidAuthority",
       "msg": "Invalid authority address"
     },
     {
-      "code": 6003,
+      "code": 6004,
       "name": "InvalidPolicyCreation",
       "msg": "Invalid policy creation"
     },
     {
-      "code": 6004,
+      "code": 6005,
       "name": "InvalidPolicyEvaluation",
       "msg": "Invalid policy evaluation"
     },
     {
-      "code": 6005,
+      "code": 6006,
       "name": "InvalidPolicyMintAssociation",
       "msg": "Invalid policy mint association"
     },
     {
-      "code": 6006,
+      "code": 6007,
       "name": "InvalidLockedBy",
       "msg": "Invalid locked by"
     },
     {
-      "code": 6007,
+      "code": 6008,
       "name": "MintStateLocked",
       "msg": "Mint state is locked"
     },
     {
-      "code": 6008,
+      "code": 6009,
       "name": "UnknownAccount",
       "msg": "Unknown account found in instruction"
     },
     {
-      "code": 6009,
+      "code": 6010,
       "name": "AccountNotFound",
       "msg": "Account not found in instruction"
     }

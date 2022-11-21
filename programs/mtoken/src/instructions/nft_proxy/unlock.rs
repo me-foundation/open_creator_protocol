@@ -12,6 +12,8 @@ pub struct UnlockCtx<'info> {
         constraint = mint_state.locked_by == Some(from.key()) @ MTokenErrorCode::InvalidLockedBy,
     )]
     mint: Box<Account<'info, Mint>>,
+    /// CHECK: going to check in action ctx
+    metadata: UncheckedAccount<'info>,
     #[account(mut)]
     mint_state: Box<Account<'info, MintState>>,
     from: Signer<'info>,
@@ -35,6 +37,9 @@ impl From<&mut UnlockCtx<'_>> for ActionCtx {
             to: None,
             to_account: None,
             mint: ctx.mint.key().to_string(),
+            metadata: Some(
+                to_metadata_ctx(&ctx.mint.key(), &ctx.metadata).expect("invalid metadata"),
+            ),
             mint_account: Some(ctx.mint.clone().into()),
             mint_state: ctx.mint_state.clone().into_inner().into(),
         }
