@@ -46,14 +46,14 @@ impl From<&mut InitAccountCtx<'_>> for ActionCtx {
             action: "init_account".to_string(),
             program_ids: get_program_ids_from_instructions(&ctx.instructions.to_account_info())
                 .unwrap(),
-            payer: Some(ctx.payer.key()),
-            from: Some(ctx.from.key()),
+            payer: Some(ctx.payer.key().to_string()),
+            from: Some(ctx.from.key().to_string()),
             from_account: None,
             to: None,
             to_account: None,
-            mint: ctx.mint.key(),
+            mint: ctx.mint.key().to_string(),
             mint_account: Some(ctx.mint.clone().into()),
-            mint_state: ctx.mint_state.clone().into_inner(),
+            mint_state: ctx.mint_state.clone().into_inner().into(),
         }
     }
 }

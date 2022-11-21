@@ -707,8 +707,7 @@ dependencies = [
 [[package]]
 name = "json-rules-engine"
 version = "0.9.4"
-source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "3dcc9af2456a8477ba2a3b91cfd782390be81cc50060ec77ffb18422c36a86e3"
+source = "git+https://github.com/nothing0012/json-rules-engine-rs.git?rev=1a433bb7c14d9ca8edfaad6aa58fda926c3333b6#1a433bb7c14d9ca8edfaad6aa58fda926c3333b6"
 dependencies = [
  "async-trait",
  "erased-serde",
