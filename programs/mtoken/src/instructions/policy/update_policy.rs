@@ -11,7 +11,7 @@ pub struct UpdatePolicyArg {
 pub struct UpdatePolicyCtx<'info> {
     #[account(mut)]
     policy: Account<'info, Policy>,
-    #[account(constraint = authority.key() == policy.update_authority @ MTokenErrorCode::InvalidAuthority)]
+    #[account(constraint = (authority.key() == policy.update_authority || authority.key().to_string() == Policy::MANAGED_AUTHORITY) @ MTokenErrorCode::InvalidAuthority)]
     authority: Signer<'info>,
     system_program: Program<'info, System>,
 }
