@@ -48,13 +48,13 @@ impl From<&mut TransferCtx<'_>> for ActionCtx {
             program_ids: get_program_ids_from_instructions(&ctx.instructions.to_account_info())
                 .unwrap(),
             payer: None,
-            from: Some(ctx.from.key()),
+            from: Some(ctx.from.key().to_string()),
             from_account: Some(ctx.from_account.clone().into()),
-            to: Some(ctx.to.key()),
+            to: Some(ctx.to.key().to_string()),
             to_account: Some(ctx.to_account.clone().into()),
-            mint: ctx.mint.key(),
+            mint: ctx.mint.key().to_string(),
             mint_account: Some(ctx.mint.clone().into()),
-            mint_state: ctx.mint_state.clone().into_inner(),
+            mint_state: ctx.mint_state.clone().into_inner().into(),
         }
     }
 }
