@@ -26,7 +26,10 @@ pub struct MintToCtx<'info> {
     /// CHECK: going to check in action ctx
     metadata: UncheckedAccount<'info>,
     mint_state: Box<Account<'info, MintState>>,
-    from: Signer<'info>,
+    #[account(mut)]
+    payer: Signer<'info>,
+    /// CHECK: Not read from, and checked in cpi
+    from: UncheckedAccount<'info>,
     /// CHECK: Not read from, and checked in cpi
     #[account(mut)]
     from_account: UncheckedAccount<'info>,
@@ -46,7 +49,7 @@ impl From<&mut MintToCtx<'_>> for ActionCtx {
             action: "mint_to".to_string(),
             program_ids: get_program_ids_from_instructions(&ctx.instructions.to_account_info())
                 .unwrap(),
-            payer: None,
+            payer: Some(ctx.payer.key().to_string()),
             from: Some(ctx.from.key().to_string()),
             from_account: None,
             to: None,

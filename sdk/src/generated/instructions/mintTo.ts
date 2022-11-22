@@ -28,7 +28,8 @@ export const mintToStruct = new beet.BeetArgsStruct<{
  * @property [_writable_] mint
  * @property [] metadata
  * @property [] mintState
- * @property [**signer**] from
+ * @property [_writable_, **signer**] payer
+ * @property [] from
  * @property [_writable_] fromAccount
  * @property [] cmtProgram
  * @property [] instructions
@@ -42,6 +43,7 @@ export type MintToInstructionAccounts = {
   mint: web3.PublicKey
   metadata: web3.PublicKey
   mintState: web3.PublicKey
+  payer: web3.PublicKey
   from: web3.PublicKey
   fromAccount: web3.PublicKey
   tokenProgram?: web3.PublicKey
@@ -96,9 +98,14 @@ export function createMintToInstruction(
       isSigner: false,
     },
     {
+      pubkey: accounts.payer,
+      isWritable: true,
+      isSigner: true,
+    },
+    {
       pubkey: accounts.from,
       isWritable: false,
-      isSigner: true,
+      isSigner: false,
     },
     {
       pubkey: accounts.fromAccount,

@@ -606,9 +606,14 @@
           "isSigner": false
         },
         {
+          "name": "payer",
+          "isMut": true,
+          "isSigner": true
+        },
+        {
           "name": "from",
           "isMut": false,
-          "isSigner": true
+          "isSigner": false
         },
         {
           "name": "fromAccount",
