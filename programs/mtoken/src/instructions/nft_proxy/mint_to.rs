@@ -28,6 +28,7 @@ pub struct MintToCtx<'info> {
     mint_state: Box<Account<'info, MintState>>,
     from: Signer<'info>,
     /// CHECK: Not read from, and checked in cpi
+    #[account(mut)]
     from_account: UncheckedAccount<'info>,
     token_program: Program<'info, Token>,
     system_program: Program<'info, System>,
