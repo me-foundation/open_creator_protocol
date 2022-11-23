@@ -1,9 +1,8 @@
 use crate::{errors::MTokenErrorCode, state::*};
 use anchor_lang::prelude::*;
-use anchor_lang::solana_program::program::invoke_signed;
 use anchor_lang::solana_program::sysvar;
+use anchor_spl::token::{set_authority, spl_token};
 use anchor_spl::token::{Mint, Token};
-use community_managed_token::instruction::create_wrap_instruction;
 use solana_program::program_option::COption;
 
 #[derive(Accounts)]
@@ -70,22 +69,28 @@ pub fn handler<'info>(ctx: Context<'_, '_, '_, 'info, WrapCtx<'info>>) -> Result
     mint_state.mint = ctx.accounts.mint.key();
     mint_state.version = 0;
 
-    invoke_signed(
-        &create_wrap_instruction(
-            &ctx.accounts.mint.key(),
-            &ctx.accounts.mint_authority.key(),
-            &ctx.accounts.freeze_authority.key(),
-            &ctx.accounts.policy.key(),
-        )?,
-        &[
-            ctx.accounts.mint.to_account_info(),
-            ctx.accounts.mint_authority.to_account_info(),
-            ctx.accounts.freeze_authority.to_account_info(),
-            ctx.accounts.policy.to_account_info(),
+    set_authority(
+        CpiContext::new(
             ctx.accounts.token_program.to_account_info(),
-            ctx.accounts.cmt_program.to_account_info(),
-        ],
-        &[&policy.signer_seeds()],
+            anchor_spl::token::SetAuthority {
+                current_authority: ctx.accounts.freeze_authority.to_account_info(),
+                account_or_mint: ctx.accounts.mint.to_account_info(),
+            },
+        ),
+        spl_token::instruction::AuthorityType::FreezeAccount,
+        Some(policy.get_freeze_authority(policy.key())),
+    )?;
+
+    set_authority(
+        CpiContext::new(
+            ctx.accounts.token_program.to_account_info(),
+            anchor_spl::token::SetAuthority {
+                current_authority: ctx.accounts.mint_authority.to_account_info(),
+                account_or_mint: ctx.accounts.mint.to_account_info(),
+            },
+        ),
+        spl_token::instruction::AuthorityType::MintTokens,
+        Some(policy.get_freeze_authority(policy.key())),
     )?;
 
     Ok(())

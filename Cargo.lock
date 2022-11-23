@@ -411,9 +411,9 @@ checksum = "baf1de4339761588bc0619e3cbc0120ee582ebb74b53b4efbf79117bd2da40fd"
 
 [[package]]
 name = "community-managed-token"
-version = "0.1.0"
+version = "0.1.1"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "d7ac8823ab1b9964295fc518cb766f601c6e0aeec8a51a0a82606b51116e6ba7"
+checksum = "fac6413d709c178ad9e7442bc099411bc33ff15646d46ff8e7d8e51a3ca4b2c5"
 dependencies = [
  "borsh",
  "shank 0.0.10",
@@ -875,7 +875,7 @@ dependencies = [
 
 [[package]]
 name = "mtoken"
-version = "0.1.3"
+version = "0.1.4"
 dependencies = [
  "anchor-lang",
  "anchor-spl",
