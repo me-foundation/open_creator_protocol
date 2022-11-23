@@ -705,9 +705,10 @@ dependencies = [
 ]
 
 [[package]]
-name = "json-rules-engine"
+name = "json-rules-engine-fork"
 version = "0.9.4"
-source = "git+https://github.com/nothing0012/json-rules-engine-rs.git?rev=1a433bb7c14d9ca8edfaad6aa58fda926c3333b6#1a433bb7c14d9ca8edfaad6aa58fda926c3333b6"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "3ce4ad08e199adac4aab17b0521ad1e09b1f59d9d115b1a8588e84abdb78fdaf"
 dependencies = [
  "async-trait",
  "erased-serde",
@@ -874,12 +875,12 @@ dependencies = [
 
 [[package]]
 name = "mtoken"
-version = "0.1.2"
+version = "0.1.3"
 dependencies = [
  "anchor-lang",
  "anchor-spl",
  "community-managed-token",
- "json-rules-engine",
+ "json-rules-engine-fork",
  "mpl-token-metadata",
  "serde",
  "serde_json",

@@ -4,7 +4,7 @@ use crate::errors::MTokenErrorCode;
 use anchor_lang::prelude::*;
 use anchor_lang::solana_program::pubkey::Pubkey;
 use anchor_spl::token::{Mint, TokenAccount};
-use json_rules_engine::{Rule, Status};
+use json_rules_engine_fork::{Rule, Status};
 use mpl_token_metadata::{
     pda::find_metadata_account,
     state::{Metadata, TokenMetadataAccount},
