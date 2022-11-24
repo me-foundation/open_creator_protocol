@@ -27,7 +27,7 @@ pub struct TransferCtx<'info> {
     metadata: UncheckedAccount<'info>,
     #[account(mut)]
     mint_state: Box<Account<'info, MintState>>,
-    from: Signer<'info>,
+    from: Signer<'info>, // either the owner of the token or the delegate of the token
     #[account(mut)]
     from_account: Box<Account<'info, TokenAccount>>,
     /// CHECK: checked in cpi

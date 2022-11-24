@@ -203,6 +203,7 @@ pub struct MintStateCtx {
     pub last_approved_at: i64,
     pub last_transfered_at: i64,
 
+    // derived from existing fields
     pub derived_cooldown: i64,
     pub derived_now: i64,
 }
@@ -427,5 +428,37 @@ mod tests {
         );
         assert!(policy.valid().is_ok());
         assert!(policy.matches(action_ctx).is_ok());
+    }
+
+    #[test]
+    fn test_policy_with_derived_now() {
+        let mut action_ctx = action_ctx_fixture();
+        action_ctx.mint_state.derived_now = 100;
+        let mut policy = policy_fixture();
+        policy.json_rule = r#"
+          {"conditions":{"field":"mint_state/derived_now","operator":"int_greater_than","value":90},"events":[]}
+        "#.to_string();
+        assert!(policy.valid().is_ok());
+        assert!(policy.matches(action_ctx).is_ok());
+
+        let mut action_ctx = action_ctx_fixture();
+        action_ctx.mint_state.derived_now = 100;
+        action_ctx.action = "transfer".to_string();
+        let mut policy = policy_fixture();
+        policy.json_rule = r#"
+          {"conditions":{"and": [{"field":"mint_state/derived_now","operator":"int_greater_than","value":90}, {"field":"action","operator":"string_equals","value":"transfer"}]},"events":[]}
+        "#.to_string();
+        assert!(policy.valid().is_ok());
+        assert!(policy.matches(action_ctx).is_ok());
+
+        let mut action_ctx = action_ctx_fixture();
+        action_ctx.mint_state.derived_now = 100;
+        action_ctx.action = "transfer".to_string();
+        let mut policy = policy_fixture();
+        policy.json_rule = r#"
+          {"conditions":{"and": [{"field":"mint_state/derived_now","operator":"int_greater_than","value":110}, {"field":"action","operator":"string_equals","value":"transfer"}]},"events":[]}
+        "#.to_string();
+        assert!(policy.valid().is_ok());
+        assert!(policy.matches(action_ctx).is_err());
     }
 }
