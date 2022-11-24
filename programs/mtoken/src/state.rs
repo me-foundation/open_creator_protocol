@@ -254,8 +254,10 @@ pub struct ActionCtx {
     pub metadata: Option<MetadataCtx>,
     pub payer: Option<String>,
     pub from: Option<String>,
+    pub from_is_on_curve: Option<bool>,
     pub from_account: Option<TokenAccountCtx>,
     pub to: Option<String>,
+    pub to_is_on_curve: Option<bool>,
     pub to_account: Option<TokenAccountCtx>,
 }
 
@@ -285,6 +287,7 @@ mod tests {
             from: None,
             from_account: None,
             to: None,
+            to_is_on_curve: None,
             to_account: None,
         }
     }
