@@ -15,5 +15,6 @@ jobs:
       - uses: actions/checkout@v2
       - uses: actions/setup-node@v3
       - uses: metadaobuilders/anchor-test@v1
+      - run: npm i typescript -g
       - run: cargo fmt -- --check && cargo clippy -- -Dwarnings
       - run: cargo test

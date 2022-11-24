@@ -285,6 +285,7 @@ mod tests {
             metadata: None,
             payer: None,
             from: None,
+            from_is_on_curve: None,
             from_account: None,
             to: None,
             to_is_on_curve: None,
