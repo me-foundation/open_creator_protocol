@@ -27,7 +27,7 @@ export const burnStruct = new beet.BeetArgsStruct<{
  * @property [] freezeAuthority
  * @property [] mint
  * @property [] metadata
- * @property [] mintState
+ * @property [_writable_] mintState
  * @property [**signer**] from
  * @property [_writable_] fromAccount
  * @property [] cmtProgram
@@ -89,7 +89,7 @@ export function createBurnInstruction(
     },
     {
       pubkey: accounts.mintState,
-      isWritable: false,
+      isWritable: true,
       isSigner: false,
     },
     {

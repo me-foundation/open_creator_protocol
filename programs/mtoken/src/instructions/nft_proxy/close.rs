@@ -26,6 +26,7 @@ pub struct CloseCtx<'info> {
     mint: Box<Account<'info, Mint>>,
     /// CHECK: going to check in action ctx
     metadata: UncheckedAccount<'info>,
+    #[account(mut)]
     mint_state: Box<Account<'info, MintState>>,
     from: Signer<'info>,
     #[account(mut, constraint =
