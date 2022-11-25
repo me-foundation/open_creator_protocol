@@ -20,6 +20,8 @@ pub struct WrapCtx<'info> {
         constraint = mint.mint_authority == COption::Some(mint_authority.key()) @ MTokenErrorCode::InvalidMint,
     )]
     mint: Box<Account<'info, Mint>>,
+    /// CHECK: going to check in action ctx
+    metadata: UncheckedAccount<'info>,
     #[account(
         init,
         payer = from,
@@ -55,7 +57,9 @@ impl From<&mut WrapCtx<'_>> for ActionCtx {
             to_is_on_curve: None,
             to_account: None,
             mint: ctx.mint.key().to_string(),
-            metadata: None,
+            metadata: Some(
+                to_metadata_ctx(&ctx.mint.key(), &ctx.metadata).expect("invalid metadata"),
+            ),
             mint_account: None,
             mint_state: ctx.mint_state.clone().into_inner().into(),
         }

@@ -27,6 +27,7 @@ export const wrapStruct = new beet.BeetArgsStruct<{
  * @property [**signer**] freezeAuthority
  * @property [**signer**] mintAuthority
  * @property [_writable_] mint
+ * @property [] metadata
  * @property [_writable_] mintState
  * @property [_writable_, **signer**] from
  * @property [] cmtProgram
@@ -40,6 +41,7 @@ export type WrapInstructionAccounts = {
   freezeAuthority: web3.PublicKey
   mintAuthority: web3.PublicKey
   mint: web3.PublicKey
+  metadata: web3.PublicKey
   mintState: web3.PublicKey
   from: web3.PublicKey
   tokenProgram?: web3.PublicKey
@@ -86,6 +88,11 @@ export function createWrapInstruction(
     {
       pubkey: accounts.mint,
       isWritable: true,
+      isSigner: false,
+    },
+    {
+      pubkey: accounts.metadata,
+      isWritable: false,
       isSigner: false,
     },
     {

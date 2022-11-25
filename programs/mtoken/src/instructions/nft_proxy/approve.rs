@@ -29,11 +29,9 @@ pub struct ApproveCtx<'info> {
     #[account(mut)]
     mint_state: Box<Account<'info, MintState>>,
     from: Signer<'info>,
-    #[account(mut, constraint =
-        from_account.owner == from.key()
-        && from_account.amount == 1
-        && from_account.delegate.is_none()
-        @ MTokenErrorCode::InvalidTokenAccount
+    #[account(
+        mut,
+        constraint = from_account.owner == from.key() && from_account.amount == 1 @ MTokenErrorCode::InvalidTokenAccount
     )]
     from_account: Box<Account<'info, TokenAccount>>,
     /// CHECK: Account is not read from

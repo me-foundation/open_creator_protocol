@@ -16,6 +16,7 @@ pub struct CloseCtx<'info> {
     /// CHECK: Checked in cpi
     freeze_authority: UncheckedAccount<'info>,
     #[account(
+        mut,
         constraint = mint_state.mint == mint.key() @ MTokenErrorCode::InvalidMint,
         constraint = mint.key() == from_account.mint @ MTokenErrorCode::InvalidMint,
         constraint = mint_state.locked_by.is_none() @ MTokenErrorCode::MintStateLocked,
@@ -29,11 +30,8 @@ pub struct CloseCtx<'info> {
     #[account(mut)]
     mint_state: Box<Account<'info, MintState>>,
     from: Signer<'info>,
-    #[account(mut, constraint =
-        from_account.owner == from.key()
-        && from_account.amount == 1
-        && from_account.delegate.is_none()
-        @ MTokenErrorCode::InvalidTokenAccount
+    #[account(
+        mut, constraint = from_account.owner == from.key() @ MTokenErrorCode::InvalidTokenAccount
     )]
     from_account: Box<Account<'info, TokenAccount>>,
     token_program: Program<'info, Token>,

@@ -87,6 +87,11 @@
           "isSigner": false
         },
         {
+          "name": "metadata",
+          "isMut": false,
+          "isSigner": false
+        },
+        {
           "name": "mintState",
           "isMut": true,
           "isSigner": false
@@ -322,7 +327,7 @@
         },
         {
           "name": "mint",
-          "isMut": false,
+          "isMut": true,
           "isSigner": false
         },
         {
@@ -378,7 +383,7 @@
         },
         {
           "name": "mint",
-          "isMut": false,
+          "isMut": true,
           "isSigner": false
         },
         {
