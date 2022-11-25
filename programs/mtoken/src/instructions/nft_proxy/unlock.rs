@@ -33,8 +33,10 @@ impl From<&mut UnlockCtx<'_>> for ActionCtx {
                 .unwrap(),
             payer: None,
             from: Some(ctx.from.key().to_string()),
+            from_is_on_curve: Some(ctx.from.key().is_on_curve()),
             from_account: None,
             to: None,
+            to_is_on_curve: None,
             to_account: None,
             mint: ctx.mint.key().to_string(),
             metadata: Some(

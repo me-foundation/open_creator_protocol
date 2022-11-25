@@ -50,8 +50,10 @@ impl From<&mut InitAccountCtx<'_>> for ActionCtx {
                 .unwrap(),
             payer: Some(ctx.payer.key().to_string()),
             from: Some(ctx.from.key().to_string()),
+            from_is_on_curve: Some(ctx.from.key().is_on_curve()),
             from_account: None,
             to: None,
+            to_is_on_curve: None,
             to_account: None,
             mint: ctx.mint.key().to_string(),
             metadata: Some(
