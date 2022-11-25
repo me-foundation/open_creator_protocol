@@ -1,4 +1,6 @@
-use crate::{errors::MTokenErrorCode, state::*};
+use crate::action_ctx::*;
+use crate::errors::MTokenErrorCode;
+use crate::state::*;
 use anchor_lang::prelude::*;
 use anchor_lang::solana_program::sysvar;
 use anchor_spl::token::{set_authority, spl_token};
@@ -63,7 +65,7 @@ impl From<&mut WrapCtx<'_>> for ActionCtx {
 pub fn handler<'info>(ctx: Context<'_, '_, '_, 'info, WrapCtx<'info>>) -> Result<()> {
     let action_ctx: ActionCtx = ctx.accounts.into();
     let policy = &ctx.accounts.policy;
-    policy.matches(action_ctx)?;
+    ctx.accounts.policy.matches(&action_ctx)?;
 
     let mint_state = &mut ctx.accounts.mint_state;
     mint_state.bump = [*ctx.bumps.get("mint_state").unwrap()];

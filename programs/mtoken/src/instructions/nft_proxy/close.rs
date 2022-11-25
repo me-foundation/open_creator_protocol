@@ -1,3 +1,4 @@
+use crate::action_ctx::*;
 use crate::errors::MTokenErrorCode;
 use crate::state::*;
 use anchor_lang::prelude::*;
@@ -68,8 +69,7 @@ impl From<&mut CloseCtx<'_>> for ActionCtx {
 
 pub fn handler<'info>(ctx: Context<'_, '_, '_, 'info, CloseCtx<'info>>) -> Result<()> {
     let action_ctx: ActionCtx = ctx.accounts.into();
-    let policy = &ctx.accounts.policy;
-    policy.matches(action_ctx)?;
+    ctx.accounts.policy.matches(&action_ctx)?;
 
     invoke_signed(
         &create_close_account_instruction(
@@ -86,7 +86,7 @@ pub fn handler<'info>(ctx: Context<'_, '_, '_, 'info, CloseCtx<'info>>) -> Resul
             ctx.accounts.token_program.to_account_info(),
             ctx.accounts.cmt_program.to_account_info(),
         ],
-        &[&policy.signer_seeds()],
+        &[&ctx.accounts.policy.signer_seeds()],
     )?;
 
     Ok(())

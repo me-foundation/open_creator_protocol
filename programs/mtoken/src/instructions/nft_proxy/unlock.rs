@@ -1,3 +1,4 @@
+use crate::action_ctx::*;
 use crate::errors::MTokenErrorCode;
 use crate::state::*;
 use anchor_lang::prelude::*;
@@ -50,8 +51,7 @@ impl From<&mut UnlockCtx<'_>> for ActionCtx {
 
 pub fn handler<'info>(ctx: Context<'_, '_, '_, 'info, UnlockCtx<'info>>) -> Result<()> {
     let action_ctx: ActionCtx = ctx.accounts.into();
-    let policy = &ctx.accounts.policy;
-    policy.matches(action_ctx)?;
+    ctx.accounts.policy.matches(&action_ctx)?;
 
     let mint_state = &mut ctx.accounts.mint_state;
     mint_state.locked_by = None;

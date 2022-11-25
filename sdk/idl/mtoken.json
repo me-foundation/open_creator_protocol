@@ -602,7 +602,7 @@
         },
         {
           "name": "mintState",
-          "isMut": false,
+          "isMut": true,
           "isSigner": false
         },
         {
@@ -682,8 +682,12 @@
             "type": "i64"
           },
           {
-            "name": "lastTransferedAt",
+            "name": "lastTransferredAt",
             "type": "i64"
+          },
+          {
+            "name": "transferredCount",
+            "type": "u32"
           }
         ]
       }

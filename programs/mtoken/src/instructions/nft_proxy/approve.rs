@@ -1,3 +1,4 @@
+use crate::action_ctx::*;
 use crate::errors::MTokenErrorCode;
 use crate::state::*;
 use anchor_lang::prelude::*;
@@ -71,8 +72,7 @@ impl From<&mut ApproveCtx<'_>> for ActionCtx {
 
 pub fn handler<'info>(ctx: Context<'_, '_, '_, 'info, ApproveCtx<'info>>) -> Result<()> {
     let action_ctx: ActionCtx = ctx.accounts.into();
-    let policy = &ctx.accounts.policy;
-    policy.matches(action_ctx)?;
+    ctx.accounts.policy.matches(&action_ctx)?;
 
     invoke_signed(
         &create_approve_instruction(
@@ -92,11 +92,10 @@ pub fn handler<'info>(ctx: Context<'_, '_, '_, 'info, ApproveCtx<'info>>) -> Res
             ctx.accounts.token_program.to_account_info(),
             ctx.accounts.cmt_program.to_account_info(),
         ],
-        &[&policy.signer_seeds()],
+        &[&ctx.accounts.policy.signer_seeds()],
     )?;
 
-    let mint_state = &mut ctx.accounts.mint_state;
-    mint_state.last_approved_at = Clock::get().unwrap().unix_timestamp;
+    ctx.accounts.mint_state.record_approve();
 
     Ok(())
 }
