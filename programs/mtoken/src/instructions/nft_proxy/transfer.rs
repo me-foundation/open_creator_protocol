@@ -1,3 +1,4 @@
+use crate::action_ctx::*;
 use crate::errors::MTokenErrorCode;
 use crate::state::*;
 use anchor_lang::prelude::*;
@@ -67,13 +68,8 @@ impl From<&mut TransferCtx<'_>> for ActionCtx {
 }
 
 pub fn handler<'info>(ctx: Context<'_, '_, '_, 'info, TransferCtx<'info>>) -> Result<()> {
-    let mint_state = &mut ctx.accounts.mint_state;
-    mint_state.assert_unlocked()?;
-    mint_state.last_transfered_at = Clock::get().unwrap().unix_timestamp;
-
     let action_ctx: ActionCtx = ctx.accounts.into();
-    let policy = &ctx.accounts.policy;
-    policy.matches(action_ctx)?;
+    ctx.accounts.policy.matches(&action_ctx)?;
 
     invoke_signed(
         &create_transfer_with_delegate_instruction(
@@ -94,8 +90,10 @@ pub fn handler<'info>(ctx: Context<'_, '_, '_, 'info, TransferCtx<'info>>) -> Re
             ctx.accounts.token_program.to_account_info(),
             ctx.accounts.cmt_program.to_account_info(),
         ],
-        &[&policy.signer_seeds()],
+        &[&ctx.accounts.policy.signer_seeds()],
     )?;
+
+    ctx.accounts.mint_state.record_transfer();
 
     Ok(())
 }

@@ -1,10 +1,11 @@
+use crate::action_ctx::*;
 use crate::errors::MTokenErrorCode;
 use crate::state::*;
 use anchor_lang::prelude::*;
 use anchor_lang::solana_program::program::invoke_signed;
 use anchor_lang::solana_program::program_option::COption;
 use anchor_lang::solana_program::sysvar;
-use anchor_spl::token::{Mint, Token};
+use anchor_spl::token::{Mint, Token, TokenAccount};
 use community_managed_token::instruction::create_mint_to_instruction;
 
 #[derive(Accounts)]
@@ -25,6 +26,7 @@ pub struct MintToCtx<'info> {
     mint: Box<Account<'info, Mint>>,
     /// CHECK: going to check in action ctx
     metadata: UncheckedAccount<'info>,
+    #[account(mut)]
     mint_state: Box<Account<'info, MintState>>,
     #[account(mut)]
     payer: Signer<'info>,
@@ -32,7 +34,7 @@ pub struct MintToCtx<'info> {
     from: UncheckedAccount<'info>,
     /// CHECK: Not read from, and checked in cpi
     #[account(mut)]
-    from_account: UncheckedAccount<'info>,
+    from_account: Box<Account<'info, TokenAccount>>,
     token_program: Program<'info, Token>,
     system_program: Program<'info, System>,
     /// CHECK: checked in cpi
@@ -52,7 +54,7 @@ impl From<&mut MintToCtx<'_>> for ActionCtx {
             payer: Some(ctx.payer.key().to_string()),
             from: Some(ctx.from.key().to_string()),
             from_is_on_curve: Some(ctx.from.key().is_on_curve()),
-            from_account: None,
+            from_account: Some(ctx.from_account.clone().into()),
             to: None,
             to_is_on_curve: None,
             to_account: None,
@@ -68,8 +70,7 @@ impl From<&mut MintToCtx<'_>> for ActionCtx {
 
 pub fn handler<'info>(ctx: Context<'_, '_, '_, 'info, MintToCtx<'info>>) -> Result<()> {
     let action_ctx: ActionCtx = ctx.accounts.into();
-    let policy = &ctx.accounts.policy;
-    policy.matches(action_ctx)?;
+    ctx.accounts.policy.matches(&action_ctx)?;
 
     invoke_signed(
         &create_mint_to_instruction(
@@ -86,8 +87,11 @@ pub fn handler<'info>(ctx: Context<'_, '_, '_, 'info, MintToCtx<'info>>) -> Resu
             ctx.accounts.token_program.to_account_info(),
             ctx.accounts.cmt_program.to_account_info(),
         ],
-        &[&policy.signer_seeds()],
+        &[&ctx.accounts.policy.signer_seeds()],
     )?;
+
+    // mint_to is seen as a transfer, from None to the given account
+    ctx.accounts.mint_state.record_transfer();
 
     Ok(())
 }

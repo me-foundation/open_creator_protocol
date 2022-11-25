@@ -87,6 +87,11 @@
           "isSigner": false
         },
         {
+          "name": "metadata",
+          "isMut": false,
+          "isSigner": false
+        },
+        {
           "name": "mintState",
           "isMut": true,
           "isSigner": false
@@ -144,7 +149,7 @@
         },
         {
           "name": "mintState",
-          "isMut": false,
+          "isMut": true,
           "isSigner": false
         },
         {
@@ -276,7 +281,7 @@
         },
         {
           "name": "mintState",
-          "isMut": false,
+          "isMut": true,
           "isSigner": false
         },
         {
@@ -322,7 +327,7 @@
         },
         {
           "name": "mint",
-          "isMut": false,
+          "isMut": true,
           "isSigner": false
         },
         {
@@ -332,7 +337,7 @@
         },
         {
           "name": "mintState",
-          "isMut": false,
+          "isMut": true,
           "isSigner": false
         },
         {
@@ -378,7 +383,7 @@
         },
         {
           "name": "mint",
-          "isMut": false,
+          "isMut": true,
           "isSigner": false
         },
         {
@@ -388,7 +393,7 @@
         },
         {
           "name": "mintState",
-          "isMut": false,
+          "isMut": true,
           "isSigner": false
         },
         {
@@ -602,7 +607,7 @@
         },
         {
           "name": "mintState",
-          "isMut": false,
+          "isMut": true,
           "isSigner": false
         },
         {
@@ -682,8 +687,12 @@
             "type": "i64"
           },
           {
-            "name": "lastTransferedAt",
+            "name": "lastTransferredAt",
             "type": "i64"
+          },
+          {
+            "name": "transferredCount",
+            "type": "u32"
           }
         ]
       }

@@ -1,3 +1,4 @@
+use crate::action_ctx::*;
 use crate::errors::MTokenErrorCode;
 use crate::state::*;
 use anchor_lang::prelude::*;
@@ -23,6 +24,7 @@ pub struct InitAccountCtx<'info> {
     mint: Box<Account<'info, Mint>>,
     /// CHECK: going to check in action ctx
     metadata: UncheckedAccount<'info>,
+    #[account(mut)]
     mint_state: Box<Account<'info, MintState>>,
     #[account(mut)]
     payer: Signer<'info>,
@@ -67,8 +69,7 @@ impl From<&mut InitAccountCtx<'_>> for ActionCtx {
 
 pub fn handler<'info>(ctx: Context<'_, '_, '_, 'info, InitAccountCtx<'info>>) -> Result<()> {
     let action_ctx: ActionCtx = ctx.accounts.into();
-    let policy = &ctx.accounts.policy;
-    policy.matches(action_ctx)?;
+    ctx.accounts.policy.matches(&action_ctx)?;
 
     invoke_signed(
         &create_initialize_account_instruction(
@@ -89,7 +90,7 @@ pub fn handler<'info>(ctx: Context<'_, '_, '_, 'info, InitAccountCtx<'info>>) ->
             ctx.accounts.cmt_program.to_account_info(),
             ctx.accounts.associated_token_program.to_account_info(),
         ],
-        &[&policy.signer_seeds()],
+        &[&ctx.accounts.policy.signer_seeds()],
     )?;
 
     Ok(())

@@ -21,7 +21,8 @@ export type MintStateArgs = {
   policy: web3.PublicKey
   lockedBy: beet.COption<web3.PublicKey>
   lastApprovedAt: beet.bignum
-  lastTransferedAt: beet.bignum
+  lastTransferredAt: beet.bignum
+  transferredCount: number
 }
 
 export const mintStateDiscriminator = [81, 17, 143, 120, 23, 57, 22, 117]
@@ -40,7 +41,8 @@ export class MintState implements MintStateArgs {
     readonly policy: web3.PublicKey,
     readonly lockedBy: beet.COption<web3.PublicKey>,
     readonly lastApprovedAt: beet.bignum,
-    readonly lastTransferedAt: beet.bignum
+    readonly lastTransferredAt: beet.bignum,
+    readonly transferredCount: number
   ) {}
 
   /**
@@ -54,7 +56,8 @@ export class MintState implements MintStateArgs {
       args.policy,
       args.lockedBy,
       args.lastApprovedAt,
-      args.lastTransferedAt
+      args.lastTransferredAt,
+      args.transferredCount
     )
   }
 
@@ -175,8 +178,8 @@ export class MintState implements MintStateArgs {
         }
         return x
       })(),
-      lastTransferedAt: (() => {
-        const x = <{ toNumber: () => number }>this.lastTransferedAt
+      lastTransferredAt: (() => {
+        const x = <{ toNumber: () => number }>this.lastTransferredAt
         if (typeof x.toNumber === 'function') {
           try {
             return x.toNumber()
@@ -186,6 +189,7 @@ export class MintState implements MintStateArgs {
         }
         return x
       })(),
+      transferredCount: this.transferredCount,
     }
   }
 }
@@ -208,7 +212,8 @@ export const mintStateBeet = new beet.FixableBeetStruct<
     ['policy', beetSolana.publicKey],
     ['lockedBy', beet.coption(beetSolana.publicKey)],
     ['lastApprovedAt', beet.i64],
-    ['lastTransferedAt', beet.i64],
+    ['lastTransferredAt', beet.i64],
+    ['transferredCount', beet.u32],
   ],
   MintState.fromArgs,
   'MintState'
