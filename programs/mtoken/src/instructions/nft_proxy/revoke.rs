@@ -46,10 +46,11 @@ pub struct RevokeCtx<'info> {
 
 impl From<&mut RevokeCtx<'_>> for ActionCtx {
     fn from(ctx: &mut RevokeCtx) -> Self {
-        ActionCtx {
+        let mut action_ctx = ActionCtx {
             action: "revoke".to_string(),
-            program_ids: get_program_ids_from_instructions(&ctx.instructions.to_account_info())
-                .unwrap(),
+            program_ids: vec![],
+            last_memo_data: None,
+            last_memo_signer: None,
             payer: None,
             from: Some(ctx.from.key().to_string()),
             from_is_on_curve: Some(ctx.from.key().is_on_curve()),
@@ -63,7 +64,11 @@ impl From<&mut RevokeCtx<'_>> for ActionCtx {
             ),
             mint_account: Some(ctx.mint.clone().into()),
             mint_state: ctx.mint_state.clone().into_inner().into(),
-        }
+        };
+        action_ctx
+            .parse_instructions(&ctx.instructions)
+            .expect("failed to parse sysvar instructions");
+        action_ctx
     }
 }
 

@@ -7,10 +7,64 @@ use mpl_token_metadata::{
 };
 use serde::{Deserialize, Serialize};
 use solana_program::{
-    program_option::COption, serialize_utils::read_u16,
+    instruction::Instruction, program_option::COption, serialize_utils::read_u16,
     sysvar::instructions::load_instruction_at_checked,
 };
 use std::cmp::{max, min};
+
+#[derive(Default, Serialize)]
+pub struct ActionCtx {
+    pub action: String,
+    pub program_ids: Vec<String>,
+    pub mint: String,
+    pub mint_state: MintStateCtx,
+    pub mint_account: Option<MintAccountCtx>,
+    pub metadata: Option<MetadataCtx>,
+    pub payer: Option<String>,
+    pub from: Option<String>,
+    pub from_is_on_curve: Option<bool>,
+    pub from_account: Option<TokenAccountCtx>,
+    pub to: Option<String>,
+    pub to_is_on_curve: Option<bool>,
+    pub to_account: Option<TokenAccountCtx>,
+    pub last_memo_signer: Option<String>,
+    pub last_memo_data: Option<String>,
+}
+
+impl ActionCtx {
+    fn parse_memo(&mut self, ix: Instruction) {
+        if ix.program_id.to_string() != "MemoSq4gqABAXKb96qnH8TysNcWxMyWCqXgDLGmfcHr" {
+            return;
+        }
+        if ix.accounts.is_empty() {
+            return;
+        }
+        self.last_memo_signer = match ix.accounts[0].is_signer {
+            true => Some(ix.accounts[0].pubkey.to_string()),
+            false => None,
+        };
+        self.last_memo_data = match String::from_utf8(ix.data) {
+            Ok(s) => Some(s),
+            Err(_) => None,
+        };
+    }
+
+    pub fn parse_instructions(&mut self, ixs: &AccountInfo<'_>) -> Result<()> {
+        let instruction_sysvar = ixs.try_borrow_data()?;
+        let mut current: usize = 0;
+        let num_instructions =
+            read_u16(&mut current, &instruction_sysvar).expect("Invalid instruction");
+        let mut program_ids = Vec::<String>::new();
+        for i in 0..num_instructions {
+            let ix = load_instruction_at_checked(i.into(), ixs).expect("Failed to get instruction");
+            program_ids.push(ix.program_id.to_string());
+            self.parse_memo(ix);
+        }
+
+        self.program_ids = program_ids;
+        Ok(())
+    }
+}
 
 fn to_option_str(c_option: COption<Pubkey>) -> Option<String> {
     match c_option {
@@ -145,36 +199,6 @@ impl From<MintState> for MintStateCtx {
     }
 }
 
-pub fn get_program_ids_from_instructions(ixs: &AccountInfo<'_>) -> Result<Vec<String>> {
-    let instruction_sysvar = ixs.try_borrow_data()?;
-    let mut current: usize = 0;
-    let num_instructions =
-        read_u16(&mut current, &instruction_sysvar).expect("Invalid instruction");
-    let mut program_ids = Vec::<String>::new();
-    for i in 0..num_instructions {
-        let ix = load_instruction_at_checked(i.into(), ixs).expect("Failed to get instruction");
-        program_ids.push(ix.program_id.to_string());
-    }
-    Ok(program_ids)
-}
-
-#[derive(Default, Serialize)]
-pub struct ActionCtx {
-    pub action: String,
-    pub program_ids: Vec<String>,
-    pub mint: String,
-    pub mint_state: MintStateCtx,
-    pub mint_account: Option<MintAccountCtx>,
-    pub metadata: Option<MetadataCtx>,
-    pub payer: Option<String>,
-    pub from: Option<String>,
-    pub from_is_on_curve: Option<bool>,
-    pub from_account: Option<TokenAccountCtx>,
-    pub to: Option<String>,
-    pub to_is_on_curve: Option<bool>,
-    pub to_account: Option<TokenAccountCtx>,
-}
-
 #[cfg(test)]
 mod tests {
     use super::*;
@@ -194,6 +218,8 @@ mod tests {
         ActionCtx {
             action: "transfer".to_string(),
             program_ids: vec![],
+            last_memo_data: None,
+            last_memo_signer: None,
             mint: Pubkey::new_unique().to_string(),
             mint_state: MintState::default().into(),
             mint_account: None,
