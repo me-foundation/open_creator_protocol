@@ -45,7 +45,7 @@ impl Policy {
     pub const LEN: usize = Policy::JSON_RULE_MAX_LEN + 200 /* with padding */;
     pub const SEED: &'static str = "policy";
     pub const MANAGED_AUTHORITY: &'static str = "RULERZZDGsXqd9TeJu5ikLfbXzBFpoDPT8N3FHRhq1T";
-    pub const JSON_RULE_MAX_LEN: usize = 2000;
+    pub const JSON_RULE_MAX_LEN: usize = 1000;
 
     pub fn valid(&self) -> Result<()> {
         if self.json_rule.len() > Policy::JSON_RULE_MAX_LEN {

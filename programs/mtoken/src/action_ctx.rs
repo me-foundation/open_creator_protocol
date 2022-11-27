@@ -273,7 +273,7 @@ mod tests {
           {"conditions":{"not":{"field":"program_ids","operator":"string_does_not_contain_any","value":[PLACEHOLDER]}},"events":[]}
         "#.replace(
             "PLACEHOLDER",
-            &(0..20).map(|_| format!("\"{}\"", Pubkey::new_unique().to_string())).collect::<Vec<String>>().join(","),
+            &(0..18).map(|_| format!("\"{}\"", Pubkey::new_unique().to_string())).collect::<Vec<String>>().join(","),
         );
         assert!(policy.valid().is_ok());
 
