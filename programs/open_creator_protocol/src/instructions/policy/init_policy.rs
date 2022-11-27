@@ -17,7 +17,7 @@ pub struct InitPolicyCtx<'info> {
         seeds = [Policy::SEED.as_bytes(), arg.uuid.as_ref()],
         bump,
     )]
-    policy: Account<'info, Policy>,
+    policy: Box<Account<'info, Policy>>,
     #[account(mut)]
     authority: Signer<'info>,
     system_program: Program<'info, System>,

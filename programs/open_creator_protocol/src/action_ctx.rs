@@ -164,29 +164,14 @@ impl From<Box<Account<'_, Mint>>> for MintAccountCtx {
 #[derive(Default, Serialize, Deserialize)]
 pub struct DatetimeCtx {
     pub utc_timestamp: i64,
-    pub utc_year: i16,
-    pub utc_month: u8, // 1-12
-    pub utc_month_day: u8,
-    pub utc_week_day: u8, // 0 = Sunday, 1 = Monday, etc.
-    pub utc_year_day: u16,
     pub utc_hour: u8,
-    pub utc_min: u8,
-    pub utc_sec: u8,
 }
 
 impl From<i64> for DatetimeCtx {
     fn from(secs: i64) -> Self {
-        let t = time_format::components_utc(secs).expect("invalid timestamp");
         Self {
             utc_timestamp: secs,
-            utc_year: t.year,
-            utc_year_day: t.year_day,
-            utc_month: t.month,
-            utc_month_day: t.month_day,
-            utc_week_day: t.week_day,
-            utc_hour: t.hour,
-            utc_min: t.min,
-            utc_sec: t.sec,
+            utc_hour: (secs / 3600 % 24) as u8,
         }
     }
 }
@@ -406,7 +391,7 @@ mod tests {
     }
 
     #[test]
-    fn test_policy_with_metadata_name_regex() {
+    fn test_policy_with_metadata_name_substring() {
         let mut action_ctx = action_ctx_fixture();
         let mut metadata = metadata_ctx_fixture();
         metadata.name = "NFT #1 (frozen)".to_string();
@@ -414,21 +399,21 @@ mod tests {
 
         let mut policy = policy_fixture();
         policy.json_rule = r#"
-          {"conditions":{"field":"metadata/name","operator":"string_matches","value":"\\(frozen\\)"},"events":[]}
+          {"conditions":{"field":"metadata/name","operator":"string_has_substring","value":"(frozen)"},"events":[]}
         "#.into();
         assert!(policy.valid().is_ok());
         assert!(policy.matches(&action_ctx).is_ok());
 
         let mut policy = policy_fixture();
         policy.json_rule = r#"
-          {"conditions":{"field":"metadata/name","operator":"string_matches","value":""},"events":[]}
+          {"conditions":{"field":"metadata/name","operator":"string_has_substring","value":""},"events":[]}
         "#.into();
         assert!(policy.valid().is_ok());
         assert!(policy.matches(&action_ctx).is_ok());
 
         let mut policy = policy_fixture();
         policy.json_rule = r#"
-          {"conditions":{"field":"metadata/name","operator":"string_matches","value":"SFT"},"events":[]}
+          {"conditions":{"field":"metadata/name","operator":"string_has_substring","value":"SFT"},"events":[]}
         "#.into();
         assert!(policy.valid().is_ok());
         assert!(policy.matches(&action_ctx).is_err());
