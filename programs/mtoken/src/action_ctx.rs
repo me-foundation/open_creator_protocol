@@ -264,26 +264,16 @@ mod tests {
           {"conditions":{"not":{"field":"program_ids","operator":"string_does_not_contain_any","value":[PLACEHOLDER]}},"events":[]}
         "#.replace(
             "PLACEHOLDER",
-            &(0..1).map(|_| format!("\"{}\"", Pubkey::new_unique().to_string())).collect::<Vec<String>>().join(","),
-        );
-        assert!(policy.valid().is_ok());
-
-        policy.json_rule = r#"
-          {"conditions":{"not":{"field":"program_ids","operator":"string_does_not_contain_any","value":[PLACEHOLDER]}},"events":[]}
-        "#.replace(
-            "PLACEHOLDER",
             &(0..10).map(|_| format!("\"{}\"", Pubkey::new_unique().to_string())).collect::<Vec<String>>().join(","),
         );
         assert!(policy.valid().is_ok());
 
-        // space should be big enough for the following big json
         let mut policy = policy_fixture();
         policy.json_rule = r#"
           {"conditions":{"not":{"field":"program_ids","operator":"string_does_not_contain_any","value":[PLACEHOLDER]}},"events":[]}
         "#.replace(
             "PLACEHOLDER",
-            // repeat the unique keys x times
-            &(0..80).map(|_| format!("\"{}\"", Pubkey::new_unique().to_string())).collect::<Vec<String>>().join(","),
+            &(0..18).map(|_| format!("\"{}\"", Pubkey::new_unique().to_string())).collect::<Vec<String>>().join(","),
         );
         assert!(policy.valid().is_ok());
 
