@@ -95,7 +95,7 @@ class MintState {
      *
      * @param programId - the program that owns the accounts we are filtering
      */
-    static gpaBuilder(programId = new web3.PublicKey('mtokYxNhZEihbDq3r6LX22pLKnpuQvXV5kwhgCDCWw4')) {
+    static gpaBuilder(programId = new web3.PublicKey('ocp4vWUzA2z2XMYJ3QhM9vWdyoyoQwAFJhRdVTbvo9E')) {
         return beetSolana.GpaBuilder.fromStruct(programId, exports.mintStateBeet);
     }
     /**

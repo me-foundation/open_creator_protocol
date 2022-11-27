@@ -55,7 +55,7 @@ exports.initPolicyInstructionDiscriminator = [
  * @category InitPolicy
  * @category generated
  */
-function createInitPolicyInstruction(accounts, args, programId = new web3.PublicKey('mtokYxNhZEihbDq3r6LX22pLKnpuQvXV5kwhgCDCWw4')) {
+function createInitPolicyInstruction(accounts, args, programId = new web3.PublicKey('ocp4vWUzA2z2XMYJ3QhM9vWdyoyoQwAFJhRdVTbvo9E')) {
     var _a;
     const [data] = exports.initPolicyStruct.serialize(Object.assign({ instructionDiscriminator: exports.initPolicyInstructionDiscriminator }, args));
     const keys = [

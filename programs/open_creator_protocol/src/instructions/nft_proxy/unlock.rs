@@ -1,5 +1,5 @@
 use crate::action_ctx::*;
-use crate::errors::MTokenErrorCode;
+use crate::errors::OCPErrorCode;
 use crate::state::*;
 use anchor_lang::prelude::*;
 use anchor_lang::solana_program::sysvar;
@@ -9,8 +9,8 @@ use anchor_spl::token::Mint;
 pub struct UnlockCtx<'info> {
     policy: Box<Account<'info, Policy>>,
     #[account(
-        constraint = mint_state.mint == mint.key() @ MTokenErrorCode::InvalidMint,
-        constraint = mint_state.locked_by == Some(from.key()) @ MTokenErrorCode::InvalidLockedBy,
+        constraint = mint_state.mint == mint.key() @ OCPErrorCode::InvalidMint,
+        constraint = mint_state.locked_by == Some(from.key()) @ OCPErrorCode::InvalidLockedBy,
     )]
     mint: Box<Account<'info, Mint>>,
     /// CHECK: going to check in action ctx

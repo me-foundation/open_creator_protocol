@@ -50,7 +50,7 @@ exports.approveInstructionDiscriminator = [
  * @category Approve
  * @category generated
  */
-function createApproveInstruction(accounts, programId = new web3.PublicKey('mtokYxNhZEihbDq3r6LX22pLKnpuQvXV5kwhgCDCWw4')) {
+function createApproveInstruction(accounts, programId = new web3.PublicKey('ocp4vWUzA2z2XMYJ3QhM9vWdyoyoQwAFJhRdVTbvo9E')) {
     var _a;
     const [data] = exports.approveStruct.serialize({
         instructionDiscriminator: exports.approveInstructionDiscriminator,

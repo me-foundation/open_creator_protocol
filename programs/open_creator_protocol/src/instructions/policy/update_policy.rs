@@ -1,4 +1,4 @@
-use crate::errors::MTokenErrorCode;
+use crate::errors::OCPErrorCode;
 use crate::state::*;
 use anchor_lang::prelude::*;
 
@@ -18,13 +18,13 @@ pub struct UpdatePolicyCtx<'info> {
         constraint = (
             authority.key() == policy.authority ||
             authority.key().to_string() == Policy::MANAGED_AUTHORITY
-        ) @ MTokenErrorCode::InvalidAuthority,
+        ) @ OCPErrorCode::InvalidAuthority,
 
         // only MANAGED_AUTHORITY can set the arg.authority to be MANAGED_AUTHORITY
         constraint = (
             arg.authority.to_string() != Policy::MANAGED_AUTHORITY ||
             authority.key().to_string() == Policy::MANAGED_AUTHORITY
-        ) @ MTokenErrorCode::InvalidAuthority,
+        ) @ OCPErrorCode::InvalidAuthority,
     )]
     authority: Signer<'info>,
     system_program: Program<'info, System>,

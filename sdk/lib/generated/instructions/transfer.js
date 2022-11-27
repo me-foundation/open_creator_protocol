@@ -50,7 +50,7 @@ exports.transferInstructionDiscriminator = [
  * @category Transfer
  * @category generated
  */
-function createTransferInstruction(accounts, programId = new web3.PublicKey('mtokYxNhZEihbDq3r6LX22pLKnpuQvXV5kwhgCDCWw4')) {
+function createTransferInstruction(accounts, programId = new web3.PublicKey('ocp4vWUzA2z2XMYJ3QhM9vWdyoyoQwAFJhRdVTbvo9E')) {
     var _a;
     const [data] = exports.transferStruct.serialize({
         instructionDiscriminator: exports.transferInstructionDiscriminator,

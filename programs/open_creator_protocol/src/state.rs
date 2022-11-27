@@ -1,4 +1,4 @@
-use crate::{action_ctx::ActionCtx, errors::MTokenErrorCode};
+use crate::{action_ctx::ActionCtx, errors::OCPErrorCode};
 use anchor_lang::prelude::*;
 use anchor_lang::solana_program::pubkey::Pubkey;
 use json_rules_engine_fork::{Rule, Status};
@@ -49,7 +49,7 @@ impl Policy {
 
     pub fn valid(&self) -> Result<()> {
         if self.json_rule.len() > Policy::JSON_RULE_MAX_LEN {
-            return Err(MTokenErrorCode::InvalidPolicyCreation.into());
+            return Err(OCPErrorCode::InvalidPolicyCreation.into());
         }
         // make sure the rule is valid
         serde_json::from_str::<Rule>(&self.json_rule).unwrap();
@@ -72,7 +72,7 @@ impl Policy {
             msg!("Policy does not match: {}", result.condition_result.name);
             msg!("fact: {}", fact);
             msg!("json_rule: {}", self.json_rule);
-            return Err(MTokenErrorCode::InvalidPolicyEvaluation.into());
+            return Err(OCPErrorCode::InvalidPolicyEvaluation.into());
         }
         Ok(())
     }

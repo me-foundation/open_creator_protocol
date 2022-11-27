@@ -1,4 +1,4 @@
-use crate::{errors::MTokenErrorCode, state::MintState};
+use crate::{errors::OCPErrorCode, state::MintState};
 use anchor_lang::prelude::*;
 use anchor_spl::token::{Mint, TokenAccount};
 use mpl_token_metadata::{
@@ -93,7 +93,7 @@ pub struct MetadataCtx {
 
 pub fn to_metadata_ctx(mint: &Pubkey, metadata: &AccountInfo) -> Result<MetadataCtx> {
     if find_metadata_account(mint).0 != metadata.key() {
-        return Err(MTokenErrorCode::InvalidMetadata.into());
+        return Err(OCPErrorCode::InvalidMetadata.into());
     }
     let parsed_metadata = Metadata::from_account_info(metadata)?;
     let collection = parsed_metadata.collection.as_ref();

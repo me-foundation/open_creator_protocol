@@ -1,5 +1,5 @@
 use crate::action_ctx::*;
-use crate::errors::MTokenErrorCode;
+use crate::errors::OCPErrorCode;
 use crate::state::*;
 use anchor_lang::prelude::*;
 use anchor_lang::solana_program::sysvar;
@@ -11,9 +11,9 @@ use solana_program::program_option::COption;
 pub struct LockCtx<'info> {
     policy: Box<Account<'info, Policy>>,
     #[account(
-        constraint = mint_state.mint == mint.key() @ MTokenErrorCode::InvalidMint,
-        constraint = mint.key() == from_account.mint @ MTokenErrorCode::InvalidMint,
-        constraint = mint_state.locked_by.is_none() @ MTokenErrorCode::MintStateLocked,
+        constraint = mint_state.mint == mint.key() @ OCPErrorCode::InvalidMint,
+        constraint = mint.key() == from_account.mint @ OCPErrorCode::InvalidMint,
+        constraint = mint_state.locked_by.is_none() @ OCPErrorCode::MintStateLocked,
     )]
     mint: Box<Account<'info, Mint>>,
     /// CHECK: going to check in action ctx
@@ -22,8 +22,8 @@ pub struct LockCtx<'info> {
     mint_state: Box<Account<'info, MintState>>,
     from: Signer<'info>,
     #[account(
-        constraint = from_account.owner == from.key() && from_account.amount == 1 @ MTokenErrorCode::InvalidTokenAccount,
-        constraint = from_account.delegate == COption::Some(to.key()) @ MTokenErrorCode::InvalidTokenAccount,
+        constraint = from_account.owner == from.key() && from_account.amount == 1 @ OCPErrorCode::InvalidTokenAccount,
+        constraint = from_account.delegate == COption::Some(to.key()) @ OCPErrorCode::InvalidTokenAccount,
     )]
     from_account: Box<Account<'info, TokenAccount>>,
     /// CHECK: Account is not read from

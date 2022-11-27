@@ -50,7 +50,7 @@ exports.closeInstructionDiscriminator = [
  * @category Close
  * @category generated
  */
-function createCloseInstruction(accounts, programId = new web3.PublicKey('mtokYxNhZEihbDq3r6LX22pLKnpuQvXV5kwhgCDCWw4')) {
+function createCloseInstruction(accounts, programId = new web3.PublicKey('ocp4vWUzA2z2XMYJ3QhM9vWdyoyoQwAFJhRdVTbvo9E')) {
     var _a;
     const [data] = exports.closeStruct.serialize({
         instructionDiscriminator: exports.closeInstructionDiscriminator,

@@ -9,11 +9,11 @@ wallet = "~/.config/solana/id.json"
 test = "npx ts-mocha -p ./tsconfig.json -t 1000000 tests/**/*.spec.ts"
 
 [workspace]
-members = ["programs/mtoken"]
+members = ["programs/open_creator_protocol"]
 
 [[test.genesis]]
-address = "mtokYxNhZEihbDq3r6LX22pLKnpuQvXV5kwhgCDCWw4"
-program = "./target/deploy/mtoken.so"
+address = "ocp4vWUzA2z2XMYJ3QhM9vWdyoyoQwAFJhRdVTbvo9E"
+program = "./target/deploy/open_creator_protocol.so"
 
 [test.validator]
 url = "https://api.devnet.solana.com"

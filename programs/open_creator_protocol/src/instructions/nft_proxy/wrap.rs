@@ -1,5 +1,5 @@
 use crate::action_ctx::*;
-use crate::errors::MTokenErrorCode;
+use crate::errors::OCPErrorCode;
 use crate::state::*;
 use anchor_lang::prelude::*;
 use anchor_lang::solana_program::sysvar;
@@ -14,10 +14,10 @@ pub struct WrapCtx<'info> {
     mint_authority: Signer<'info>,
     #[account(
         mut,
-        constraint = mint.decimals == 0 @ MTokenErrorCode::InvalidMint, // nft
-        constraint = mint.supply == 0 @ MTokenErrorCode::InvalidMint, // nft
-        constraint = mint.freeze_authority == COption::Some(freeze_authority.key()) @ MTokenErrorCode::InvalidMint,
-        constraint = mint.mint_authority == COption::Some(mint_authority.key()) @ MTokenErrorCode::InvalidMint,
+        constraint = mint.decimals == 0 @ OCPErrorCode::InvalidMint, // nft
+        constraint = mint.supply == 0 @ OCPErrorCode::InvalidMint, // nft
+        constraint = mint.freeze_authority == COption::Some(freeze_authority.key()) @ OCPErrorCode::InvalidMint,
+        constraint = mint.mint_authority == COption::Some(mint_authority.key()) @ OCPErrorCode::InvalidMint,
     )]
     mint: Box<Account<'info, Mint>>,
     /// CHECK: going to check in action ctx

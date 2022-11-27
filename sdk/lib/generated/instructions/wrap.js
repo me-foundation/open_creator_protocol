@@ -50,7 +50,7 @@ exports.wrapInstructionDiscriminator = [
  * @category Wrap
  * @category generated
  */
-function createWrapInstruction(accounts, programId = new web3.PublicKey('mtokYxNhZEihbDq3r6LX22pLKnpuQvXV5kwhgCDCWw4')) {
+function createWrapInstruction(accounts, programId = new web3.PublicKey('ocp4vWUzA2z2XMYJ3QhM9vWdyoyoQwAFJhRdVTbvo9E')) {
     var _a, _b;
     const [data] = exports.wrapStruct.serialize({
         instructionDiscriminator: exports.wrapInstructionDiscriminator,

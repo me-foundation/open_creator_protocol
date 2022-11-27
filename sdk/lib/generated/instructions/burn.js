@@ -48,7 +48,7 @@ exports.burnInstructionDiscriminator = [116, 110, 29, 56, 107, 219, 42, 93];
  * @category Burn
  * @category generated
  */
-function createBurnInstruction(accounts, programId = new web3.PublicKey('mtokYxNhZEihbDq3r6LX22pLKnpuQvXV5kwhgCDCWw4')) {
+function createBurnInstruction(accounts, programId = new web3.PublicKey('ocp4vWUzA2z2XMYJ3QhM9vWdyoyoQwAFJhRdVTbvo9E')) {
     var _a;
     const [data] = exports.burnStruct.serialize({
         instructionDiscriminator: exports.burnInstructionDiscriminator,

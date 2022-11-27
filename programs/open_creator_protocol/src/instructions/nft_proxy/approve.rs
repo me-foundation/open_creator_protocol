@@ -1,5 +1,5 @@
 use crate::action_ctx::*;
-use crate::errors::MTokenErrorCode;
+use crate::errors::OCPErrorCode;
 use crate::state::*;
 use anchor_lang::prelude::*;
 use anchor_lang::solana_program::program::invoke_signed;
@@ -16,12 +16,12 @@ pub struct ApproveCtx<'info> {
     /// CHECK: Checked in cpi
     freeze_authority: UncheckedAccount<'info>,
     #[account(
-        constraint = mint_state.mint == mint.key() @ MTokenErrorCode::InvalidMint,
-        constraint = mint.key() == from_account.mint @ MTokenErrorCode::InvalidMint,
-        constraint = mint_state.locked_by.is_none() @ MTokenErrorCode::MintStateLocked,
-        constraint = mint.freeze_authority == COption::Some(freeze_authority.key()) @ MTokenErrorCode::InvalidPolicyMintAssociation,
-        constraint = mint.mint_authority == COption::Some(freeze_authority.key()) @ MTokenErrorCode::InvalidPolicyMintAssociation,
-        constraint = policy.get_freeze_authority(policy.key()) == freeze_authority.key() @ MTokenErrorCode::InvalidPolicyMintAssociation,
+        constraint = mint_state.mint == mint.key() @ OCPErrorCode::InvalidMint,
+        constraint = mint.key() == from_account.mint @ OCPErrorCode::InvalidMint,
+        constraint = mint_state.locked_by.is_none() @ OCPErrorCode::MintStateLocked,
+        constraint = mint.freeze_authority == COption::Some(freeze_authority.key()) @ OCPErrorCode::InvalidPolicyMintAssociation,
+        constraint = mint.mint_authority == COption::Some(freeze_authority.key()) @ OCPErrorCode::InvalidPolicyMintAssociation,
+        constraint = policy.get_freeze_authority(policy.key()) == freeze_authority.key() @ OCPErrorCode::InvalidPolicyMintAssociation,
     )]
     mint: Box<Account<'info, Mint>>,
     /// CHECK: going to check in action ctx
@@ -31,7 +31,7 @@ pub struct ApproveCtx<'info> {
     from: Signer<'info>,
     #[account(
         mut,
-        constraint = from_account.owner == from.key() && from_account.amount == 1 @ MTokenErrorCode::InvalidTokenAccount
+        constraint = from_account.owner == from.key() && from_account.amount == 1 @ OCPErrorCode::InvalidTokenAccount
     )]
     from_account: Box<Account<'info, TokenAccount>>,
     /// CHECK: Account is not read from

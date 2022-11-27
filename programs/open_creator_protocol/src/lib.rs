@@ -8,10 +8,10 @@ pub mod state;
 use anchor_lang::prelude::*;
 use instructions::*;
 
-solana_program::declare_id!("mtokYxNhZEihbDq3r6LX22pLKnpuQvXV5kwhgCDCWw4");
+solana_program::declare_id!("ocp4vWUzA2z2XMYJ3QhM9vWdyoyoQwAFJhRdVTbvo9E");
 
 #[program]
-pub mod mtoken {
+pub mod open_creator_protocol {
     use super::*;
 
     pub fn init_policy(ctx: Context<InitPolicyCtx>, arg: InitPolicyArg) -> Result<()> {

@@ -50,7 +50,7 @@ exports.mintToInstructionDiscriminator = [
  * @category MintTo
  * @category generated
  */
-function createMintToInstruction(accounts, programId = new web3.PublicKey('mtokYxNhZEihbDq3r6LX22pLKnpuQvXV5kwhgCDCWw4')) {
+function createMintToInstruction(accounts, programId = new web3.PublicKey('ocp4vWUzA2z2XMYJ3QhM9vWdyoyoQwAFJhRdVTbvo9E')) {
     var _a, _b;
     const [data] = exports.mintToStruct.serialize({
         instructionDiscriminator: exports.mintToInstructionDiscriminator,

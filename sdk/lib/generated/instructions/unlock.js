@@ -49,7 +49,7 @@ exports.unlockInstructionDiscriminator = [
  * @category Unlock
  * @category generated
  */
-function createUnlockInstruction(accounts, programId = new web3.PublicKey('mtokYxNhZEihbDq3r6LX22pLKnpuQvXV5kwhgCDCWw4')) {
+function createUnlockInstruction(accounts, programId = new web3.PublicKey('ocp4vWUzA2z2XMYJ3QhM9vWdyoyoQwAFJhRdVTbvo9E')) {
     const [data] = exports.unlockStruct.serialize({
         instructionDiscriminator: exports.unlockInstructionDiscriminator,
     });

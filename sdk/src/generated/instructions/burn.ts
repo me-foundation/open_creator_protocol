@@ -61,7 +61,7 @@ export const burnInstructionDiscriminator = [116, 110, 29, 56, 107, 219, 42, 93]
  */
 export function createBurnInstruction(
   accounts: BurnInstructionAccounts,
-  programId = new web3.PublicKey('mtokYxNhZEihbDq3r6LX22pLKnpuQvXV5kwhgCDCWw4')
+  programId = new web3.PublicKey('ocp4vWUzA2z2XMYJ3QhM9vWdyoyoQwAFJhRdVTbvo9E')
 ) {
   const [data] = burnStruct.serialize({
     instructionDiscriminator: burnInstructionDiscriminator,

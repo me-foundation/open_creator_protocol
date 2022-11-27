@@ -97,7 +97,7 @@ export class MintState implements MintStateArgs {
    */
   static gpaBuilder(
     programId: web3.PublicKey = new web3.PublicKey(
-      'mtokYxNhZEihbDq3r6LX22pLKnpuQvXV5kwhgCDCWw4'
+      'ocp4vWUzA2z2XMYJ3QhM9vWdyoyoQwAFJhRdVTbvo9E'
     )
   ) {
     return beetSolana.GpaBuilder.fromStruct(programId, mintStateBeet)

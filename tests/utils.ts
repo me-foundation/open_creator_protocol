@@ -29,7 +29,7 @@ export const process_tx = async (
   try {
     const sig = await conn.sendRawTransaction(tx.serialize());
     console.log({ sig });
-    await new Promise((r) => setTimeout(r, 500));
+    await new Promise((r) => setTimeout(r, 1000));
   } catch (e) {
     console.error(e);
     throw e;

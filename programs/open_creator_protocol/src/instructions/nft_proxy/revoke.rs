@@ -1,5 +1,5 @@
 use crate::action_ctx::*;
-use crate::errors::MTokenErrorCode;
+use crate::errors::OCPErrorCode;
 use crate::state::*;
 use anchor_lang::prelude::*;
 use anchor_lang::solana_program::program::invoke_signed;
@@ -8,21 +8,20 @@ use anchor_lang::solana_program::sysvar;
 use anchor_spl::token::Mint;
 use anchor_spl::token::Token;
 use anchor_spl::token::TokenAccount;
-use community_managed_token::instruction::create_close_account_instruction;
+use community_managed_token::instruction::create_revoke_instruction;
 
 #[derive(Accounts)]
-pub struct CloseCtx<'info> {
+pub struct RevokeCtx<'info> {
     policy: Box<Account<'info, Policy>>,
     /// CHECK: Checked in cpi
     freeze_authority: UncheckedAccount<'info>,
     #[account(
-        mut,
-        constraint = mint_state.mint == mint.key() @ MTokenErrorCode::InvalidMint,
-        constraint = mint.key() == from_account.mint @ MTokenErrorCode::InvalidMint,
-        constraint = mint_state.locked_by.is_none() @ MTokenErrorCode::MintStateLocked,
-        constraint = mint.freeze_authority == COption::Some(freeze_authority.key()) @ MTokenErrorCode::InvalidPolicyMintAssociation,
-        constraint = mint.mint_authority == COption::Some(freeze_authority.key()) @ MTokenErrorCode::InvalidPolicyMintAssociation,
-        constraint = policy.get_freeze_authority(policy.key()) == freeze_authority.key() @ MTokenErrorCode::InvalidPolicyMintAssociation,
+        constraint = mint_state.mint == mint.key() @ OCPErrorCode::InvalidMint,
+        constraint = mint.key() == from_account.mint @ OCPErrorCode::InvalidMint,
+        constraint = mint_state.locked_by.is_none() @ OCPErrorCode::MintStateLocked,
+        constraint = mint.freeze_authority == COption::Some(freeze_authority.key()) @ OCPErrorCode::InvalidPolicyMintAssociation,
+        constraint = mint.mint_authority == COption::Some(freeze_authority.key()) @ OCPErrorCode::InvalidPolicyMintAssociation,
+        constraint = policy.get_freeze_authority(policy.key()) == freeze_authority.key() @ OCPErrorCode::InvalidPolicyMintAssociation,
     )]
     mint: Box<Account<'info, Mint>>,
     /// CHECK: going to check in action ctx
@@ -31,7 +30,9 @@ pub struct CloseCtx<'info> {
     mint_state: Box<Account<'info, MintState>>,
     from: Signer<'info>,
     #[account(
-        mut, constraint = from_account.owner == from.key() @ MTokenErrorCode::InvalidTokenAccount
+        mut,
+        constraint = from_account.owner == from.key() @ OCPErrorCode::InvalidTokenAccount,
+        constraint = from_account.delegate.is_some() @ OCPErrorCode::InvalidTokenAccount,
     )]
     from_account: Box<Account<'info, TokenAccount>>,
     token_program: Program<'info, Token>,
@@ -43,10 +44,10 @@ pub struct CloseCtx<'info> {
     instructions: UncheckedAccount<'info>,
 }
 
-impl From<&mut CloseCtx<'_>> for ActionCtx {
-    fn from(ctx: &mut CloseCtx) -> Self {
+impl From<&mut RevokeCtx<'_>> for ActionCtx {
+    fn from(ctx: &mut RevokeCtx) -> Self {
         let mut action_ctx = ActionCtx {
-            action: "close".to_string(),
+            action: "revoke".to_string(),
             program_ids: vec![],
             last_memo_data: None,
             last_memo_signer: None,
@@ -71,12 +72,12 @@ impl From<&mut CloseCtx<'_>> for ActionCtx {
     }
 }
 
-pub fn handler<'info>(ctx: Context<'_, '_, '_, 'info, CloseCtx<'info>>) -> Result<()> {
+pub fn handler<'info>(ctx: Context<'_, '_, '_, 'info, RevokeCtx<'info>>) -> Result<()> {
     let action_ctx: ActionCtx = ctx.accounts.into();
     ctx.accounts.policy.matches(&action_ctx)?;
 
     invoke_signed(
-        &create_close_account_instruction(
+        &create_revoke_instruction(
             &ctx.accounts.mint.key(),
             &ctx.accounts.from.key(),
             &ctx.accounts.policy.key(),

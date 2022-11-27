@@ -47,7 +47,7 @@ exports.lockInstructionDiscriminator = [21, 19, 208, 43, 237, 62, 255, 87];
  * @category Lock
  * @category generated
  */
-function createLockInstruction(accounts, programId = new web3.PublicKey('mtokYxNhZEihbDq3r6LX22pLKnpuQvXV5kwhgCDCWw4')) {
+function createLockInstruction(accounts, programId = new web3.PublicKey('ocp4vWUzA2z2XMYJ3QhM9vWdyoyoQwAFJhRdVTbvo9E')) {
     const [data] = exports.lockStruct.serialize({
         instructionDiscriminator: exports.lockInstructionDiscriminator,
     });
