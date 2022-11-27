@@ -20,7 +20,7 @@ test-bpf = []
 anchor-lang = { version = "0.25.0", features = ["init-if-needed"] }
 anchor-spl = { version = "0.25.0" }
 community-managed-token = { version = "0.1.3", features = ["no-entrypoint"] }
-json-rules-engine-fork = "0.9.4"
+json-rules-engine-fork = "0.9.5"
 mpl-token-metadata = { version = "1.6.1", features = ["no-entrypoint"] }
 serde = { version = "1.0", features = ["derive"] }
 serde_json = "1.0.88"

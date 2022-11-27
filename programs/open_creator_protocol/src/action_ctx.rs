@@ -406,6 +406,35 @@ mod tests {
     }
 
     #[test]
+    fn test_policy_with_metadata_name_regex() {
+        let mut action_ctx = action_ctx_fixture();
+        let mut metadata = metadata_ctx_fixture();
+        metadata.name = "NFT #1 (frozen)".to_string();
+        action_ctx.metadata = Some(metadata);
+
+        let mut policy = policy_fixture();
+        policy.json_rule = r#"
+          {"conditions":{"field":"metadata/name","operator":"string_matches","value":"\\(frozen\\)"},"events":[]}
+        "#.into();
+        assert!(policy.valid().is_ok());
+        assert!(policy.matches(&action_ctx).is_ok());
+
+        let mut policy = policy_fixture();
+        policy.json_rule = r#"
+          {"conditions":{"field":"metadata/name","operator":"string_matches","value":""},"events":[]}
+        "#.into();
+        assert!(policy.valid().is_ok());
+        assert!(policy.matches(&action_ctx).is_ok());
+
+        let mut policy = policy_fixture();
+        policy.json_rule = r#"
+          {"conditions":{"field":"metadata/name","operator":"string_matches","value":"SFT"},"events":[]}
+        "#.into();
+        assert!(policy.valid().is_ok());
+        assert!(policy.matches(&action_ctx).is_err());
+    }
+
+    #[test]
     fn test_policy_with_derived_datetime() {
         let mut action_ctx = action_ctx_fixture();
         action_ctx.mint_state.derived_datetime = 100.into();
