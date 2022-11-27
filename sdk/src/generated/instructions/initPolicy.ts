@@ -37,8 +37,7 @@ export const initPolicyStruct = new beet.FixableBeetArgsStruct<
  * Accounts required by the _initPolicy_ instruction
  *
  * @property [_writable_] policy
- * @property [**signer**] authority
- * @property [_writable_, **signer**] payer
+ * @property [_writable_, **signer**] authority
  * @category Instructions
  * @category InitPolicy
  * @category generated
@@ -46,7 +45,6 @@ export const initPolicyStruct = new beet.FixableBeetArgsStruct<
 export type InitPolicyInstructionAccounts = {
   policy: web3.PublicKey
   authority: web3.PublicKey
-  payer: web3.PublicKey
   systemProgram?: web3.PublicKey
 }
 
@@ -81,11 +79,6 @@ export function createInitPolicyInstruction(
     },
     {
       pubkey: accounts.authority,
-      isWritable: false,
-      isSigner: true,
-    },
-    {
-      pubkey: accounts.payer,
       isWritable: true,
       isSigner: true,
     },

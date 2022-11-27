@@ -5,9 +5,12 @@
  * See: https://github.com/metaplex-foundation/solita
  */
 
+import * as web3 from '@solana/web3.js'
 import * as beet from '@metaplex-foundation/beet'
+import * as beetSolana from '@metaplex-foundation/beet-solana'
 export type UpdatePolicyArg = {
   jsonRule: string
+  authority: web3.PublicKey
 }
 
 /**
@@ -16,6 +19,9 @@ export type UpdatePolicyArg = {
  */
 export const updatePolicyArgBeet =
   new beet.FixableBeetArgsStruct<UpdatePolicyArg>(
-    [['jsonRule', beet.utf8String]],
+    [
+      ['jsonRule', beet.utf8String],
+      ['authority', beetSolana.publicKey],
+    ],
     'UpdatePolicyArg'
   )

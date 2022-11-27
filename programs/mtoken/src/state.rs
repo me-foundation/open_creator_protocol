@@ -36,8 +36,8 @@ impl MintState {
 pub struct Policy {
     pub version: u8,
     pub bump: [u8; 1],
-    pub update_authority: Pubkey,
-    pub update_authority_nonce: [u8; 1],
+    pub uuid: Pubkey,
+    pub authority: Pubkey,
     pub json_rule: String,
 }
 
@@ -54,6 +54,10 @@ impl Policy {
         // make sure the rule is valid
         serde_json::from_str::<Rule>(&self.json_rule).unwrap();
         Ok(())
+    }
+
+    pub fn is_managed(&self) -> bool {
+        self.authority.to_string() == Policy::MANAGED_AUTHORITY
     }
 
     pub fn matches(&self, ctx: &ActionCtx) -> Result<()> {
@@ -73,13 +77,8 @@ impl Policy {
         Ok(())
     }
 
-    pub fn signer_seeds(&self) -> [&[u8]; 4] {
-        [
-            Policy::SEED.as_bytes(),
-            self.update_authority.as_ref(),
-            &self.update_authority_nonce,
-            &self.bump,
-        ]
+    pub fn signer_seeds(&self) -> [&[u8]; 3] {
+        [Policy::SEED.as_bytes(), self.uuid.as_ref(), &self.bump]
     }
 
     pub fn get_freeze_authority(&self, upstream_authority: Pubkey) -> Pubkey {

@@ -9,8 +9,7 @@ import * as web3 from '@solana/web3.js'
 import * as beetSolana from '@metaplex-foundation/beet-solana'
 import * as beet from '@metaplex-foundation/beet'
 export type InitPolicyArg = {
-  updateAuthority: web3.PublicKey
-  updateAuthorityNonce: number
+  uuid: web3.PublicKey
   jsonRule: string
 }
 
@@ -20,8 +19,7 @@ export type InitPolicyArg = {
  */
 export const initPolicyArgBeet = new beet.FixableBeetArgsStruct<InitPolicyArg>(
   [
-    ['updateAuthority', beetSolana.publicKey],
-    ['updateAuthorityNonce', beet.u8],
+    ['uuid', beetSolana.publicKey],
     ['jsonRule', beet.utf8String],
   ],
   'InitPolicyArg'

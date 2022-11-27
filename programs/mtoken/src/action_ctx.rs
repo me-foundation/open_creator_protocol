@@ -208,8 +208,8 @@ mod tests {
         Policy {
             version: 0,
             bump: [0; 1],
-            update_authority: Pubkey::new_unique(),
-            update_authority_nonce: [0; 1],
+            authority: Pubkey::new_unique(),
+            uuid: Pubkey::new_unique(),
             json_rule:r#"{"conditions":{"and":[{"field":"action","operator":"string_not_equals","value":""}]},"events":[]}"#.to_string(),
         }
     }

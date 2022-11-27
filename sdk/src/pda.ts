@@ -6,14 +6,12 @@ import { PROGRAM_ID } from "./generated";
 export const CMT_PROGRAM = new PublicKey("CMTQqjzH6Anr9XcPVt73EFDTjWkJWPzH7H6DtvhHcyzV");
 
 export const findPolicyPk = (
-  update_authority: PublicKey,
-  update_authority_nonce = 0
+  uuid: PublicKey,
 ) => {
   return findProgramAddressSync(
     [
       utils.bytes.utf8.encode("policy"),
-      update_authority.toBuffer(),
-      Uint8Array.from([update_authority_nonce]),
+      uuid.toBuffer(),
     ],
     PROGRAM_ID
   )[0];
