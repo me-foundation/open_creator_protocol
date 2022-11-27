@@ -20,7 +20,7 @@ pub struct UpdatePolicyCtx<'info> {
             authority.key().to_string() == Policy::MANAGED_AUTHORITY
         ) @ MTokenErrorCode::InvalidAuthority,
 
-        // only MANAGED_AUTHORITY can set the future policy.authority to be MANAGED_AUTHORITY
+        // only MANAGED_AUTHORITY can set the arg.authority to be MANAGED_AUTHORITY
         constraint = (
             arg.authority.to_string() != Policy::MANAGED_AUTHORITY ||
             authority.key().to_string() == Policy::MANAGED_AUTHORITY
