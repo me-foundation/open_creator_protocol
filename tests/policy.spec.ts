@@ -5,8 +5,8 @@ import {
   createUpdatePolicyInstruction,
   Policy,
 } from "../sdk/src/generated";
-import { findPolicyPk } from "../sdk/src/pda";
-import { airdrop, conn, process_tx } from "./utils";
+import { findPolicyPk, process_tx } from "../sdk/src/pda";
+import { airdrop, conn } from "./utils";
 
 describe("policy", () => {
   const uuid = Keypair.generate().publicKey;
@@ -32,7 +32,7 @@ describe("policy", () => {
         { policy: findPolicyPk(uuid), authority: alice.publicKey },
         { arg: { uuid, jsonRule } }
       );
-      await process_tx([ix], [alice]);
+      await process_tx(conn, [ix], [alice]);
       const policy = await Policy.fromAccountAddress(
         conn,
         findPolicyPk(uuid)
@@ -57,7 +57,7 @@ describe("policy", () => {
         { policy: findPolicyPk(uuid), authority: alice.publicKey },
         { arg: { uuid, jsonRule } }
       );
-      await process_tx([ix], [alice]);
+      await process_tx(conn, [ix], [alice]);
       const policy = await Policy.fromAccountAddress(
         conn,
         findPolicyPk(uuid)
@@ -84,7 +84,7 @@ describe("policy", () => {
         { policy: findPolicyPk(uuid), authority: alice.publicKey },
         { arg: { uuid, jsonRule } }
       );
-      await process_tx([ix], [alice]);
+      await process_tx(conn, [ix], [alice]);
       const policy = await Policy.fromAccountAddress(
         conn,
         findPolicyPk(uuid)
@@ -106,7 +106,7 @@ describe("policy", () => {
         { policy: findPolicyPk(uuid), authority: alice.publicKey },
         { arg: { authority: bob.publicKey, jsonRule } }
       );
-      await process_tx([ix], [alice]);
+      await process_tx(conn, [ix], [alice]);
       {
         const policy = await Policy.fromAccountAddress(
           conn,
@@ -119,7 +119,7 @@ describe("policy", () => {
         { policy: findPolicyPk(uuid), authority: bob.publicKey },
         { arg: { authority: alice.publicKey, jsonRule } }
       );
-      await process_tx([ix], [bob]);
+      await process_tx(conn, [ix], [bob]);
       {
         const policy = await Policy.fromAccountAddress(
           conn,
@@ -129,7 +129,7 @@ describe("policy", () => {
       }
 
       try {
-        await process_tx([ix], [bob]);
+        await process_tx(conn, [ix], [bob]);
         assert.fail("should have failed");
       } catch (e: any) {
         assert.include(e.message, "Transaction simulation failed");

@@ -12,7 +12,7 @@ pub struct UpdatePolicyArg {
 #[instruction(arg: UpdatePolicyArg)]
 pub struct UpdatePolicyCtx<'info> {
     #[account(mut)]
-    policy: Account<'info, Policy>,
+    policy: Box<Account<'info, Policy>>,
     #[account(
         // only policy.authority or MANAGED_AUTHORITY can update the policy
         constraint = (
