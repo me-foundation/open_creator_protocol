@@ -1,28 +1,33 @@
-import { Connection, Keypair, LAMPORTS_PER_SOL, PublicKey, Transaction, TransactionInstruction } from "@solana/web3.js";
+import * as anchor from "@project-serum/anchor";
+import { Keypair, LAMPORTS_PER_SOL, PublicKey, Transaction, TransactionInstruction } from "@solana/web3.js";
+
+export const conn = new anchor.AnchorProvider(
+  anchor.AnchorProvider.env().connection,
+  new anchor.Wallet(Keypair.generate()),
+  { commitment: "confirmed" }
+).connection;
 
 export const airdrop = async (
-  connection: Connection,
   to: PublicKey,
   amount: number
 ) => {
-  await connection.confirmTransaction({
-    ...(await connection.getLatestBlockhash()),
-    signature: await connection.requestAirdrop(to, amount * LAMPORTS_PER_SOL),
+  await conn.confirmTransaction({
+    ...(await conn.getLatestBlockhash()),
+    signature: await conn.requestAirdrop(to, amount * LAMPORTS_PER_SOL),
   });
 };
 
 export const process_tx = async (
-  connection: Connection,
   ixs: TransactionInstruction[],
-  signers: Keypair[]
+  signers: Keypair[],
 ) => {
   const tx = new Transaction();
   tx.feePayer = signers[0].publicKey;
-  tx.recentBlockhash = (await connection.getLatestBlockhash()).blockhash;
+  tx.recentBlockhash = (await conn.getLatestBlockhash()).blockhash;
   tx.add(...ixs);
   tx.partialSign(...signers);
   try {
-    const sig = await connection.sendRawTransaction(tx.serialize());
+    const sig = await conn.sendRawTransaction(tx.serialize());
     console.log({ sig });
     await new Promise((r) => setTimeout(r, 500));
   } catch (e) {
