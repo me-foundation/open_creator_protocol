@@ -9,12 +9,20 @@ pub struct UpdatePolicyArg {
 }
 
 #[derive(Accounts)]
+#[instruction(arg: UpdatePolicyArg)]
 pub struct UpdatePolicyCtx<'info> {
     #[account(mut)]
     policy: Account<'info, Policy>,
     #[account(
+        // only policy.authority or MANAGED_AUTHORITY can update the policy
         constraint = (
             authority.key() == policy.authority ||
+            authority.key().to_string() == Policy::MANAGED_AUTHORITY
+        ) @ MTokenErrorCode::InvalidAuthority,
+
+        // only MANAGED_AUTHORITY can set the future policy.authority to be MANAGED_AUTHORITY
+        constraint = (
+            arg.authority.to_string() != Policy::MANAGED_AUTHORITY ||
             authority.key().to_string() == Policy::MANAGED_AUTHORITY
         ) @ MTokenErrorCode::InvalidAuthority,
     )]
