@@ -162,6 +162,36 @@ impl From<Box<Account<'_, Mint>>> for MintAccountCtx {
 }
 
 #[derive(Default, Serialize, Deserialize)]
+pub struct DatetimeCtx {
+    pub utc_timestamp: i64,
+    pub utc_year: i16,
+    pub utc_month: u8, // 1-12
+    pub utc_month_day: u8,
+    pub utc_week_day: u8, // 0 = Sunday, 1 = Monday, etc.
+    pub utc_year_day: u16,
+    pub utc_hour: u8,
+    pub utc_min: u8,
+    pub utc_sec: u8,
+}
+
+impl From<i64> for DatetimeCtx {
+    fn from(secs: i64) -> Self {
+        let t = time_format::components_utc(secs).expect("invalid timestamp");
+        Self {
+            utc_timestamp: secs,
+            utc_year: t.year,
+            utc_year_day: t.year_day,
+            utc_month: t.month,
+            utc_month_day: t.month_day,
+            utc_week_day: t.week_day,
+            utc_hour: t.hour,
+            utc_min: t.min,
+            utc_sec: t.sec,
+        }
+    }
+}
+
+#[derive(Default, Serialize, Deserialize)]
 pub struct MintStateCtx {
     pub version: u8,
     pub policy: String,
@@ -172,7 +202,7 @@ pub struct MintStateCtx {
 
     // derived from existing fields
     pub derived_cooldown: i64,
-    pub derived_now: i64,
+    pub derived_datetime: DatetimeCtx,
 }
 
 impl From<MintState> for MintStateCtx {
@@ -194,7 +224,7 @@ impl From<MintState> for MintStateCtx {
                 max(0, now - mint_state.last_approved_at),
                 max(0, now - mint_state.last_transferred_at),
             ),
-            derived_now: now,
+            derived_datetime: now.into(),
         }
     }
 }
@@ -376,32 +406,50 @@ mod tests {
     }
 
     #[test]
-    fn test_policy_with_derived_now() {
+    fn test_policy_with_derived_datetime() {
         let mut action_ctx = action_ctx_fixture();
-        action_ctx.mint_state.derived_now = 100;
+        action_ctx.mint_state.derived_datetime = 100.into();
         let mut policy = policy_fixture();
         policy.json_rule = r#"
-          {"conditions":{"field":"mint_state/derived_now","operator":"int_greater_than","value":90},"events":[]}
+          {"conditions":{"field":"mint_state/derived_datetime/utc_timestamp","operator":"int_greater_than","value":90},"events":[]}
         "#.to_string();
         assert!(policy.valid().is_ok());
         assert!(policy.matches(&action_ctx).is_ok());
 
         let mut action_ctx = action_ctx_fixture();
-        action_ctx.mint_state.derived_now = 100;
+        action_ctx.mint_state.derived_datetime = 100.into();
         action_ctx.action = "transfer".to_string();
         let mut policy = policy_fixture();
         policy.json_rule = r#"
-          {"conditions":{"and": [{"field":"mint_state/derived_now","operator":"int_greater_than","value":90}, {"field":"action","operator":"string_equals","value":"transfer"}]},"events":[]}
+          {"conditions":{"and": [{"field":"mint_state/derived_datetime/utc_timestamp","operator":"int_greater_than","value":90}, {"field":"action","operator":"string_equals","value":"transfer"}]},"events":[]}
         "#.to_string();
         assert!(policy.valid().is_ok());
         assert!(policy.matches(&action_ctx).is_ok());
 
         let mut action_ctx = action_ctx_fixture();
-        action_ctx.mint_state.derived_now = 100;
+        action_ctx.mint_state.derived_datetime = 100.into();
         action_ctx.action = "transfer".to_string();
         let mut policy = policy_fixture();
         policy.json_rule = r#"
-          {"conditions":{"and": [{"field":"mint_state/derived_now","operator":"int_greater_than","value":110}, {"field":"action","operator":"string_equals","value":"transfer"}]},"events":[]}
+          {"conditions":{"and": [{"field":"mint_state/derived_datetime/utc_timestamp","operator":"int_greater_than","value":110}, {"field":"action","operator":"string_equals","value":"transfer"}]},"events":[]}
+        "#.to_string();
+        assert!(policy.valid().is_ok());
+        assert!(policy.matches(&action_ctx).is_err());
+
+        let mut action_ctx = action_ctx_fixture();
+        action_ctx.mint_state.derived_datetime = 100.into();
+        let mut policy = policy_fixture();
+        policy.json_rule = r#"
+          {"conditions":{"and": [{"field":"mint_state/derived_datetime/utc_hour","operator":"int_in","value":[0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11]}]},"events":[]}
+        "#.to_string();
+        assert!(policy.valid().is_ok());
+        assert!(policy.matches(&action_ctx).is_ok());
+
+        let mut action_ctx = action_ctx_fixture();
+        action_ctx.mint_state.derived_datetime = (100 + 3600 * 12).into();
+        let mut policy = policy_fixture();
+        policy.json_rule = r#"
+          {"conditions":{"and": [{"field":"mint_state/derived_datetime/utc_hour","operator":"int_in","value":[0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11]}]},"events":[]}
         "#.to_string();
         assert!(policy.valid().is_ok());
         assert!(policy.matches(&action_ctx).is_err());

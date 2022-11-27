@@ -27,6 +27,7 @@ serde_json = "1.0.88"
 solana-program = "^1.9.28"
 spl-associated-token-account = { version = "~1.0.5", features = ["no-entrypoint"] }
 spl-token = { version = "^3.3.0", features = ["no-entrypoint"] }
+time-format = "1.1.2"
 
 [dev-dependencies]
 solana-program-test = "^1.9.28"
