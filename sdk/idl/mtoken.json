@@ -12,11 +12,6 @@
         },
         {
           "name": "authority",
-          "isMut": false,
-          "isSigner": true
-        },
-        {
-          "name": "payer",
           "isMut": true,
           "isSigner": true
         },
@@ -716,17 +711,12 @@
             }
           },
           {
-            "name": "updateAuthority",
+            "name": "uuid",
             "type": "publicKey"
           },
           {
-            "name": "updateAuthorityNonce",
-            "type": {
-              "array": [
-                "u8",
-                1
-              ]
-            }
+            "name": "authority",
+            "type": "publicKey"
           },
           {
             "name": "jsonRule",
@@ -743,12 +733,8 @@
         "kind": "struct",
         "fields": [
           {
-            "name": "updateAuthority",
+            "name": "uuid",
             "type": "publicKey"
-          },
-          {
-            "name": "updateAuthorityNonce",
-            "type": "u8"
           },
           {
             "name": "jsonRule",
@@ -765,6 +751,10 @@
           {
             "name": "jsonRule",
             "type": "string"
+          },
+          {
+            "name": "authority",
+            "type": "publicKey"
           }
         ]
       }

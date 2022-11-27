@@ -17,8 +17,8 @@ import * as beetSolana from '@metaplex-foundation/beet-solana'
 export type PolicyArgs = {
   version: number
   bump: number[] /* size: 1 */
-  updateAuthority: web3.PublicKey
-  updateAuthorityNonce: number[] /* size: 1 */
+  uuid: web3.PublicKey
+  authority: web3.PublicKey
   jsonRule: string
 }
 
@@ -34,8 +34,8 @@ export class Policy implements PolicyArgs {
   private constructor(
     readonly version: number,
     readonly bump: number[] /* size: 1 */,
-    readonly updateAuthority: web3.PublicKey,
-    readonly updateAuthorityNonce: number[] /* size: 1 */,
+    readonly uuid: web3.PublicKey,
+    readonly authority: web3.PublicKey,
     readonly jsonRule: string
   ) {}
 
@@ -46,8 +46,8 @@ export class Policy implements PolicyArgs {
     return new Policy(
       args.version,
       args.bump,
-      args.updateAuthority,
-      args.updateAuthorityNonce,
+      args.uuid,
+      args.authority,
       args.jsonRule
     )
   }
@@ -155,8 +155,8 @@ export class Policy implements PolicyArgs {
     return {
       version: this.version,
       bump: this.bump,
-      updateAuthority: this.updateAuthority.toBase58(),
-      updateAuthorityNonce: this.updateAuthorityNonce,
+      uuid: this.uuid.toBase58(),
+      authority: this.authority.toBase58(),
       jsonRule: this.jsonRule,
     }
   }
@@ -176,8 +176,8 @@ export const policyBeet = new beet.FixableBeetStruct<
     ['accountDiscriminator', beet.uniformFixedSizeArray(beet.u8, 8)],
     ['version', beet.u8],
     ['bump', beet.uniformFixedSizeArray(beet.u8, 1)],
-    ['updateAuthority', beetSolana.publicKey],
-    ['updateAuthorityNonce', beet.uniformFixedSizeArray(beet.u8, 1)],
+    ['uuid', beetSolana.publicKey],
+    ['authority', beetSolana.publicKey],
     ['jsonRule', beet.utf8String],
   ],
   Policy.fromArgs,
