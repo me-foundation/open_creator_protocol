@@ -59,7 +59,7 @@ export const lockInstructionDiscriminator = [21, 19, 208, 43, 237, 62, 255, 87]
  */
 export function createLockInstruction(
   accounts: LockInstructionAccounts,
-  programId = new web3.PublicKey('mtokYxNhZEihbDq3r6LX22pLKnpuQvXV5kwhgCDCWw4')
+  programId = new web3.PublicKey('ocp4vWUzA2z2XMYJ3QhM9vWdyoyoQwAFJhRdVTbvo9E')
 ) {
   const [data] = lockStruct.serialize({
     instructionDiscriminator: lockInstructionDiscriminator,

@@ -1,6 +1,6 @@
-# mtoken
+# Open Creator Protocol
 
-mtoken is a super flexible json-rules-engine extension of [Community Managed Token (CMT)](https://github.com/magiceden-oss/community-managed-token).
+Open Creator Protocol is an open protocol for creators to build utilities and the policy engine for their tokens.
 
 ## Architecture
 
