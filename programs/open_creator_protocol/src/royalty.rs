@@ -129,6 +129,8 @@ impl DynamicRoyalty {
 
 #[cfg(test)]
 mod tests {
+    use solana_program::native_token::LAMPORTS_PER_SOL;
+
     use super::*;
 
     #[test]
@@ -148,6 +150,23 @@ mod tests {
             assert_eq!(price_linear.get_royalty_bp(1000, metadat_roaylty_bp).unwrap(), 10);
             assert_eq!(price_linear.get_royalty_bp(10000, metadat_roaylty_bp).unwrap(), 10);
             assert_eq!(price_linear.get_royalty_bp(500, metadat_roaylty_bp).unwrap(), 560);
+        }
+
+        // happy code path - 2
+        {
+            let price_linear = DynamicRoyaltyPriceLinear {
+                price_mint: None,
+                start_price: LAMPORTS_PER_SOL,
+                end_price: 3 * LAMPORTS_PER_SOL,
+                start_multiplier_bp: 10000, // start from 100%
+                end_multiplier_bp: 5000,    // end at 50%
+            };
+            let metadat_roaylty_bp = 500;
+            assert_eq!(price_linear.get_royalty_bp(0, metadat_roaylty_bp).unwrap(), 500);
+            assert_eq!(price_linear.get_royalty_bp(1 * LAMPORTS_PER_SOL, metadat_roaylty_bp).unwrap(), 500);
+            assert_eq!(price_linear.get_royalty_bp(2 * LAMPORTS_PER_SOL, metadat_roaylty_bp).unwrap(), 375);
+            assert_eq!(price_linear.get_royalty_bp(3 * LAMPORTS_PER_SOL, metadat_roaylty_bp).unwrap(), 250);
+            assert_eq!(price_linear.get_royalty_bp(100 * LAMPORTS_PER_SOL, metadat_roaylty_bp).unwrap(), 250);
         }
 
         // cannot exceed the 10000 from get_royalty_bp
