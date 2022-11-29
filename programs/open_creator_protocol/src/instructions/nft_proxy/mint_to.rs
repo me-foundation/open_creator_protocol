@@ -1,4 +1,4 @@
-use crate::action_ctx::*;
+use crate::action::*;
 use crate::errors::OCPErrorCode;
 use crate::state::*;
 use anchor_lang::prelude::*;
@@ -58,9 +58,7 @@ impl From<&mut MintToCtx<'_>> for ActionCtx {
             to: None,
             to_account: None,
             mint: ctx.mint.key().to_string(),
-            metadata: Some(
-                to_metadata_ctx(&ctx.mint.key(), &ctx.metadata).expect("invalid metadata"),
-            ),
+            metadata: Some(to_metadata_ctx(&ctx.mint.key(), &ctx.metadata).expect("invalid metadata")),
             mint_account: Some(ctx.mint.clone().into()),
             mint_state: ctx.mint_state.clone().into_inner().into(),
         };
@@ -76,12 +74,7 @@ pub fn handler<'info>(ctx: Context<'_, '_, '_, 'info, MintToCtx<'info>>) -> Resu
     ctx.accounts.policy.matches(&action_ctx)?;
 
     invoke_signed(
-        &create_mint_to_instruction(
-            &ctx.accounts.mint.key(),
-            &ctx.accounts.from.key(),
-            &ctx.accounts.policy.key(),
-            1,
-        )?,
+        &create_mint_to_instruction(&ctx.accounts.mint.key(), &ctx.accounts.from.key(), &ctx.accounts.policy.key(), 1)?,
         &[
             ctx.accounts.mint.to_account_info(),
             ctx.accounts.from_account.to_account_info(),

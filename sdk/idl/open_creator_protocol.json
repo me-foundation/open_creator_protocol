@@ -1,5 +1,5 @@
 {
-  "version": "0.1.2",
+  "version": "0.2.0",
   "name": "open_creator_protocol",
   "instructions": [
     {
@@ -8,6 +8,11 @@
         {
           "name": "policy",
           "isMut": true,
+          "isSigner": false
+        },
+        {
+          "name": "uuid",
+          "isMut": false,
           "isSigner": false
         },
         {
@@ -57,6 +62,27 @@
           }
         }
       ]
+    },
+    {
+      "name": "closePolicy",
+      "accounts": [
+        {
+          "name": "policy",
+          "isMut": true,
+          "isSigner": false
+        },
+        {
+          "name": "authority",
+          "isMut": false,
+          "isSigner": true
+        },
+        {
+          "name": "systemProgram",
+          "isMut": false,
+          "isSigner": false
+        }
+      ],
+      "args": []
     },
     {
       "name": "wrap",
@@ -719,8 +745,18 @@
             "type": "publicKey"
           },
           {
+            "name": "dynamicRoyalty",
+            "type": {
+              "option": {
+                "defined": "DynamicRoyalty"
+              }
+            }
+          },
+          {
             "name": "jsonRule",
-            "type": "string"
+            "type": {
+              "option": "string"
+            }
           }
         ]
       }
@@ -733,12 +769,18 @@
         "kind": "struct",
         "fields": [
           {
-            "name": "uuid",
-            "type": "publicKey"
+            "name": "jsonRule",
+            "type": {
+              "option": "string"
+            }
           },
           {
-            "name": "jsonRule",
-            "type": "string"
+            "name": "dynamicRoyalty",
+            "type": {
+              "option": {
+                "defined": "DynamicRoyalty"
+              }
+            }
           }
         ]
       }
@@ -749,12 +791,118 @@
         "kind": "struct",
         "fields": [
           {
-            "name": "jsonRule",
-            "type": "string"
-          },
-          {
             "name": "authority",
             "type": "publicKey"
+          },
+          {
+            "name": "jsonRule",
+            "type": {
+              "option": "string"
+            }
+          },
+          {
+            "name": "dynamicRoyalty",
+            "type": {
+              "option": {
+                "defined": "DynamicRoyalty"
+              }
+            }
+          }
+        ]
+      }
+    },
+    {
+      "name": "DynamicRoyaltyPriceLinear",
+      "type": {
+        "kind": "struct",
+        "fields": [
+          {
+            "name": "priceMint",
+            "type": {
+              "option": "publicKey"
+            }
+          },
+          {
+            "name": "startPrice",
+            "type": "u64"
+          },
+          {
+            "name": "endPrice",
+            "type": "u64"
+          },
+          {
+            "name": "startMultiplierBp",
+            "type": "u16"
+          },
+          {
+            "name": "endMultiplierBp",
+            "type": "u16"
+          }
+        ]
+      }
+    },
+    {
+      "name": "DynamicRoyalty",
+      "type": {
+        "kind": "struct",
+        "fields": [
+          {
+            "name": "version",
+            "type": "u8"
+          },
+          {
+            "name": "kind",
+            "type": "u8"
+          },
+          {
+            "name": "overrideRoyaltyBp",
+            "type": {
+              "option": "u16"
+            }
+          },
+          {
+            "name": "kindPriceLinear",
+            "type": {
+              "option": {
+                "defined": "DynamicRoyaltyPriceLinear"
+              }
+            }
+          },
+          {
+            "name": "reserved0",
+            "type": {
+              "array": [
+                "u8",
+                32
+              ]
+            }
+          },
+          {
+            "name": "reserved1",
+            "type": {
+              "array": [
+                "u8",
+                32
+              ]
+            }
+          },
+          {
+            "name": "reserved2",
+            "type": {
+              "array": [
+                "u8",
+                32
+              ]
+            }
+          },
+          {
+            "name": "reserved3",
+            "type": {
+              "array": [
+                "u8",
+                32
+              ]
+            }
           }
         ]
       }
@@ -815,6 +963,16 @@
       "code": 6010,
       "name": "AccountNotFound",
       "msg": "Account not found in instruction"
+    },
+    {
+      "code": 6011,
+      "name": "InvalidDynamicRoyalty",
+      "msg": "Invalid dynamic royalty"
+    },
+    {
+      "code": 6012,
+      "name": "NumericalOverflow",
+      "msg": "Numerical overflow"
     }
   ],
   "metadata": {

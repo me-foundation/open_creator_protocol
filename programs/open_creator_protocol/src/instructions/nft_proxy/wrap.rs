@@ -1,4 +1,4 @@
-use crate::action_ctx::*;
+use crate::action::*;
 use crate::errors::OCPErrorCode;
 use crate::state::*;
 use anchor_lang::prelude::*;
@@ -56,9 +56,7 @@ impl From<&mut WrapCtx<'_>> for ActionCtx {
             to: None,
             to_account: None,
             mint: ctx.mint.key().to_string(),
-            metadata: Some(
-                to_metadata_ctx(&ctx.mint.key(), &ctx.metadata).expect("invalid metadata"),
-            ),
+            metadata: Some(to_metadata_ctx(&ctx.mint.key(), &ctx.metadata).expect("invalid metadata")),
             mint_account: None,
             mint_state: ctx.mint_state.clone().into_inner().into(),
         };

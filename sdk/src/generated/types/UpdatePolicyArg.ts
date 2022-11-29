@@ -8,9 +8,11 @@
 import * as web3 from '@solana/web3.js'
 import * as beet from '@metaplex-foundation/beet'
 import * as beetSolana from '@metaplex-foundation/beet-solana'
+import { DynamicRoyalty, dynamicRoyaltyBeet } from './DynamicRoyalty'
 export type UpdatePolicyArg = {
-  jsonRule: string
   authority: web3.PublicKey
+  jsonRule: beet.COption<string>
+  dynamicRoyalty: beet.COption<DynamicRoyalty>
 }
 
 /**
@@ -20,8 +22,9 @@ export type UpdatePolicyArg = {
 export const updatePolicyArgBeet =
   new beet.FixableBeetArgsStruct<UpdatePolicyArg>(
     [
-      ['jsonRule', beet.utf8String],
       ['authority', beetSolana.publicKey],
+      ['jsonRule', beet.coption(beet.utf8String)],
+      ['dynamicRoyalty', beet.coption(dynamicRoyaltyBeet)],
     ],
     'UpdatePolicyArg'
   )

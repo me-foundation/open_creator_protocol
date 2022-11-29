@@ -262,6 +262,52 @@ createErrorFromNameLookup.set(
 )
 
 /**
+ * InvalidDynamicRoyalty: 'Invalid dynamic royalty'
+ *
+ * @category Errors
+ * @category generated
+ */
+export class InvalidDynamicRoyaltyError extends Error {
+  readonly code: number = 0x177b
+  readonly name: string = 'InvalidDynamicRoyalty'
+  constructor() {
+    super('Invalid dynamic royalty')
+    if (typeof Error.captureStackTrace === 'function') {
+      Error.captureStackTrace(this, InvalidDynamicRoyaltyError)
+    }
+  }
+}
+
+createErrorFromCodeLookup.set(0x177b, () => new InvalidDynamicRoyaltyError())
+createErrorFromNameLookup.set(
+  'InvalidDynamicRoyalty',
+  () => new InvalidDynamicRoyaltyError()
+)
+
+/**
+ * NumericalOverflow: 'Numerical overflow'
+ *
+ * @category Errors
+ * @category generated
+ */
+export class NumericalOverflowError extends Error {
+  readonly code: number = 0x177c
+  readonly name: string = 'NumericalOverflow'
+  constructor() {
+    super('Numerical overflow')
+    if (typeof Error.captureStackTrace === 'function') {
+      Error.captureStackTrace(this, NumericalOverflowError)
+    }
+  }
+}
+
+createErrorFromCodeLookup.set(0x177c, () => new NumericalOverflowError())
+createErrorFromNameLookup.set(
+  'NumericalOverflow',
+  () => new NumericalOverflowError()
+)
+
+/**
  * Attempts to resolve a custom program error from the provided error code.
  * @category Errors
  * @category generated

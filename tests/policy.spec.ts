@@ -1,11 +1,21 @@
-import { Keypair, TransactionInstruction } from "@solana/web3.js";
+import * as anchor from "@project-serum/anchor";
+import {
+  Keypair,
+  LAMPORTS_PER_SOL,
+  TransactionInstruction,
+} from "@solana/web3.js";
 import { assert } from "chai";
 import {
+  createClosePolicyInstruction,
   createInitPolicyInstruction,
   createUpdatePolicyInstruction,
   Policy,
 } from "../sdk/src/generated";
-import { findPolicyPk, process_tx } from "../sdk/src/pda";
+import {
+  createDynamicRoyaltyStruct,
+  findPolicyPk,
+  process_tx,
+} from "../sdk/src/pda";
 import { airdrop, conn } from "./utils";
 
 describe("policy", () => {
@@ -29,14 +39,42 @@ describe("policy", () => {
         },
       });
       const ix = createInitPolicyInstruction(
-        { policy: findPolicyPk(uuid), authority: alice.publicKey },
-        { arg: { uuid, jsonRule } }
+        {
+          policy: findPolicyPk(uuid),
+          authority: alice.publicKey,
+          uuid,
+        },
+        { arg: { jsonRule, dynamicRoyalty: null } }
       );
       await process_tx(conn, [ix], [alice]);
-      const policy = await Policy.fromAccountAddress(
-        conn,
-        findPolicyPk(uuid)
+      const policy = await Policy.fromAccountAddress(conn, findPolicyPk(uuid));
+      assert.isTrue(policy.authority.equals(alice.publicKey));
+    });
+
+    it("happy path with dynamic royalty", async () => {
+      const uuid = Keypair.generate().publicKey;
+      const jsonRule = JSON.stringify({
+        events: [],
+        conditions: {
+          and: [{ field: "action", operator: "string_not_equals", value: "" }],
+        },
+      });
+      const dynamicRoyalty = createDynamicRoyaltyStruct({
+        startPrice: new anchor.BN(LAMPORTS_PER_SOL),
+        endPrice: new anchor.BN(LAMPORTS_PER_SOL * 2),
+        startMultiplierBp: 10000,
+        endMultiplierBp: 5000,
+      });
+      const ix = createInitPolicyInstruction(
+        {
+          policy: findPolicyPk(uuid),
+          authority: alice.publicKey,
+          uuid,
+        },
+        { arg: { jsonRule, dynamicRoyalty } }
       );
+      await process_tx(conn, [ix], [alice]);
+      const policy = await Policy.fromAccountAddress(conn, findPolicyPk(uuid));
       assert.isTrue(policy.authority.equals(alice.publicKey));
     });
 
@@ -54,14 +92,15 @@ describe("policy", () => {
       });
       const uuid = Keypair.generate().publicKey;
       const ix = createInitPolicyInstruction(
-        { policy: findPolicyPk(uuid), authority: alice.publicKey },
-        { arg: { uuid, jsonRule } }
+        {
+          policy: findPolicyPk(uuid),
+          authority: alice.publicKey,
+          uuid,
+        },
+        { arg: { jsonRule, dynamicRoyalty: null } }
       );
       await process_tx(conn, [ix], [alice]);
-      const policy = await Policy.fromAccountAddress(
-        conn,
-        findPolicyPk(uuid)
-      );
+      const policy = await Policy.fromAccountAddress(conn, findPolicyPk(uuid));
       assert.isTrue(policy.authority.equals(alice.publicKey));
     });
 
@@ -81,14 +120,15 @@ describe("policy", () => {
       });
       const uuid = Keypair.generate().publicKey;
       const ix = createInitPolicyInstruction(
-        { policy: findPolicyPk(uuid), authority: alice.publicKey },
-        { arg: { uuid, jsonRule } }
+        {
+          policy: findPolicyPk(uuid),
+          authority: alice.publicKey,
+          uuid,
+        },
+        { arg: { jsonRule, dynamicRoyalty: null } }
       );
       await process_tx(conn, [ix], [alice]);
-      const policy = await Policy.fromAccountAddress(
-        conn,
-        findPolicyPk(uuid)
-      );
+      const policy = await Policy.fromAccountAddress(conn, findPolicyPk(uuid));
       assert.isTrue(policy.authority.equals(alice.publicKey));
     });
   });
@@ -104,7 +144,7 @@ describe("policy", () => {
       });
       ix = createUpdatePolicyInstruction(
         { policy: findPolicyPk(uuid), authority: alice.publicKey },
-        { arg: { authority: bob.publicKey, jsonRule } }
+        { arg: { authority: bob.publicKey, jsonRule, dynamicRoyalty: null } }
       );
       await process_tx(conn, [ix], [alice]);
       {
@@ -117,7 +157,7 @@ describe("policy", () => {
 
       ix = createUpdatePolicyInstruction(
         { policy: findPolicyPk(uuid), authority: bob.publicKey },
-        { arg: { authority: alice.publicKey, jsonRule } }
+        { arg: { authority: alice.publicKey, jsonRule, dynamicRoyalty: null } }
       );
       await process_tx(conn, [ix], [bob]);
       {
@@ -133,6 +173,25 @@ describe("policy", () => {
         assert.fail("should have failed");
       } catch (e: any) {
         assert.include(e.message, "Transaction simulation failed");
+      }
+    });
+  });
+
+  describe("Can close policy", () => {
+    it("alice set bob as the authority", async () => {
+      let ix: TransactionInstruction;
+      ix = createClosePolicyInstruction(
+        { policy: findPolicyPk(uuid), authority: alice.publicKey },
+      );
+      await process_tx(conn, [ix], [alice]);
+      try {
+        await Policy.fromAccountAddress(
+          conn,
+          findPolicyPk(uuid)
+        );
+        assert.fail("should have failed");
+      } catch (e: any) {
+        assert.include(e.message, "Unable to find");
       }
     });
   });

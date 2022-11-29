@@ -1,8 +1,9 @@
 #![allow(clippy::result_large_err)]
 
-pub mod action_ctx;
+pub mod action;
 pub mod errors;
 pub mod instructions;
+pub mod royalty;
 pub mod state;
 
 use anchor_lang::prelude::*;
@@ -22,13 +23,15 @@ pub mod open_creator_protocol {
         policy::update_policy::handler(ctx, arg)
     }
 
+    pub fn close_policy(ctx: Context<ClosePolicyCtx>) -> Result<()> {
+        policy::close_policy::handler(ctx)
+    }
+
     pub fn wrap<'info>(ctx: Context<'_, '_, '_, 'info, WrapCtx<'info>>) -> Result<()> {
         nft_proxy::wrap::handler(ctx)
     }
 
-    pub fn init_account<'info>(
-        ctx: Context<'_, '_, '_, 'info, InitAccountCtx<'info>>,
-    ) -> Result<()> {
+    pub fn init_account<'info>(ctx: Context<'_, '_, '_, 'info, InitAccountCtx<'info>>) -> Result<()> {
         nft_proxy::init_account::handler(ctx)
     }
 

@@ -7,8 +7,7 @@ use mpl_token_metadata::{
 };
 use serde::{Deserialize, Serialize};
 use solana_program::{
-    instruction::Instruction, program_option::COption, serialize_utils::read_u16,
-    sysvar::instructions::load_instruction_at_checked,
+    instruction::Instruction, program_option::COption, serialize_utils::read_u16, sysvar::instructions::load_instruction_at_checked,
 };
 use std::cmp::{max, min};
 
@@ -50,8 +49,7 @@ impl ActionCtx {
     pub fn parse_instructions(&mut self, ixs: &AccountInfo<'_>) -> Result<()> {
         let instruction_sysvar = ixs.try_borrow_data()?;
         let mut current: usize = 0;
-        let num_instructions =
-            read_u16(&mut current, &instruction_sysvar).expect("Invalid instruction");
+        let num_instructions = read_u16(&mut current, &instruction_sysvar).expect("Invalid instruction");
         let mut program_ids = Vec::<String>::new();
         for i in 0..num_instructions {
             let ix = load_instruction_at_checked(i.into(), ixs).expect("Failed to get instruction");
@@ -101,21 +99,13 @@ pub fn to_metadata_ctx(mint: &Pubkey, metadata: &AccountInfo) -> Result<Metadata
         primary_sale_happened: parsed_metadata.primary_sale_happened,
         is_mutable: parsed_metadata.is_mutable,
         collection_verified: collection.map(|c| c.verified).unwrap_or(false),
-        collection_key: collection
-            .map(|c| c.key.to_string())
-            .unwrap_or_else(|| "".to_owned()),
+        collection_key: collection.map(|c| c.key.to_string()).unwrap_or_else(|| "".to_owned()),
         name: parsed_metadata.data.name,
         uri: parsed_metadata.data.uri,
         symbol: parsed_metadata.data.symbol,
         seller_fee_basis_points: parsed_metadata.data.seller_fee_basis_points,
-        creators: creators.map(|creators| {
-            creators
-                .iter()
-                .map(|c| c.address.to_string())
-                .collect::<Vec<String>>()
-        }),
-        creators_verified: creators
-            .map(|creators| creators.iter().map(|c| c.verified).collect::<Vec<bool>>()),
+        creators: creators.map(|creators| creators.iter().map(|c| c.address.to_string()).collect::<Vec<String>>()),
+        creators_verified: creators.map(|creators| creators.iter().map(|c| c.verified).collect::<Vec<bool>>()),
     })
 }
 
@@ -203,10 +193,7 @@ impl From<MintState> for MintStateCtx {
             last_transferred_at: mint_state.last_transferred_at,
             transferred_count: mint_state.transferred_count,
 
-            derived_cooldown: min(
-                max(0, now - mint_state.last_approved_at),
-                max(0, now - mint_state.last_transferred_at),
-            ),
+            derived_cooldown: min(max(0, now - mint_state.last_approved_at), max(0, now - mint_state.last_transferred_at)),
             derived_datetime: now.into(),
         }
     }
@@ -221,9 +208,10 @@ mod tests {
         Policy {
             version: 0,
             bump: [0; 1],
-            authority: Pubkey::new_unique(),
             uuid: Pubkey::new_unique(),
-            json_rule:r#"{"conditions":{"and":[{"field":"action","operator":"string_not_equals","value":""}]},"events":[]}"#.to_string(),
+            authority: Pubkey::new_unique(),
+            dynamic_royalty: None,
+            json_rule: Some(r#"{"conditions":{"and":[{"field":"action","operator":"string_not_equals","value":""}]},"events":[]}"#.to_string()),
         }
     }
 
@@ -254,13 +242,7 @@ mod tests {
             update_authority: Pubkey::new_unique().to_string(),
             primary_sale_happened: true,
             is_mutable: true,
-            creators: Some(
-                [
-                    Pubkey::new_unique().to_string(),
-                    Pubkey::new_unique().to_string(),
-                ]
-                .to_vec(),
-            ),
+            creators: Some([Pubkey::new_unique().to_string(), Pubkey::new_unique().to_string()].to_vec()),
             creators_verified: Some(vec![true, false]),
             collection_verified: true,
             collection_key: Pubkey::new_unique().to_string(),
@@ -271,29 +253,47 @@ mod tests {
     fn test_policy_validation() {
         let mut policy = policy_fixture();
 
-        policy.json_rule = r#"
+        policy.json_rule = Some(
+            r#"
           {"conditions":{"not":{"field":"program_ids","operator":"string_does_not_contain_any","value":[PLACEHOLDER]}},"events":[]}
-        "#.replace(
-            "PLACEHOLDER",
-            &(0..10).map(|_| format!("\"{}\"", Pubkey::new_unique().to_string())).collect::<Vec<String>>().join(","),
+        "#
+            .replace(
+                "PLACEHOLDER",
+                &(0..10)
+                    .map(|_| format!("\"{}\"", Pubkey::new_unique().to_string()))
+                    .collect::<Vec<String>>()
+                    .join(","),
+            ),
         );
         assert!(policy.valid().is_ok());
 
         let mut policy = policy_fixture();
-        policy.json_rule = r#"
+        policy.json_rule = Some(
+            r#"
           {"conditions":{"not":{"field":"program_ids","operator":"string_does_not_contain_any","value":[PLACEHOLDER]}},"events":[]}
-        "#.replace(
-            "PLACEHOLDER",
-            &(0..18).map(|_| format!("\"{}\"", Pubkey::new_unique().to_string())).collect::<Vec<String>>().join(","),
+        "#
+            .replace(
+                "PLACEHOLDER",
+                &(0..18)
+                    .map(|_| format!("\"{}\"", Pubkey::new_unique().to_string()))
+                    .collect::<Vec<String>>()
+                    .join(","),
+            ),
         );
         assert!(policy.valid().is_ok());
 
         let mut policy = policy_fixture();
-        policy.json_rule = r#"
+        policy.json_rule = Some(
+            r#"
           {"conditions":{"not":{"field":"program_ids","operator":"string_does_not_contain_any","value":[PLACEHOLDER]}},"events":[]}
-        "#.replace(
-            "PLACEHOLDER",
-            &(0..100).map(|_| format!("\"{}\"", Pubkey::new_unique().to_string())).collect::<Vec<String>>().join(","),
+        "#
+            .replace(
+                "PLACEHOLDER",
+                &(0..100)
+                    .map(|_| format!("\"{}\"", Pubkey::new_unique().to_string()))
+                    .collect::<Vec<String>>()
+                    .join(","),
+            ),
         );
         assert!(policy.valid().is_err());
     }
@@ -311,9 +311,12 @@ mod tests {
     fn test_policy_program_ids_single_allowlist() {
         let program_id = Pubkey::new_unique().to_string();
         let mut policy = policy_fixture();
-        policy.json_rule = r#"
+        policy.json_rule = Some(
+            r#"
           {"conditions":{"and":[{"field":"program_ids","operator":"string_contains","value":"PLACEHOLDER"}]},"events":[]}
-        "#.replace("PLACEHOLDER", &program_id);
+        "#
+            .replace("PLACEHOLDER", &program_id),
+        );
 
         let mut action_ctx = action_ctx_fixture();
         action_ctx.program_ids = vec![program_id];
@@ -328,16 +331,13 @@ mod tests {
 
     #[test]
     fn test_policy_program_ids_multiple_allowlist() {
-        let allowed_program_ids = [
-            Pubkey::new_unique().to_string(),
-            Pubkey::new_unique().to_string(),
-        ];
+        let allowed_program_ids = [Pubkey::new_unique().to_string(), Pubkey::new_unique().to_string()];
         let mut policy = policy_fixture();
-        policy.json_rule = r#"
+        policy.json_rule = Some(
+            r#"
           {"conditions":{"field":"program_ids","operator":"string_is_subset","value":[PLACEHOLDER]},"events":[]}
-        "#.replace(
-            "PLACEHOLDER",
-            &allowed_program_ids.clone().map(|x| format!("\"{}\"", x)).join(","),
+        "#
+            .replace("PLACEHOLDER", &allowed_program_ids.clone().map(|x| format!("\"{}\"", x)).join(",")),
         );
         assert!(policy.valid().is_ok());
 
@@ -358,29 +358,23 @@ mod tests {
 
         // not ok with some other program_id and allowed_program_ids[0]
         let mut action_ctx = action_ctx_fixture();
-        action_ctx.program_ids = vec![
-            Pubkey::new_unique().to_string(),
-            allowed_program_ids.clone()[0].clone(),
-        ];
+        action_ctx.program_ids = vec![Pubkey::new_unique().to_string(), allowed_program_ids.clone()[0].clone()];
         assert!(policy.matches(&action_ctx).is_err());
     }
 
     #[test]
     fn test_policy_with_metadata_policy() {
         let mut action_ctx = action_ctx_fixture();
-        let creators = [
-            Pubkey::new_unique().to_string(),
-            Pubkey::new_unique().to_string(),
-        ];
+        let creators = [Pubkey::new_unique().to_string(), Pubkey::new_unique().to_string()];
         let mut metadata = metadata_ctx_fixture();
         metadata.creators = Some(creators.clone().to_vec());
         action_ctx.metadata = Some(metadata);
         let mut policy = policy_fixture();
-        policy.json_rule = r#"
+        policy.json_rule = Some(
+            r#"
           {"conditions":{"field":"metadata/creators","operator":"string_is_subset","value":[PLACEHOLDER]},"events":[]}
-        "#.replace(
-            "PLACEHOLDER",
-            &creators.clone().map(|x| format!("\"{}\"", x)).join(","),
+        "#
+            .replace("PLACEHOLDER", &creators.clone().map(|x| format!("\"{}\"", x)).join(",")),
         );
         assert!(policy.valid().is_ok());
         assert!(policy.matches(&action_ctx).is_ok());
@@ -394,23 +388,32 @@ mod tests {
         action_ctx.metadata = Some(metadata);
 
         let mut policy = policy_fixture();
-        policy.json_rule = r#"
+        policy.json_rule = Some(
+            r#"
           {"conditions":{"field":"metadata/name","operator":"string_has_substring","value":"(frozen)"},"events":[]}
-        "#.into();
+        "#
+            .into(),
+        );
         assert!(policy.valid().is_ok());
         assert!(policy.matches(&action_ctx).is_ok());
 
         let mut policy = policy_fixture();
-        policy.json_rule = r#"
+        policy.json_rule = Some(
+            r#"
           {"conditions":{"field":"metadata/name","operator":"string_has_substring","value":""},"events":[]}
-        "#.into();
+        "#
+            .into(),
+        );
         assert!(policy.valid().is_ok());
         assert!(policy.matches(&action_ctx).is_ok());
 
         let mut policy = policy_fixture();
-        policy.json_rule = r#"
+        policy.json_rule = Some(
+            r#"
           {"conditions":{"field":"metadata/name","operator":"string_has_substring","value":"SFT"},"events":[]}
-        "#.into();
+        "#
+            .into(),
+        );
         assert!(policy.valid().is_ok());
         assert!(policy.matches(&action_ctx).is_err());
     }
@@ -420,9 +423,12 @@ mod tests {
         let mut action_ctx = action_ctx_fixture();
         action_ctx.mint_state.derived_datetime = 100.into();
         let mut policy = policy_fixture();
-        policy.json_rule = r#"
+        policy.json_rule = Some(
+            r#"
           {"conditions":{"field":"mint_state/derived_datetime/utc_timestamp","operator":"int_greater_than","value":90},"events":[]}
-        "#.to_string();
+        "#
+            .to_string(),
+        );
         assert!(policy.valid().is_ok());
         assert!(policy.matches(&action_ctx).is_ok());
 
@@ -430,9 +436,9 @@ mod tests {
         action_ctx.mint_state.derived_datetime = 100.into();
         action_ctx.action = "transfer".to_string();
         let mut policy = policy_fixture();
-        policy.json_rule = r#"
+        policy.json_rule = Some(r#"
           {"conditions":{"and": [{"field":"mint_state/derived_datetime/utc_timestamp","operator":"int_greater_than","value":90}, {"field":"action","operator":"string_equals","value":"transfer"}]},"events":[]}
-        "#.to_string();
+        "#.to_string());
         assert!(policy.valid().is_ok());
         assert!(policy.matches(&action_ctx).is_ok());
 
@@ -440,27 +446,33 @@ mod tests {
         action_ctx.mint_state.derived_datetime = 100.into();
         action_ctx.action = "transfer".to_string();
         let mut policy = policy_fixture();
-        policy.json_rule = r#"
+        policy.json_rule = Some(r#"
           {"conditions":{"and": [{"field":"mint_state/derived_datetime/utc_timestamp","operator":"int_greater_than","value":110}, {"field":"action","operator":"string_equals","value":"transfer"}]},"events":[]}
-        "#.to_string();
+        "#.to_string());
         assert!(policy.valid().is_ok());
         assert!(policy.matches(&action_ctx).is_err());
 
         let mut action_ctx = action_ctx_fixture();
         action_ctx.mint_state.derived_datetime = 100.into();
         let mut policy = policy_fixture();
-        policy.json_rule = r#"
+        policy.json_rule = Some(
+            r#"
           {"conditions":{"and": [{"field":"mint_state/derived_datetime/utc_hour","operator":"int_in","value":[0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11]}]},"events":[]}
-        "#.to_string();
+        "#
+            .to_string(),
+        );
         assert!(policy.valid().is_ok());
         assert!(policy.matches(&action_ctx).is_ok());
 
         let mut action_ctx = action_ctx_fixture();
         action_ctx.mint_state.derived_datetime = (100 + 3600 * 12).into();
         let mut policy = policy_fixture();
-        policy.json_rule = r#"
+        policy.json_rule = Some(
+            r#"
           {"conditions":{"and": [{"field":"mint_state/derived_datetime/utc_hour","operator":"int_in","value":[0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11]}]},"events":[]}
-        "#.to_string();
+        "#
+            .to_string(),
+        );
         assert!(policy.valid().is_ok());
         assert!(policy.matches(&action_ctx).is_err());
     }
