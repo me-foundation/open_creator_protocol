@@ -23,6 +23,10 @@ Policy
 
 <img src="./docs/policy.excalidraw.png" width="400">
 
+Dynamic Royalty
+
+<img src="./docs/dynamic_royalty.excalidraw.png" width="400">
+
 ## Development
 
 ```bash

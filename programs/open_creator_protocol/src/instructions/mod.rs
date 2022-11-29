@@ -1,4 +1,5 @@
 pub mod policy;
+pub use policy::close_policy::*;
 pub use policy::init_policy::*;
 pub use policy::update_policy::*;
 

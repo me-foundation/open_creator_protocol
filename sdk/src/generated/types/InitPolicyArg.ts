@@ -5,12 +5,11 @@
  * See: https://github.com/metaplex-foundation/solita
  */
 
-import * as web3 from '@solana/web3.js'
-import * as beetSolana from '@metaplex-foundation/beet-solana'
 import * as beet from '@metaplex-foundation/beet'
+import { DynamicRoyalty, dynamicRoyaltyBeet } from './DynamicRoyalty'
 export type InitPolicyArg = {
-  uuid: web3.PublicKey
-  jsonRule: string
+  jsonRule: beet.COption<string>
+  dynamicRoyalty: beet.COption<DynamicRoyalty>
 }
 
 /**
@@ -19,8 +18,8 @@ export type InitPolicyArg = {
  */
 export const initPolicyArgBeet = new beet.FixableBeetArgsStruct<InitPolicyArg>(
   [
-    ['uuid', beetSolana.publicKey],
-    ['jsonRule', beet.utf8String],
+    ['jsonRule', beet.coption(beet.utf8String)],
+    ['dynamicRoyalty', beet.coption(dynamicRoyaltyBeet)],
   ],
   'InitPolicyArg'
 )

@@ -24,4 +24,8 @@ pub enum OCPErrorCode {
     UnknownAccount,
     #[msg("Account not found in instruction")]
     AccountNotFound,
+    #[msg("Invalid dynamic royalty")]
+    InvalidDynamicRoyalty,
+    #[msg("Numerical overflow")]
+    NumericalOverflow,
 }

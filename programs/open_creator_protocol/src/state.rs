@@ -1,4 +1,4 @@
-use crate::{action_ctx::ActionCtx, errors::OCPErrorCode};
+use crate::{action::ActionCtx, errors::OCPErrorCode, royalty::DynamicRoyalty};
 use anchor_lang::prelude::*;
 use anchor_lang::solana_program::pubkey::Pubkey;
 use json_rules_engine_fork::{Rule, Status};
@@ -38,21 +38,32 @@ pub struct Policy {
     pub bump: [u8; 1],
     pub uuid: Pubkey,
     pub authority: Pubkey,
-    pub json_rule: String,
+    pub dynamic_royalty: Option<DynamicRoyalty>,
+    pub json_rule: Option<String>,
 }
 
 impl Policy {
-    pub const LEN: usize = Policy::JSON_RULE_MAX_LEN + 200 /* with padding */;
+    pub const LEN: usize = Policy::JSON_RULE_MAX_LEN + 400 /* with padding */;
     pub const SEED: &'static str = "policy";
     pub const MANAGED_AUTHORITY: &'static str = "RULERZZDGsXqd9TeJu5ikLfbXzBFpoDPT8N3FHRhq1T";
     pub const JSON_RULE_MAX_LEN: usize = 1000;
 
     pub fn valid(&self) -> Result<()> {
-        if self.json_rule.len() > Policy::JSON_RULE_MAX_LEN {
-            return Err(OCPErrorCode::InvalidPolicyCreation.into());
+        match &self.json_rule {
+            Some(json_rule) => {
+                if json_rule.len() > Policy::JSON_RULE_MAX_LEN {
+                    return Err(OCPErrorCode::InvalidPolicyCreation.into());
+                }
+                serde_json::from_str::<Rule>(json_rule).expect("json_rule should be valid");
+            }
+            None => {}
         }
-        // make sure the rule is valid
-        serde_json::from_str::<Rule>(&self.json_rule).unwrap();
+        match &self.dynamic_royalty {
+            Some(dynamic_royalty) => {
+                dynamic_royalty.valid()?;
+            }
+            None => {}
+        }
         Ok(())
     }
 
@@ -61,19 +72,24 @@ impl Policy {
     }
 
     pub fn matches(&self, ctx: &ActionCtx) -> Result<()> {
-        if self.json_rule.is_empty() {
-            return Ok(());
+        match &self.json_rule {
+            Some(json_rule) => {
+                if json_rule.is_empty() {
+                    return Ok(());
+                }
+                let rule: Rule = serde_json::from_str::<Rule>(json_rule).expect("json_rule should be valid");
+                let fact: &Value = &serde_json::to_value::<&ActionCtx>(ctx).expect("action_ctx should be serializable");
+                let result = rule.check_value(fact);
+                if result.condition_result.status != Status::Met {
+                    msg!("Policy does not match: {}", result.condition_result.name);
+                    msg!("fact: {}", fact);
+                    msg!("json_rule: {}", json_rule);
+                    return Err(OCPErrorCode::InvalidPolicyEvaluation.into());
+                }
+            }
+            None => {}
         }
 
-        let rule: Rule = serde_json::from_str::<Rule>(&self.json_rule).unwrap();
-        let fact: &Value = &serde_json::to_value::<&ActionCtx>(ctx).unwrap();
-        let result = rule.check_value(fact);
-        if result.condition_result.status != Status::Met {
-            msg!("Policy does not match: {}", result.condition_result.name);
-            msg!("fact: {}", fact);
-            msg!("json_rule: {}", self.json_rule);
-            return Err(OCPErrorCode::InvalidPolicyEvaluation.into());
-        }
         Ok(())
     }
 
@@ -82,10 +98,7 @@ impl Policy {
     }
 
     pub fn get_freeze_authority(&self, upstream_authority: Pubkey) -> Pubkey {
-        let (freeze_authority, _) = Pubkey::find_program_address(
-            &[upstream_authority.as_ref()],
-            &community_managed_token::id(),
-        );
+        let (freeze_authority, _) = Pubkey::find_program_address(&[upstream_authority.as_ref()], &community_managed_token::id());
         freeze_authority
     }
 }

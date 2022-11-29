@@ -8,6 +8,7 @@
 import * as web3 from '@solana/web3.js'
 import * as beet from '@metaplex-foundation/beet'
 import * as beetSolana from '@metaplex-foundation/beet-solana'
+import { DynamicRoyalty, dynamicRoyaltyBeet } from '../types/DynamicRoyalty'
 
 /**
  * Arguments used to create {@link Policy}
@@ -19,7 +20,8 @@ export type PolicyArgs = {
   bump: number[] /* size: 1 */
   uuid: web3.PublicKey
   authority: web3.PublicKey
-  jsonRule: string
+  dynamicRoyalty: beet.COption<DynamicRoyalty>
+  jsonRule: beet.COption<string>
 }
 
 export const policyDiscriminator = [222, 135, 7, 163, 235, 177, 33, 68]
@@ -36,7 +38,8 @@ export class Policy implements PolicyArgs {
     readonly bump: number[] /* size: 1 */,
     readonly uuid: web3.PublicKey,
     readonly authority: web3.PublicKey,
-    readonly jsonRule: string
+    readonly dynamicRoyalty: beet.COption<DynamicRoyalty>,
+    readonly jsonRule: beet.COption<string>
   ) {}
 
   /**
@@ -48,6 +51,7 @@ export class Policy implements PolicyArgs {
       args.bump,
       args.uuid,
       args.authority,
+      args.dynamicRoyalty,
       args.jsonRule
     )
   }
@@ -157,6 +161,7 @@ export class Policy implements PolicyArgs {
       bump: this.bump,
       uuid: this.uuid.toBase58(),
       authority: this.authority.toBase58(),
+      dynamicRoyalty: this.dynamicRoyalty,
       jsonRule: this.jsonRule,
     }
   }
@@ -178,7 +183,8 @@ export const policyBeet = new beet.FixableBeetStruct<
     ['bump', beet.uniformFixedSizeArray(beet.u8, 1)],
     ['uuid', beetSolana.publicKey],
     ['authority', beetSolana.publicKey],
-    ['jsonRule', beet.utf8String],
+    ['dynamicRoyalty', beet.coption(dynamicRoyaltyBeet)],
+    ['jsonRule', beet.coption(beet.utf8String)],
   ],
   Policy.fromArgs,
   'Policy'
