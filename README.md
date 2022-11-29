@@ -7,7 +7,7 @@ Onchain Accounts
 | Network | Type | Address  |
 | ----------- | ----------- | ----- |
 | Devnet  | Program   | ocp4vWUzA2z2XMYJ3QhM9vWdyoyoQwAFJhRdVTbvo9E |
-| Devnet  | Policy (allow all) | BSpZkG5dJ5EBhTQmkjiyELAQuKyMVEqrW6DVu53zi9kU |
+| Devnet  | Policy (allow all) | 6Huqrb4xxmmNA4NufYdgpmspoLmjXFd3qEfteCddLgSz |
 
 | Network | Type | Address  |
 | ----------- | ----------- | ----- |
@@ -51,6 +51,13 @@ CLI_COMMAND=update_policy \
 CLI_AUTHORITY=./keypair.json \
 CLI_RPC=https://api.devnet.solana.com \
 CLI_JSON_RULE='{"conditions":{"field":"action","operator":"string_not_equals","value":""},"events":[]}' \
+CLI_POLICY_PUBKEY=... \
+  ts-node sdk/src/cli.ts
+
+# To close a policy
+CLI_COMMAND=close_policy \
+CLI_AUTHORITY=./keypair.json \
+CLI_RPC=https://api.devnet.solana.com \
 CLI_POLICY_PUBKEY=... \
   ts-node sdk/src/cli.ts
 ```

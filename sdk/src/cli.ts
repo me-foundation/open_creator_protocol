@@ -42,6 +42,7 @@ async function create_policy() {
     { arg: { jsonRule: CLI_JSON_RULE, dynamicRoyalty: CLI_DYNAMIC_ROYALTY} }
   );
   await process_tx(conn, [ix], [CLI_AUTHORITY]);
+  console.log("policy uuid: ", uuid.toBase58());
   console.log("policy created: ", findPolicyPk(uuid).toBase58());
 }
 
