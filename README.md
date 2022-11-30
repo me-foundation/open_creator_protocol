@@ -12,6 +12,7 @@ Onchain Accounts
 | Network | Type | Address  |
 | ----------- | ----------- | ----- |
 | Mainnet | Program   | ocp4vWUzA2z2XMYJ3QhM9vWdyoyoQwAFJhRdVTbvo9E |
+| Mainnet | Policy (allow all) | 7evQhBswiztNd6HLvNWsh1Ekc3fmyvQGnL82uDepSMbw |
 
 ## Architecture
 
@@ -44,6 +45,7 @@ CLI_COMMAND=create_policy \
 CLI_AUTHORITY=./keypair.json \
 CLI_RPC=https://api.devnet.solana.com \
 CLI_JSON_RULE='{"conditions":{"field":"action","operator":"string_not_equals","value":""},"events":[]}' \
+
   ts-node sdk/src/cli.ts
 
 # To update a policy

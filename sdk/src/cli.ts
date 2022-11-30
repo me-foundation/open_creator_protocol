@@ -3,7 +3,7 @@ import {
   createInitPolicyInstruction,
   createUpdatePolicyInstruction,
 } from "./generated";
-import { findPolicyPk, process_tx } from "./pda";
+import { findPolicyPk, parsePriceLinearDynamicRoyaltyStruct, process_tx } from "./pda";
 import fs from "fs";
 
 const CLI_COMMAND: "create_policy" | "update_policy"  = (process.env
@@ -24,9 +24,9 @@ const CLI_JSON_RULE =
     events: [],
     conditions: { field: "action", operator: "string_not_equals", value: "" },
   });
-const CLI_DYNAMIC_ROYALTY =
-  process.env.CLI_DYNAMIC_ROYALTY ?
-  JSON.parse(process.env.CLI_DYNAMIC_ROYALTY) : null;
+const CLI_DYNAMIC_ROYALTY_PRICE_LINEAR =
+  process.env.CLI_DYNAMIC_ROYALTY_PRICE_LINEAR ?
+  parsePriceLinearDynamicRoyaltyStruct(process.env.CLI_DYNAMIC_ROYALTY_PRICE_LINEAR) : null;
 const CLI_POLICY_PUBKEY = new PublicKey(process.env.CLI_POLICY_PUBKEY ?? Keypair.generate().publicKey);
 
 const conn = new Connection(CLI_RPC, "confirmed");
@@ -38,7 +38,7 @@ async function create_policy() {
       policy: findPolicyPk(uuid), authority: CLI_AUTHORITY.publicKey,
       uuid,
     },
-    { arg: { jsonRule: CLI_JSON_RULE, dynamicRoyalty: CLI_DYNAMIC_ROYALTY} }
+    { arg: { jsonRule: CLI_JSON_RULE, dynamicRoyalty: CLI_DYNAMIC_ROYALTY_PRICE_LINEAR} }
   );
   await process_tx(conn, [ix], [CLI_AUTHORITY]);
   console.log("policy uuid: ", uuid.toBase58());
@@ -48,7 +48,7 @@ async function create_policy() {
 async function update_policy() {
   const ix = createUpdatePolicyInstruction(
     { policy: CLI_POLICY_PUBKEY, authority: CLI_AUTHORITY.publicKey },
-    { arg: { authority: CLI_AUTHORITY.publicKey, jsonRule: CLI_JSON_RULE, dynamicRoyalty: CLI_DYNAMIC_ROYALTY } }
+    { arg: { authority: CLI_AUTHORITY.publicKey, jsonRule: CLI_JSON_RULE, dynamicRoyalty: CLI_DYNAMIC_ROYALTY_PRICE_LINEAR } }
   );
   await process_tx(conn, [ix], [CLI_AUTHORITY]);
   console.log("policy updated: ", CLI_POLICY_PUBKEY.toBase58());
