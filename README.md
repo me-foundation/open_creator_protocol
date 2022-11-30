@@ -53,13 +53,6 @@ CLI_RPC=https://api.devnet.solana.com \
 CLI_JSON_RULE='{"conditions":{"field":"action","operator":"string_not_equals","value":""},"events":[]}' \
 CLI_POLICY_PUBKEY=... \
   ts-node sdk/src/cli.ts
-
-# To close a policy
-CLI_COMMAND=close_policy \
-CLI_AUTHORITY=./keypair.json \
-CLI_RPC=https://api.devnet.solana.com \
-CLI_POLICY_PUBKEY=... \
-  ts-node sdk/src/cli.ts
 ```
 
 ## Licenses

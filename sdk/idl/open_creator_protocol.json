@@ -1,5 +1,5 @@
 {
-  "version": "0.2.0",
+  "version": "0.2.1",
   "name": "open_creator_protocol",
   "instructions": [
     {
@@ -62,27 +62,6 @@
           }
         }
       ]
-    },
-    {
-      "name": "closePolicy",
-      "accounts": [
-        {
-          "name": "policy",
-          "isMut": true,
-          "isSigner": false
-        },
-        {
-          "name": "authority",
-          "isMut": false,
-          "isSigner": true
-        },
-        {
-          "name": "systemProgram",
-          "isMut": false,
-          "isSigner": false
-        }
-      ],
-      "args": []
     },
     {
       "name": "wrap",
@@ -973,6 +952,11 @@
       "code": 6012,
       "name": "NumericalOverflow",
       "msg": "Numerical overflow"
+    },
+    {
+      "code": 6013,
+      "name": "NotImplemented",
+      "msg": "Not Implemented"
     }
   ],
   "metadata": {
