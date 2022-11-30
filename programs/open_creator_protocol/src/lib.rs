@@ -23,10 +23,6 @@ pub mod open_creator_protocol {
         policy::update_policy::handler(ctx, arg)
     }
 
-    pub fn close_policy(ctx: Context<ClosePolicyCtx>) -> Result<()> {
-        policy::close_policy::handler(ctx)
-    }
-
     pub fn wrap<'info>(ctx: Context<'_, '_, '_, 'info, WrapCtx<'info>>) -> Result<()> {
         nft_proxy::wrap::handler(ctx)
     }

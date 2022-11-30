@@ -28,4 +28,6 @@ pub enum OCPErrorCode {
     InvalidDynamicRoyalty,
     #[msg("Numerical overflow")]
     NumericalOverflow,
+    #[msg("Not Implemented")]
+    NotImplemented,
 }

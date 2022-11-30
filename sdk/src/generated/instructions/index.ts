@@ -1,7 +1,6 @@
 export * from './approve'
 export * from './burn'
 export * from './close'
-export * from './closePolicy'
 export * from './initAccount'
 export * from './initPolicy'
 export * from './lock'

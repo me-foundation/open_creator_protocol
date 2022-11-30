@@ -1,13 +1,12 @@
 import { Connection, Keypair, PublicKey } from "@solana/web3.js";
 import {
-  createClosePolicyInstruction,
   createInitPolicyInstruction,
   createUpdatePolicyInstruction,
 } from "./generated";
 import { findPolicyPk, process_tx } from "./pda";
 import fs from "fs";
 
-const CLI_COMMAND: "create_policy" | "update_policy" | "close_policy" = (process.env
+const CLI_COMMAND: "create_policy" | "update_policy"  = (process.env
   .CLI_COMMAND ?? "create_policy") as any;
 const CLI_AUTHORITY = Keypair.fromSecretKey(
   Buffer.from(
@@ -55,14 +54,6 @@ async function update_policy() {
   console.log("policy updated: ", CLI_POLICY_PUBKEY.toBase58());
 }
 
-async function close_policy() {
-  const ix = createClosePolicyInstruction(
-    { policy: CLI_POLICY_PUBKEY, authority: CLI_AUTHORITY.publicKey },
-  );
-  await process_tx(conn, [ix], [CLI_AUTHORITY]);
-  console.log("policy closed: ", CLI_POLICY_PUBKEY.toBase58());
-}
-
 async function run() {
   switch (CLI_COMMAND) {
     case "create_policy":
@@ -70,9 +61,6 @@ async function run() {
       break;
     case "update_policy":
       await update_policy();
-      break;
-    case "close_policy":
-      await close_policy();
       break;
   }
 }
