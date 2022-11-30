@@ -20,10 +20,8 @@ pub struct ActionCtx {
     pub mint_account: Option<MintAccountCtx>,
     pub metadata: Option<MetadataCtx>,
     pub payer: Option<String>,
-    pub from: Option<String>,
-    pub from_account: Option<TokenAccountCtx>,
-    pub to: Option<String>,
-    pub to_account: Option<TokenAccountCtx>,
+    pub from: Option<String>, // owner of the from_account, and many action's initiator
+    pub to: Option<String>,   // owner of the to_account
     pub last_memo_signer: Option<String>,
     pub last_memo_data: Option<String>,
 }
@@ -71,20 +69,11 @@ fn to_option_str(c_option: COption<Pubkey>) -> Option<String> {
 
 #[derive(Default, Serialize, Deserialize)]
 pub struct MetadataCtx {
-    // root level
-    pub update_authority: String,
-    pub primary_sale_happened: bool,
-    pub is_mutable: bool,
-    pub collection_verified: bool,
-    pub collection_key: String,
-
     // data
     pub name: String,
     pub symbol: String,
     pub uri: String,
     pub seller_fee_basis_points: u16,
-    pub creators: Option<Vec<String>>,
-    pub creators_verified: Option<Vec<bool>>,
 }
 
 pub fn to_metadata_ctx(mint: &Pubkey, metadata: &AccountInfo) -> Result<MetadataCtx> {
@@ -92,20 +81,11 @@ pub fn to_metadata_ctx(mint: &Pubkey, metadata: &AccountInfo) -> Result<Metadata
         return Err(OCPErrorCode::InvalidMetadata.into());
     }
     let parsed_metadata = Metadata::from_account_info(metadata)?;
-    let collection = parsed_metadata.collection.as_ref();
-    let creators = parsed_metadata.data.creators.as_ref();
     Ok(MetadataCtx {
-        update_authority: parsed_metadata.update_authority.to_string(),
-        primary_sale_happened: parsed_metadata.primary_sale_happened,
-        is_mutable: parsed_metadata.is_mutable,
-        collection_verified: collection.map(|c| c.verified).unwrap_or(false),
-        collection_key: collection.map(|c| c.key.to_string()).unwrap_or_else(|| "".to_owned()),
         name: parsed_metadata.data.name,
         uri: parsed_metadata.data.uri,
         symbol: parsed_metadata.data.symbol,
         seller_fee_basis_points: parsed_metadata.data.seller_fee_basis_points,
-        creators: creators.map(|creators| creators.iter().map(|c| c.address.to_string()).collect::<Vec<String>>()),
-        creators_verified: creators.map(|creators| creators.iter().map(|c| c.verified).collect::<Vec<bool>>()),
     })
 }
 
@@ -227,9 +207,7 @@ mod tests {
             metadata: None,
             payer: None,
             from: None,
-            from_account: None,
             to: None,
-            to_account: None,
         }
     }
 
@@ -239,13 +217,6 @@ mod tests {
             uri: "https://test.com".to_string(),
             symbol: "TEST".to_string(),
             seller_fee_basis_points: 500,
-            update_authority: Pubkey::new_unique().to_string(),
-            primary_sale_happened: true,
-            is_mutable: true,
-            creators: Some([Pubkey::new_unique().to_string(), Pubkey::new_unique().to_string()].to_vec()),
-            creators_verified: Some(vec![true, false]),
-            collection_verified: true,
-            collection_key: Pubkey::new_unique().to_string(),
         }
     }
 
@@ -365,17 +336,12 @@ mod tests {
     #[test]
     fn test_policy_with_metadata_policy() {
         let mut action_ctx = action_ctx_fixture();
-        let creators = [Pubkey::new_unique().to_string(), Pubkey::new_unique().to_string()];
         let mut metadata = metadata_ctx_fixture();
-        metadata.creators = Some(creators.clone().to_vec());
+        metadata.name = "abc FROZEN".to_owned();
         action_ctx.metadata = Some(metadata);
         let mut policy = policy_fixture();
-        policy.json_rule = Some(
-            r#"
-          {"conditions":{"field":"metadata/creators","operator":"string_is_subset","value":[PLACEHOLDER]},"events":[]}
-        "#
-            .replace("PLACEHOLDER", &creators.clone().map(|x| format!("\"{}\"", x)).join(",")),
-        );
+        policy.json_rule =
+            Some(r#"{"conditions":{"field":"metadata/name","operator":"string_has_substring","value":"FROZEN"},"events":[]}"#.to_owned());
         assert!(policy.valid().is_ok());
         assert!(policy.matches(&action_ctx).is_ok());
     }
