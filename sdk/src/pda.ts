@@ -2,12 +2,10 @@ import { utils } from "@project-serum/anchor";
 import {
   Connection,
   Keypair,
-  LAMPORTS_PER_SOL,
   PublicKey,
   Transaction,
   TransactionInstruction,
 } from "@solana/web3.js";
-import { findProgramAddressSync } from "@project-serum/anchor/dist/cjs/utils/pubkey";
 import { DynamicRoyalty, PROGRAM_ID } from "./generated";
 import * as anchor from "@project-serum/anchor";
 
@@ -16,21 +14,21 @@ export const CMT_PROGRAM = new PublicKey(
 );
 
 export const findPolicyPk = (uuid: PublicKey) => {
-  return findProgramAddressSync(
+  return PublicKey.findProgramAddressSync(
     [utils.bytes.utf8.encode("policy"), uuid.toBuffer()],
     PROGRAM_ID
   )[0];
 };
 
 export const findMintStatePk = (mint: PublicKey) => {
-  return findProgramAddressSync(
+  return PublicKey.findProgramAddressSync(
     [utils.bytes.utf8.encode("mint_state"), mint.toBuffer()],
     PROGRAM_ID
   )[0];
 };
 
 export const findFreezeAuthorityPk = (policy: PublicKey) => {
-  return findProgramAddressSync([policy.toBuffer()], CMT_PROGRAM)[0];
+  return PublicKey.findProgramAddressSync([policy.toBuffer()], CMT_PROGRAM)[0];
 };
 
 export const createDynamicRoyaltyStruct = ({
@@ -63,6 +61,20 @@ export const createDynamicRoyaltyStruct = ({
   return dynamicRoyalty;
 };
 
+export const parsePriceLinearDynamicRoyaltyStruct = (jsonStr: string) => {
+  if (jsonStr === "" || jsonStr === "null") {
+    return null;
+  }
+
+  const {startPrice, endPrice, startMultiplierBp, endMultiplierBp} = JSON.parse(jsonStr);
+  return createDynamicRoyaltyStruct({
+    startPrice: new anchor.BN(startPrice),
+    endPrice: new anchor.BN(endPrice),
+    startMultiplierBp: Number(startMultiplierBp),
+    endMultiplierBp: Number(endMultiplierBp),
+  });
+}
+
 export const process_tx = async (
   conn: Connection,
   ixs: TransactionInstruction[],
@@ -76,7 +88,7 @@ export const process_tx = async (
   try {
     const sig = await conn.sendRawTransaction(tx.serialize());
     console.log({ sig });
-    await new Promise((r) => setTimeout(r, 1000));
+    await conn.confirmTransaction(sig);
     return sig;
   } catch (e) {
     console.error(e);

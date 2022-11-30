@@ -12,6 +12,7 @@ Onchain Accounts
 | Network | Type | Address  |
 | ----------- | ----------- | ----- |
 | Mainnet | Program   | ocp4vWUzA2z2XMYJ3QhM9vWdyoyoQwAFJhRdVTbvo9E |
+| Mainnet | Policy (allow all) | 7evQhBswiztNd6HLvNWsh1Ekc3fmyvQGnL82uDepSMbw |
 
 ## Architecture
 
@@ -39,19 +40,28 @@ npm i
 # To test
 anchor test
 
-# To create a policy
+# To create a policy without a dynamic royalty setting
 CLI_COMMAND=create_policy \
 CLI_AUTHORITY=./keypair.json \
 CLI_RPC=https://api.devnet.solana.com \
 CLI_JSON_RULE='{"conditions":{"field":"action","operator":"string_not_equals","value":""},"events":[]}' \
   ts-node sdk/src/cli.ts
 
+# To create a policy with a dynamic royalty setting
+CLI_COMMAND=create_policy \
+CLI_AUTHORITY=./keypair.json \
+CLI_RPC=https://api.devnet.solana.com \
+CLI_JSON_RULE='{"conditions":{"field":"action","operator":"string_not_equals","value":""},"events":[]}' \
+CLI_DYNAMIC_ROYALTY_PRICE_LINEAR='{"startPrice":0,"endPrice":5000000000,"startMultiplierBp":10000,"endMultiplierBp":0}' \
+  ts-node sdk/src/cli.ts
+
 # To update a policy
+CLI_POLICY_PUBKEY=TODO \
 CLI_COMMAND=update_policy \
 CLI_AUTHORITY=./keypair.json \
 CLI_RPC=https://api.devnet.solana.com \
 CLI_JSON_RULE='{"conditions":{"field":"action","operator":"string_not_equals","value":""},"events":[]}' \
-CLI_POLICY_PUBKEY=... \
+CLI_DYNAMIC_ROYALTY_PRICE_LINEAR='{"startPrice":0,"endPrice":5000000000,"startMultiplierBp":10000,"endMultiplierBp":0}' \
   ts-node sdk/src/cli.ts
 ```
 
