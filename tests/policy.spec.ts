@@ -177,22 +177,4 @@ describe("policy", () => {
     });
   });
 
-  describe("Can close policy", () => {
-    it("alice set bob as the authority", async () => {
-      let ix: TransactionInstruction;
-      ix = createClosePolicyInstruction(
-        { policy: findPolicyPk(uuid), authority: alice.publicKey },
-      );
-      await process_tx(conn, [ix], [alice]);
-      try {
-        await Policy.fromAccountAddress(
-          conn,
-          findPolicyPk(uuid)
-        );
-        assert.fail("should have failed");
-      } catch (e: any) {
-        assert.include(e.message, "Unable to find");
-      }
-    });
-  });
 });
