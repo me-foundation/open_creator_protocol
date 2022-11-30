@@ -6,7 +6,6 @@ import {
 } from "@solana/web3.js";
 import { assert } from "chai";
 import {
-  createClosePolicyInstruction,
   createInitPolicyInstruction,
   createUpdatePolicyInstruction,
   Policy,
