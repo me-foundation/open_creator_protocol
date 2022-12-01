@@ -17,7 +17,7 @@ Open Creator Protocol (OCP) is an open protocol for creators to build utilities 
 
 ## Core Features
 
-- Onchain Policy Engine (to help creators to build utilities and gamified transferability)
+- Onchain Policy Engine (to help creators to build utilities and personalized transferability)
 - Dynamic Royalty Standard
 - Built on top of solana foundation’s spl-managed-token.
 
@@ -77,7 +77,7 @@ pub struct ActionCtx {
 | Metadata URI Filter | `{ "field": "metadata/uri", "operator": "string_has_substring", "value": "IPFS"}` |
 | Single Transfer Destination | `{ "field": "to", "operator": "string_equals", "value": ["1111111111111111111111111111111"]}` |
 
-Here's a full example of how a creator can leverage OCP to gamify the transferability. The logic works like this:
+Here's a full example of how a creator can leverage OCP to personalize the transferability. The logic works like this:
 
 - When the `action` is not `transfer`, pass
 - When the `action` is `transfer`, then one cannot transfer if the `metadata/name` contains a keyword `FROZEN`
