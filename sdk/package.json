@@ -1,12 +1,16 @@
 {
+  "name": "@magiceden-oss/open_creator_protocol",
+  "version": "0.2.3",
+  "description": "SDK for open_creator_protocol",
   "scripts": {
     "build": "tsc"
   },
-  "name": "@magiceden-oss/open_creator_protocol",
-  "version": "0.0.1",
-  "description": "SDK for open_creator_protocol",
-  "main": "index.ts",
-  "license": "MIT",
+  "files": [
+    "/dist/**/*",
+    "/idl"
+  ],
+  "main": "dist/src/index.js",
+  "license": "Apache 2.0",
   "dependencies": {
     "@metaplex-foundation/beet": "^0.7.1",
     "@metaplex-foundation/beet-solana": "^0.3.1",
