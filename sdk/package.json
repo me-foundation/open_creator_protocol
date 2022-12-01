@@ -2,9 +2,9 @@
   "scripts": {
     "build": "tsc"
   },
-  "name": "@magiceden-oss/community-managed-token",
+  "name": "@magiceden-oss/open_creator_protocol",
   "version": "0.0.1",
-  "description": "SDK for community-managed-token",
+  "description": "SDK for open_creator_protocol",
   "main": "index.ts",
   "license": "MIT",
   "dependencies": {
