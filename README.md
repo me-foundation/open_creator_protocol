@@ -152,7 +152,7 @@ DynamicRoyaltyPriceLinear:
   start_price: 0 SOL
   end_price: 5 SOL
   start_multiplier_bp: 100% (10000 bp)
-  end_multiplier_bp: 50% (0 bp)
+  end_multiplier_bp: 50% (5000 bp)
 }
 
 Metadata:
