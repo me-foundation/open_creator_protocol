@@ -83,7 +83,6 @@ impl Policy {
                 if result.condition_result.status != Status::Met {
                     msg!("Policy does not match: {}", result.condition_result.name);
                     msg!("fact: {}", fact);
-                    msg!("json_rule: {}", json_rule);
                     return Err(OCPErrorCode::InvalidPolicyEvaluation.into());
                 }
             }
