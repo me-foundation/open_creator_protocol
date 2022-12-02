@@ -386,6 +386,18 @@ mod tests {
             Some(r#"{"events":[],"conditions":{"or":[{"field":"action","operator":"string_not_equals","value":"transfer"},{"and":[{"not":{"field":"metadata/name","operator":"string_has_substring","value":"FROZEN"}},{"or":[{"field":"to","operator":"string_not_equals","value":"DWuopEsTrg5qWMSMVT1hoiVTRQG9PkGJZSbXiKAxHYbn"},{"field":"metadata/name","operator":"string_has_substring","value":"WINNER"}]}]}]}}"#.to_owned());
         assert!(policy.valid().is_ok());
         assert!(policy.matches(&action_ctx).is_ok());
+
+        let mut action_ctx = action_ctx_fixture();
+        let mut metadata = metadata_ctx_fixture();
+        metadata.name = "abc".to_owned();
+        action_ctx.action = "approve".to_owned();
+        action_ctx.metadata = Some(metadata);
+        action_ctx.to = Some("DWuopEsTrg5qWMSMVT1hoiVTRQG9PkGJZSbXiKAxHYbn".to_owned());
+        let mut policy = policy_fixture();
+        policy.json_rule =
+            Some(r#"{"events":[],"conditions":{"or":[{"field":"action","operator":"string_not_equals","value":"transfer"},{"and":[{"not":{"field":"metadata/name","operator":"string_has_substring","value":"FROZEN"}},{"or":[{"field":"to","operator":"string_not_equals","value":"DWuopEsTrg5qWMSMVT1hoiVTRQG9PkGJZSbXiKAxHYbn"},{"field":"metadata/name","operator":"string_has_substring","value":"WINNER"}]}]}]}}"#.to_owned());
+        assert!(policy.valid().is_ok());
+        assert!(policy.matches(&action_ctx).is_ok());
     }
 
     #[test]
