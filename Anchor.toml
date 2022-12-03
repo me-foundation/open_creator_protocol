@@ -23,3 +23,6 @@ address = "metaqbxxUerdq28cj1RbAWkYQm3ybzjb6a8bt518x1s"
 
 [[test.validator.clone]]
 address = "CMTQqjzH6Anr9XcPVt73EFDTjWkJWPzH7H6DtvhHcyzV"
+
+[[test.validator.clone]]
+address = "6Huqrb4xxmmNA4NufYdgpmspoLmjXFd3qEfteCddLgSz" # ocp: policy (allow all)

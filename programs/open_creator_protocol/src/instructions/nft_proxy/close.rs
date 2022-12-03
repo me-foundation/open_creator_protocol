@@ -72,9 +72,9 @@ pub fn handler<'info>(ctx: Context<'_, '_, '_, 'info, CloseCtx<'info>>) -> Resul
     invoke_signed(
         &create_close_account_instruction(&ctx.accounts.mint.key(), &ctx.accounts.from.key(), &ctx.accounts.policy.key())?,
         &[
-            ctx.accounts.mint.to_account_info(),
             ctx.accounts.from_account.to_account_info(),
             ctx.accounts.from.to_account_info(),
+            ctx.accounts.mint.to_account_info(),
             ctx.accounts.policy.to_account_info(),
             ctx.accounts.freeze_authority.to_account_info(),
             ctx.accounts.token_program.to_account_info(),
