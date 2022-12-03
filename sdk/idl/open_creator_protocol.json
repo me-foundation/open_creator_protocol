@@ -1,5 +1,5 @@
 {
-  "version": "0.2.3",
+  "version": "0.2.4",
   "name": "open_creator_protocol",
   "instructions": [
     {
@@ -342,7 +342,7 @@
         },
         {
           "name": "from",
-          "isMut": false,
+          "isMut": true,
           "isSigner": true
         },
         {
