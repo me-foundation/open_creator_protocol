@@ -16,6 +16,7 @@ import {
   createCloseInstruction,
   createInitAccountInstruction,
   createLockInstruction,
+  createMintToInstruction,
   createRevokeInstruction,
   createTransferInstruction,
   createUnlockInstruction,
@@ -127,6 +128,59 @@ describe("policy", () => {
       }
       const mint = await getMint(conn, tokenMint);
       assert.equal(mint.supply.toString(), "1");
+    });
+
+    it("burn then cannot mint_to", async () => {
+      const [tokenMint, tokenAta] = await createTestMintAndWrap(
+        conn,
+        new anchor.Wallet(alice),
+        DEVNET_POLICY_ALL
+      );
+      assert.isNotEmpty(tokenMint.toBase58());
+      assert.isNotEmpty(tokenAta.toBase58());
+
+      const ix = createBurnInstruction({
+        policy: DEVNET_POLICY_ALL,
+        freezeAuthority: findFreezeAuthorityPk(DEVNET_POLICY_ALL),
+        mint: tokenMint,
+        metadata: findMetadataPda(tokenMint),
+        mintState: findMintStatePk(tokenMint),
+        from: alice.publicKey,
+        fromAccount: tokenAta,
+        cmtProgram: CMT_PROGRAM,
+        instructions: SYSVAR_INSTRUCTIONS_PUBKEY,
+      });
+
+      await process_tx(conn, [computeBudgetIx, ix], [alice]);
+
+      try {
+        await MintState.fromAccountAddress(conn, tokenMint);
+        assert.fail("should have thrown");
+      } catch (e: any) {
+        assert.include(e.message, "Expected");
+      }
+      const mint = await getMint(conn, tokenMint);
+      assert.equal(mint.supply.toString(), "0");
+
+      const mintToIx = createMintToInstruction({
+        policy: DEVNET_POLICY_ALL,
+        freezeAuthority: findFreezeAuthorityPk(DEVNET_POLICY_ALL),
+        mint: tokenMint,
+        metadata: findMetadataPda(tokenMint),
+        mintState: findMintStatePk(tokenMint),
+        from: alice.publicKey,
+        fromAccount: tokenAta,
+        cmtProgram: CMT_PROGRAM,
+        instructions: SYSVAR_INSTRUCTIONS_PUBKEY,
+        payer: alice.publicKey,
+      })
+      try {
+        await process_tx(conn, [computeBudgetIx, mintToIx], [alice]);
+        assert.fail("should have thrown");
+      } catch (e: any) {
+        assert.include(e.message, "failed to send transaction");
+      }
+
     });
   });
 
