@@ -9,6 +9,7 @@ use anchor_spl::token::Mint;
 use anchor_spl::token::Token;
 use anchor_spl::token::TokenAccount;
 use community_managed_token::instruction::create_burn_instruction;
+use community_managed_token::instruction::create_close_account_instruction;
 
 #[derive(Accounts)]
 pub struct BurnCtx<'info> {
@@ -27,8 +28,12 @@ pub struct BurnCtx<'info> {
     mint: Box<Account<'info, Mint>>,
     /// CHECK: going to check in action ctx
     metadata: UncheckedAccount<'info>,
-    #[account(mut)]
+    #[account(
+        mut,
+        close = from, // CHECK: Since it's under nft_proxy, burn essentially closes the mint_state, and renders other instructions invalid
+    )]
     mint_state: Box<Account<'info, MintState>>,
+    #[account(mut)]
     from: Signer<'info>,
     #[account(
         mut,
@@ -76,6 +81,20 @@ pub fn handler<'info>(ctx: Context<'_, '_, '_, 'info, BurnCtx<'info>>) -> Result
             ctx.accounts.mint.to_account_info(),
             ctx.accounts.from_account.to_account_info(),
             ctx.accounts.from.to_account_info(),
+            ctx.accounts.policy.to_account_info(),
+            ctx.accounts.freeze_authority.to_account_info(),
+            ctx.accounts.token_program.to_account_info(),
+            ctx.accounts.cmt_program.to_account_info(),
+        ],
+        &[&ctx.accounts.policy.signer_seeds()],
+    )?;
+
+    invoke_signed(
+        &create_close_account_instruction(&ctx.accounts.mint.key(), &ctx.accounts.from.key(), &ctx.accounts.policy.key())?,
+        &[
+            ctx.accounts.from_account.to_account_info(),
+            ctx.accounts.from.to_account_info(),
+            ctx.accounts.mint.to_account_info(),
             ctx.accounts.policy.to_account_info(),
             ctx.accounts.freeze_authority.to_account_info(),
             ctx.accounts.token_program.to_account_info(),

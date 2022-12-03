@@ -1,5 +1,6 @@
 import { utils } from "@project-serum/anchor";
 import {
+  ComputeBudgetProgram,
   Connection,
   Keypair,
   PublicKey,
@@ -8,6 +9,9 @@ import {
 } from "@solana/web3.js";
 import { DynamicRoyalty, PROGRAM_ID } from "./generated";
 import * as anchor from "@project-serum/anchor";
+
+export const LARGER_COMPUTE_UNIT = 1_400_000;
+export const computeBudgetIx = ComputeBudgetProgram.setComputeUnitLimit({ units: LARGER_COMPUTE_UNIT });
 
 export const CMT_PROGRAM = new PublicKey(
   "CMTQqjzH6Anr9XcPVt73EFDTjWkJWPzH7H6DtvhHcyzV"

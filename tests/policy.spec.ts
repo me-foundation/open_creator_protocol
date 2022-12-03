@@ -2,18 +2,18 @@ import * as anchor from "@project-serum/anchor";
 import {
   Keypair,
   LAMPORTS_PER_SOL,
-  TransactionInstruction,
+  TransactionInstruction
 } from "@solana/web3.js";
 import { assert } from "chai";
 import {
   createInitPolicyInstruction,
   createUpdatePolicyInstruction,
-  Policy,
+  Policy
 } from "../sdk/src/generated";
 import {
   createDynamicRoyaltyStruct,
   findPolicyPk,
-  process_tx,
+  process_tx
 } from "../sdk/src/pda";
 import { airdrop, conn } from "./utils";
 

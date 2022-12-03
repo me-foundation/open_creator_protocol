@@ -1,6 +1,8 @@
+#! /bin/bash
+
 cargo build-bpf
 cargo fmt && cargo clippy
-cd sdk
+cd sdk || exit
 npm ci
 npx solita
-cd -
+cd - || exit
