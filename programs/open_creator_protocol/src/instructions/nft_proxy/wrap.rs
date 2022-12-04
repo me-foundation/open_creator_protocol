@@ -1,5 +1,6 @@
 use crate::action::*;
 use crate::errors::OCPErrorCode;
+use crate::id;
 use crate::state::*;
 use anchor_lang::prelude::*;
 use anchor_lang::solana_program::sysvar;
@@ -9,6 +10,9 @@ use solana_program::program_option::COption;
 
 #[derive(Accounts)]
 pub struct WrapCtx<'info> {
+    #[account(
+        constraint = policy.to_account_info().owner.eq(&id()) @ OCPErrorCode::InvalidPolicyMintAssociation,
+    )]
     policy: Box<Account<'info, Policy>>,
     freeze_authority: Signer<'info>,
     mint_authority: Signer<'info>,

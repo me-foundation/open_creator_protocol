@@ -8,14 +8,15 @@ use anchor_spl::token::Mint;
 #[derive(Accounts)]
 pub struct UnlockCtx<'info> {
     policy: Box<Account<'info, Policy>>,
-    #[account(
-        constraint = mint_state.mint == mint.key() @ OCPErrorCode::InvalidMint,
-        constraint = mint_state.locked_by == Some(from.key()) @ OCPErrorCode::InvalidLockedBy,
-    )]
     mint: Box<Account<'info, Mint>>,
     /// CHECK: going to check in action ctx
     metadata: UncheckedAccount<'info>,
-    #[account(mut)]
+    #[account(
+        mut,
+        constraint = mint_state.mint == mint.key() @ OCPErrorCode::InvalidMint,
+        constraint = mint_state.locked_by == Some(from.key()) @ OCPErrorCode::InvalidLockedBy,
+        constraint = mint_state.policy == policy.key() @ OCPErrorCode::InvalidPolicyMintAssociation,
+    )]
     mint_state: Box<Account<'info, MintState>>,
     from: Signer<'info>,
     /// CHECK: checked in cpi

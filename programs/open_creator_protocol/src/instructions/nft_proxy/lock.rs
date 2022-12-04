@@ -14,6 +14,7 @@ pub struct LockCtx<'info> {
         constraint = mint_state.mint == mint.key() @ OCPErrorCode::InvalidMint,
         constraint = mint.key() == from_account.mint @ OCPErrorCode::InvalidMint,
         constraint = mint_state.locked_by.is_none() @ OCPErrorCode::MintStateLocked,
+        constraint = mint_state.policy == policy.key() @ OCPErrorCode::InvalidPolicyMintAssociation,
     )]
     mint: Box<Account<'info, Mint>>,
     /// CHECK: going to check in action ctx
