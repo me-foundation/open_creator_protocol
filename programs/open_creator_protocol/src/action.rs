@@ -301,6 +301,41 @@ mod tests {
     }
 
     #[test]
+    fn test_policy_program_ids_denylist() {
+        let program_id = Pubkey::new_unique().to_string();
+        let mut policy = policy_fixture();
+        policy.json_rule = Some(
+            r#"
+          {"conditions":{"and":[{"field":"program_ids","operator":"string_does_not_contain_any","value":["PLACEHOLDER"]}]},"events":[]}
+        "#
+            .replace("PLACEHOLDER", &program_id),
+        );
+        let mut action_ctx = action_ctx_fixture();
+        action_ctx.program_ids = vec![program_id];
+        assert!(policy.valid().is_ok());
+        assert!(policy.matches(&action_ctx).is_err());
+
+        let mut action_ctx = action_ctx_fixture();
+        action_ctx.program_ids = vec![Pubkey::new_unique().to_string()];
+        assert!(policy.valid().is_ok());
+        assert!(policy.matches(&action_ctx).is_ok());
+
+        let program_id = Pubkey::new_unique().to_string();
+        let mut policy = policy_fixture();
+        policy.json_rule = Some(
+            r#"
+          {"conditions":{"and":[{"field":"program_ids","operator":"string_does_not_contain_any","value":[]}]},"events":[]}
+        "#
+            .replace("PLACEHOLDER", &program_id),
+        );
+
+        let mut action_ctx = action_ctx_fixture();
+        action_ctx.program_ids = vec![program_id];
+        assert!(policy.valid().is_ok());
+        assert!(policy.matches(&action_ctx).is_ok());
+    }
+
+    #[test]
     fn test_policy_program_ids_multiple_allowlist() {
         let allowed_program_ids = [Pubkey::new_unique().to_string(), Pubkey::new_unique().to_string()];
         let mut policy = policy_fixture();

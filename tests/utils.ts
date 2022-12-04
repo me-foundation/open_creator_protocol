@@ -214,11 +214,9 @@ export const createPolicyFixture = async (conn: Connection, payer: Keypair) => {
         {
           and: [
             {
-              not: {
-                field: "metadata/name",
-                operator: "string_has_substring",
-                value: "FROZEN",
-              },
+                field: "program_ids",
+                operator: "string_does_not_contain_any",
+                value: ["aaaa111111111111111111111111", "bbbb111111111111111111111111", "cccc111111111111111111111111"],
             },
             {
               or: [
