@@ -21,7 +21,9 @@ Open Creator Protocol (OCP) is an open protocol for creators to build utilities 
 - Dynamic Royalty Standard
 - Built on top of solana foundation’s spl-managed-token.
 
-View our live documentation to [learn how to get started with OCP](https://magiceden-oss.github.io/open_creator_protocol/).
+## Documentation
+
+View our live [documentation](https://magiceden-oss.github.io/open_creator_protocol/).
 
 ## Licenses
 - Apache 2.0
