@@ -34,7 +34,7 @@ const katex = require('rehype-katex');
                 docs: {
                     routeBasePath: '/',
                     sidebarPath: require.resolve('./sidebars.js'),
-                    editUrl: 'https://github.com/magiceden-oss/open_creator_protocol/tree/main/',
+                    editUrl: 'https://github.com/magiceden-oss/open_creator_protocol/tree/main/docs',
                     remarkPlugins: [require('mdx-mermaid'), math],
                     showLastUpdateTime: true,
                     rehypePlugins: [katex],
