@@ -14,7 +14,7 @@ const katex = require('rehype-katex');
     onBrokenLinks: 'throw',
     onBrokenMarkdownLinks: 'warn',
     favicon: 'img/favicon.png',
-    organizationName: 'thisisasimulation',
+    organizationName: 'magiceden-oss',
     projectName: 'open_creator_protocol',
     scripts: [],
     stylesheets: [
