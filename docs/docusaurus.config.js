@@ -9,7 +9,7 @@ const katex = require('rehype-katex');
     staticDirectories: ['static'],
     title: 'Magic Eden | Developer',
     tagline: 'Documentation for Magic Eden Open-Source Tools',
-    url: 'https://thisisasimulation.github.io/',
+    url: 'https://magiceden-oss.github.io/',
     baseUrl: '/open_creator_protocol',
     onBrokenLinks: 'throw',
     onBrokenMarkdownLinks: 'warn',
