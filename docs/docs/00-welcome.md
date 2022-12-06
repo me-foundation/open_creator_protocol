@@ -1,7 +1,7 @@
 ---
 slug: /
 sidebar_position: 1
-title: Welcome 👋
+title: 👋 Welcome
 ---
 
 # Welcome
@@ -12,7 +12,3 @@ solutions. Magic Eden brings dynamic cultural moments onto the blockchain, empow
 communities to create, discover and collect unique NFTs.
 
 For more information, please visit  [Magic Eden](https://magiceden.io).
-
-<img src={'img/available_now.webp'} alt={'available now'} style={{borderRadius: '10px'}}/>
-
-

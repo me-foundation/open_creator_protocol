@@ -35,8 +35,6 @@ We created this Open Creator Protocol because we wanted to provide tools to crea
 forward to a world where there are different standards and creators can choose what works best for them. See below for
 the full feature list.
 
-<img src={'img/protected_royalties.png'} alt={'protected royalties'} style={{borderRadius: '10px'}}/>
-
 ### Protected royalties
 
 We will protect royalties on all collections who adopt the standard. The protocol allows creators
@@ -44,35 +42,25 @@ to ban marketplaces that have not protected royalties on their collection. For n
 standard, royalties will remain optional on Magic Eden. We will also welcome the inclusion of other future royalty
 protection protocols that emerge and gain market adoption.
 
-<img src={'img/open_sourced.png'} alt={'open sourced'} style={{borderRadius: '10px'}}/>
-
 ### Open source
 
 This is a tool built on top of Solana’s SPL managed-token standard. Creators will be in control of creating
 and managing the rules of their collection.
-
-<img src={'img/dynamic_royalties.png'} alt={'dynamic royalties'} style={{borderRadius: '10px'}}/>
 
 ### Dynamic royalties
 
 Creators can specify a relationship between an NFT’s sale price and royalty amount via a linear price curve. For
 example, creators can reduce the nominal value of royalties for buyers who pay a higher price for the NFT.
 
-<img src={'img/freeze.png'} alt={'freeze'} style={{borderRadius: '10px'}}/>
-
 ### Freeze trading until mint is done
 
 Creators can use Open Creator Protocol to limit trading until after mint is
 complete (only time based)
 
-<img src={'img/transfer_rules.png'} alt={'transfer rules'} style={{borderRadius: '10px'}}/>
-
 ### Create rules for NFT transfers
 
-Creators can gamify transferability for collections, including completely non-transferable tokens (or restrictions based
+Creators can game-ify transferability for collections, including completely non-transferable tokens (or restrictions based
 on time, # of transfers, or metadata name)
-
-<img src={'img/bulk_transfer.webp'} alt={'bulk transfer'} style={{borderRadius: '10px'}}/>
 
 ### Bulk transfers directly on Magic Eden
 
