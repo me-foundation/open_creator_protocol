@@ -65,20 +65,24 @@ const katex = require('rehype-katex');
                     content: 'solana, magic eden, ocp, open creator protocol'
                 },
                 {
-                    name: 'twitter:image',
+                    property: 'twitter:image',
                     content: 'https://magiceden-oss.github.io/open_creator_protocol/img/me_logo.png'
                 },
                 {
-                    name: 'twitter:url',
+                    property: 'twitter:url',
                     content: 'https://magiceden-oss.github.io/open_creator_protocol/'
                 },
                 {
-                    name: 'twitter:title',
+                    property: 'twitter:title',
                     content: 'Docs | Open Creator Protocol'
                 },
                 {
-                    name: 'twitter:description',
+                    property: 'twitter:description',
                     content: 'Documentation for the Open Creator Protocol'
+                },
+                {
+                    property: 'og:image',
+                    content: 'https://magiceden-oss.github.io/open_creator_protocol/img/me_logo.png'
                 }
             ],
             colorMode: {
