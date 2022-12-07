@@ -78,7 +78,7 @@ const katex = require('rehype-katex');
                 },
                 {
                     name: 'twitter:description',
-                    content: 'Documentation for Magic Eden Open-Source Tools'
+                    content: 'Documentation for the Open Creator Protocol'
                 }
             ],
             colorMode: {
