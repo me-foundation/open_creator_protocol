@@ -17,7 +17,7 @@ feature-packed standard built on Solana Token Standard that enables creators to 
   Protocol.
 
 :::note **What about Metaplex?**
-We intend to support Metaplex’s MIP-1 when it goes live in Q1 2023. MIP-1 will offer a
+We intend to support Metaplex’s MIP-1 when it goes live in Q4 2022. MIP-1 will offer a
 migration path towards royalty protection for existing collections. We also remain open-minded to adopting other
 standards that receive market adoption and look forward to community feedback.
 :::

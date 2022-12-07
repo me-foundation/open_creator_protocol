@@ -34,6 +34,9 @@ CLI_RPC=https://api.devnet.solana.com \
 CLI_JSON_RULE='{"conditions":{"field":"action","operator":"string_not_equals","value":""},"events":[]}' \
 CLI_DYNAMIC_ROYALTY_PRICE_LINEAR='{"startPrice":0,"endPrice":5000000000,"startMultiplierBp":10000,"endMultiplierBp":0}' \
 ```
+### JSON Rules
+
+OCP utilises the JSON Rules Engine package, for more information [please see the repository](https://github.com/GopherJ/json-rules-engine-rs).
 
 ### Example Rules
 
