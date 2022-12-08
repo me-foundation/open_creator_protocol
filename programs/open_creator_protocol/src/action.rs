@@ -322,13 +322,18 @@ mod tests {
 
         let program_id = Pubkey::new_unique().to_string();
         let mut policy = policy_fixture();
-        policy.json_rule = Some(
-            r#"
-          {"conditions":{"and":[{"field":"program_ids","operator":"string_does_not_contain_any","value":[]}]},"events":[]}
-        "#
-            .replace("PLACEHOLDER", &program_id),
-        );
+        policy.json_rule =
+            Some(r#" {"conditions":{"and":[{"field":"program_ids","operator":"string_does_not_contain_any","value":[]}]},"events":[]} "#.to_owned());
+        let mut action_ctx = action_ctx_fixture();
+        action_ctx.program_ids = vec![program_id];
+        assert!(policy.valid().is_ok());
+        assert!(policy.matches(&action_ctx).is_ok());
 
+        let program_id = Pubkey::new_unique().to_string();
+        let mut policy = policy_fixture();
+        policy.json_rule = Some(
+            r#" {"conditions":{"and":[{"field":"program_ids","operator":"string_does_not_contain_any","value":[""]}]},"events":[]} "#.to_owned(),
+        );
         let mut action_ctx = action_ctx_fixture();
         action_ctx.program_ids = vec![program_id];
         assert!(policy.valid().is_ok());
