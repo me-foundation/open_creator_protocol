@@ -66,7 +66,7 @@ const katex = require('rehype-katex');
                 },
                 {
                     property: 'twitter:image',
-                    content: 'https://magiceden-oss.github.io/open_creator_protocol/img/me_logo.png'
+                    content: 'https://magiceden-oss.github.io/open_creator_protocol/img/me_card.png'
                 },
                 {
                     property: 'twitter:url',
@@ -82,7 +82,7 @@ const katex = require('rehype-katex');
                 },
                 {
                     property: 'og:image',
-                    content: 'https://magiceden-oss.github.io/open_creator_protocol/img/me_logo.png'
+                    content: 'https://magiceden-oss.github.io/open_creator_protocol/img/me_card.png'
                 }
             ],
             colorMode: {
