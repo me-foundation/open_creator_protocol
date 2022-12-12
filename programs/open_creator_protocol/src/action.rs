@@ -68,11 +68,11 @@ fn to_option_str(c_option: COption<Pubkey>) -> Option<String> {
 
 #[derive(Default, Serialize, Deserialize)]
 pub struct MetadataCtx {
-    // data
     pub name: String,
     pub symbol: String,
     pub uri: String,
     pub seller_fee_basis_points: u16,
+    pub update_authority: String,
 }
 
 impl From<Box<Account<'_, MetadataAccount>>> for MetadataCtx {
@@ -82,6 +82,7 @@ impl From<Box<Account<'_, MetadataAccount>>> for MetadataCtx {
             symbol: metadata.data.symbol.clone(),
             uri: metadata.data.uri.clone(),
             seller_fee_basis_points: metadata.data.seller_fee_basis_points,
+            update_authority: metadata.update_authority.to_string(),
         }
     }
 }
@@ -214,6 +215,7 @@ mod tests {
             uri: "https://test.com".to_string(),
             symbol: "TEST".to_string(),
             seller_fee_basis_points: 500,
+            update_authority: Pubkey::new_unique().to_string(),
         }
     }
 

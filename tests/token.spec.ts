@@ -1,4 +1,4 @@
-import { findMetadataPda } from "@metaplex-foundation/js";
+import { findMasterEditionV2Pda, findMetadataPda, TokenMetadataProgram } from "@metaplex-foundation/js";
 import * as anchor from "@project-serum/anchor";
 import {
   ASSOCIATED_TOKEN_PROGRAM_ID,
@@ -16,6 +16,7 @@ import {
   createCloseInstruction,
   createInitAccountInstruction,
   createLockInstruction,
+  createMigrateToMplInstruction,
   createMintToInstruction,
   createRevokeInstruction,
   createTransferInstruction,
@@ -541,4 +542,72 @@ describe("policy", () => {
       assert.equal(aliceAtaAcc.amount.toString(), "0");
     });
   });
+
+  describe("Can migrate to mpl", () => {
+    it("happy path", async () => {
+      const [tokenMint, tokenAta] = await createTestMintAndWrap(
+        conn,
+        new anchor.Wallet(alice),
+        DEVNET_POLICY_ALL
+      );
+      assert.isNotEmpty(tokenMint.toBase58());
+      assert.isNotEmpty(tokenAta.toBase58());
+
+      const ix = createMigrateToMplInstruction({
+        policy: DEVNET_POLICY_ALL,
+        freezeAuthority: findFreezeAuthorityPk(DEVNET_POLICY_ALL),
+        mint: tokenMint,
+        metadata: findMetadataPda(tokenMint),
+        mintState: findMintStatePk(tokenMint),
+        from: alice.publicKey,
+        cmtProgram: CMT_PROGRAM,
+        instructions: SYSVAR_INSTRUCTIONS_PUBKEY,
+        edition: findMasterEditionV2Pda(tokenMint),
+        metadataProgram: TokenMetadataProgram.publicKey,
+      });
+      await process_tx(conn, [computeBudgetIx, ix], [alice]);
+
+      try {
+        await MintState.fromAccountAddress(conn, tokenMint);
+        assert.fail("should have thrown");
+      } catch (e: any) {
+        assert.include(e.message, "Expected");
+      }
+      const mint = await getMint(conn, tokenMint);
+      assert.equal(mint.supply.toString(), "1");
+
+      const mintState = await conn.getAccountInfo(findMintStatePk(tokenMint))
+      assert.isNull(mintState);
+    });
+    it("invalid 'from' as the update authority", async () => {
+      const [tokenMint, tokenAta] = await createTestMintAndWrap(
+        conn,
+        new anchor.Wallet(alice),
+        DEVNET_POLICY_ALL
+      );
+      assert.isNotEmpty(tokenMint.toBase58());
+      assert.isNotEmpty(tokenAta.toBase58());
+
+      const ix = createMigrateToMplInstruction({
+        policy: DEVNET_POLICY_ALL,
+        freezeAuthority: findFreezeAuthorityPk(DEVNET_POLICY_ALL),
+        mint: tokenMint,
+        metadata: findMetadataPda(tokenMint),
+        mintState: findMintStatePk(tokenMint),
+        from: bob.publicKey,
+        cmtProgram: CMT_PROGRAM,
+        instructions: SYSVAR_INSTRUCTIONS_PUBKEY,
+        edition: findMasterEditionV2Pda(tokenMint),
+        metadataProgram: TokenMetadataProgram.publicKey,
+      });
+
+      try {
+        await process_tx(conn, [computeBudgetIx, ix], [bob]);
+        assert.fail("should have thrown");
+      } catch (e: any) {
+        assert.include(e.message, "failed");
+      }
+    });
+  });
+
 });

@@ -652,6 +652,72 @@
         }
       ],
       "args": []
+    },
+    {
+      "name": "migrateToMpl",
+      "accounts": [
+        {
+          "name": "policy",
+          "isMut": false,
+          "isSigner": false
+        },
+        {
+          "name": "freezeAuthority",
+          "isMut": false,
+          "isSigner": false
+        },
+        {
+          "name": "mint",
+          "isMut": true,
+          "isSigner": false
+        },
+        {
+          "name": "metadata",
+          "isMut": true,
+          "isSigner": false
+        },
+        {
+          "name": "mintState",
+          "isMut": true,
+          "isSigner": false
+        },
+        {
+          "name": "from",
+          "isMut": true,
+          "isSigner": true
+        },
+        {
+          "name": "edition",
+          "isMut": true,
+          "isSigner": false
+        },
+        {
+          "name": "tokenProgram",
+          "isMut": false,
+          "isSigner": false
+        },
+        {
+          "name": "systemProgram",
+          "isMut": false,
+          "isSigner": false
+        },
+        {
+          "name": "cmtProgram",
+          "isMut": false,
+          "isSigner": false
+        },
+        {
+          "name": "instructions",
+          "isMut": false,
+          "isSigner": false
+        },
+        {
+          "name": "metadataProgram",
+          "isMut": false,
+          "isSigner": false
+        }
+      ],
+      "args": []
     }
   ],
   "accounts": [
@@ -962,6 +1028,11 @@
       "code": 6013,
       "name": "NotImplemented",
       "msg": "Not Implemented"
+    },
+    {
+      "code": 6014,
+      "name": "InvalidMetadataUpdateAuthority",
+      "msg": "Invalid metadata update_authority"
     }
   ],
   "metadata": {

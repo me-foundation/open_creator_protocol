@@ -62,4 +62,8 @@ pub mod open_creator_protocol {
     pub fn mint_to<'info>(ctx: Context<'_, '_, '_, 'info, MintToCtx<'info>>) -> Result<()> {
         nft_proxy::mint_to::handler(ctx)
     }
+
+    pub fn migrate_to_mpl<'info>(ctx: Context<'_, '_, '_, 'info, MigrateToMplCtx<'info>>) -> Result<()> {
+        nft_proxy::migrate_to_mpl::handler(ctx)
+    }
 }
