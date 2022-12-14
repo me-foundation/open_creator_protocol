@@ -16,7 +16,6 @@ pub struct CloseCtx<'info> {
     /// CHECK: Checked in cpi
     freeze_authority: UncheckedAccount<'info>,
     #[account(
-        mut,
         constraint = mint_state.mint == mint.key() @ OCPErrorCode::InvalidMint,
         constraint = mint.key() == from_account.mint @ OCPErrorCode::InvalidMint,
         constraint = mint_state.locked_by.is_none() @ OCPErrorCode::MintStateLocked,
