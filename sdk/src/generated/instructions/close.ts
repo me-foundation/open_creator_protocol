@@ -25,7 +25,7 @@ export const closeStruct = new beet.BeetArgsStruct<{
  *
  * @property [] policy
  * @property [] freezeAuthority
- * @property [_writable_] mint
+ * @property [] mint
  * @property [] metadata
  * @property [_writable_] mintState
  * @property [**signer**] from
@@ -81,7 +81,7 @@ export function createCloseInstruction(
     },
     {
       pubkey: accounts.mint,
-      isWritable: true,
+      isWritable: false,
       isSigner: false,
     },
     {
