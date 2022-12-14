@@ -687,6 +687,11 @@
           "isSigner": true
         },
         {
+          "name": "fromAccount",
+          "isMut": true,
+          "isSigner": false
+        },
+        {
           "name": "edition",
           "isMut": true,
           "isSigner": false

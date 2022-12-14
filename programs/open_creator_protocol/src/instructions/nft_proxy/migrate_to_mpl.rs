@@ -4,7 +4,7 @@ use crate::id;
 use crate::state::*;
 use anchor_lang::prelude::*;
 use anchor_lang::solana_program::sysvar;
-use anchor_spl::token::{Mint, Token};
+use anchor_spl::token::{Mint, Token, TokenAccount};
 use community_managed_token::instruction::create_migrate_authority_instruction;
 use solana_program::program::invoke;
 use solana_program::program::invoke_signed;
@@ -40,6 +40,14 @@ pub struct MigrateToMplCtx<'info> {
     mint_state: Box<Account<'info, MintState>>,
     #[account(mut)]
     from: Signer<'info>, // this is the update_authority of the metadata account
+    #[account(
+        mut,
+        constraint = from_account.mint == mint.key() @ OCPErrorCode::InvalidTokenAccount,
+        constraint = from_account.amount == 1 @ OCPErrorCode::InvalidTokenAccount,
+        // for from_account.owner, we don't need to check the owner of the token account because
+        // this migration is triggered by the update_authority (i.e. the "from" account)
+    )]
+    from_account: Box<Account<'info, TokenAccount>>,
     /// CHECK: going to create this account in cpi
     #[account(mut)]
     edition: UncheckedAccount<'info>,
@@ -107,6 +115,15 @@ pub fn handler<'info>(ctx: Context<'_, '_, '_, 'info, MigrateToMplCtx<'info>>) -
         ],
         &[&ctx.accounts.policy.signer_seeds()],
     )?;
+
+    anchor_spl::token::thaw_account(anchor_lang::prelude::CpiContext::new(
+        ctx.accounts.token_program.to_account_info(),
+        anchor_spl::token::ThawAccount {
+            account: ctx.accounts.from_account.to_account_info(),
+            mint: ctx.accounts.mint.to_account_info(),
+            authority: ctx.accounts.from.to_account_info(),
+        },
+    ))?;
 
     invoke(
         &mpl_token_metadata::instruction::create_master_edition_v3(

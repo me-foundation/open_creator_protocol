@@ -540,6 +540,7 @@ describe("policy", () => {
       assert.equal(bobAtaAcc.amount.toString(), "1");
       const aliceAtaAcc = await getAccount(conn, aliceAta);
       assert.equal(aliceAtaAcc.amount.toString(), "0");
+      assert.equal(aliceAtaAcc.isFrozen, true);
     });
   });
 
@@ -560,6 +561,7 @@ describe("policy", () => {
         metadata: findMetadataPda(tokenMint),
         mintState: findMintStatePk(tokenMint),
         from: alice.publicKey,
+        fromAccount: tokenAta,
         cmtProgram: CMT_PROGRAM,
         instructions: SYSVAR_INSTRUCTIONS_PUBKEY,
         edition: findMasterEditionV2Pda(tokenMint),
@@ -578,6 +580,9 @@ describe("policy", () => {
 
       const mintState = await conn.getAccountInfo(findMintStatePk(tokenMint))
       assert.isNull(mintState);
+      const aliceAtaAcc = await getAccount(conn, tokenAta);
+      assert.equal(aliceAtaAcc.amount.toString(), "1");
+      assert.equal(aliceAtaAcc.isFrozen, false);
     });
     it("invalid 'from' as the update authority", async () => {
       const [tokenMint, tokenAta] = await createTestMintAndWrap(
@@ -595,6 +600,7 @@ describe("policy", () => {
         metadata: findMetadataPda(tokenMint),
         mintState: findMintStatePk(tokenMint),
         from: bob.publicKey,
+        fromAccount: tokenAta,
         cmtProgram: CMT_PROGRAM,
         instructions: SYSVAR_INSTRUCTIONS_PUBKEY,
         edition: findMasterEditionV2Pda(tokenMint),

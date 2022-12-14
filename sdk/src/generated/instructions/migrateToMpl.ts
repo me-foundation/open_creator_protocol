@@ -29,6 +29,7 @@ export const migrateToMplStruct = new beet.BeetArgsStruct<{
  * @property [_writable_] metadata
  * @property [_writable_] mintState
  * @property [_writable_, **signer**] from
+ * @property [_writable_] fromAccount
  * @property [_writable_] edition
  * @property [] cmtProgram
  * @property [] instructions
@@ -44,6 +45,7 @@ export type MigrateToMplInstructionAccounts = {
   metadata: web3.PublicKey
   mintState: web3.PublicKey
   from: web3.PublicKey
+  fromAccount: web3.PublicKey
   edition: web3.PublicKey
   tokenProgram?: web3.PublicKey
   systemProgram?: web3.PublicKey
@@ -101,6 +103,11 @@ export function createMigrateToMplInstruction(
       pubkey: accounts.from,
       isWritable: true,
       isSigner: true,
+    },
+    {
+      pubkey: accounts.fromAccount,
+      isWritable: true,
+      isSigner: false,
     },
     {
       pubkey: accounts.edition,
