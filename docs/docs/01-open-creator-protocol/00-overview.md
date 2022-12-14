@@ -17,11 +17,14 @@ feature-packed standard built on Solana Token Standard that enables creators to 
   Protocol.
 
 OCP NFTs are based on `spl-managed-token`, `spl-token`, and `token metadata` programs.
-By definition, it's the same implementation of all the NFTs on solana:
 
 - Token Mint (supply = 1, decimals = 0)
 - Token Account
 - Token Metadata
+
+By definition, it's the same implementation of all the NFTs on solana. Everything is the same including
+interacting with wallets (except "transfer", that users can use ME profile page to send tokens including OCP NFTs),
+run token gated content, and prove token ownerships exactly like the normal Normal NFTs.
 
 :::note **What about Metaplex?**
 We intend to support Metaplex’s MIP-1 when it goes live in Q4 2022. MIP-1 will offer a

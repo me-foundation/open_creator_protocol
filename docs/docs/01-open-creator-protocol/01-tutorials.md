@@ -122,16 +122,20 @@ await process_tx(conn, [ix], [alice]);
 ## How to migrate OCP token back to other standards (e.g. Metaplex Master Edition)
 
 Notice that OCP NFTs are based on `spl-managed-token`, `spl-token`, and `token metadata` programs.
-By definition, it's the same implementation of all the NFTs on solana:
 
 - Token Mint (supply = 1, decimals = 0)
 - Token Account
 - Token Metadata
 
+By definition, it's the same implementation of all the NFTs on solana. Everything is the same including
+interacting with wallets (except "transfer", that users can use ME profile page to send tokens including OCP NFTs),
+run token gated content, and prove token ownerships exactly like the normal Normal NFTs.
+
 OCP provides an upstream authority to interact with `spl-managed-token` that wraps the token interfaces.
 
 And if creators want to migrate from OCP to other standards, the seamless way of doing that is to call
-one of the migration entrypoints in OCP. This is pending on the deployment of this [PR](https://github.com/magiceden-oss/open_creator_protocol/pull/49).
+one of the migration entrypoints in OCP. Example of how to run the migration with `update_authority` of
+the metadata can be found in this [PR](https://github.com/magiceden-oss/open_creator_protocol/pull/49).
 
 ```js
 TODO
