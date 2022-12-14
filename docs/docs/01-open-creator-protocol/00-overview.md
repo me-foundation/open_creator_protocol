@@ -16,6 +16,13 @@ feature-packed standard built on Solana Token Standard that enables creators to 
 * Existing collections will have the ability to burn and re-mint their existing collections on the Open Creator
   Protocol.
 
+OCP NFTs are based on `spl-managed-token`, `spl-token`, and `token metadata` programs.
+By definition, it's the same implementation of all the NFTs on solana:
+
+- Token Mint (supply = 1, decimals = 0)
+- Token Account
+- Token Metadata
+
 :::note **What about Metaplex?**
 We intend to support Metaplex’s MIP-1 when it goes live in Q4 2022. MIP-1 will offer a
 migration path towards royalty protection for existing collections. We also remain open-minded to adopting other
@@ -25,7 +32,7 @@ standards that receive market adoption and look forward to community feedback.
 ## How to get started with Open Creator Protocol
 
 * Get familiar with deploying the Open Creator Protocol by reading the [Tutorials](01-tutorials.md).
-* New creators can mint their collection with the [Open Creator Protocol CLI tool](https://github.com/magiceden-oss/open_creator_protocol).
+* New creators can mint their collection with the [Open Creator Protocol CLI tool](04-cli.md).
 * If you are interested in applying to Launchpad and using Open Creator Protocol, [please fill out an inquiry form](https://airtable.com/shrMhMDpcvt9nB6cu). Of
   course, collections do not need to launch on Launchpad in order to use Open Creator Protocol.
 

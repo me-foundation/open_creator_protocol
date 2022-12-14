@@ -8,6 +8,8 @@ description: "Describes the cli usage of the Open Creator Protocol."
 The CLI can be executed by running the following from the project directory:
 
 ```shell
+git clone https://github.com/magiceden-oss/open_creator_protocol.git
+cd open_creator_protocol
 ts-node sdk/src/cli.ts
 ```
 

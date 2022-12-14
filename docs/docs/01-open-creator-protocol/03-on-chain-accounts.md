@@ -3,6 +3,10 @@ title: On-chain Accounts
 description: "Describes the on-chain accounts available for the Open Creator Protocol."
 ---
 
+There are some useful default onchain accounts that people can use or test for OCP tokens.
+Creating policies is completely permissionless, and it's up to the creators to decide their own policies
+for their collections.
+
 | Network | Type | Address  |
 | ----------- | ----------- | ----- |
 | Devnet  | Program   | ocp4vWUzA2z2XMYJ3QhM9vWdyoyoQwAFJhRdVTbvo9E |

@@ -10,7 +10,7 @@ base for holding the freeze authority of the spl-token. And managed-token has 1:
 feature parity of the spl-token in terms of the token interfaces like `transfer`, `approve`, `revoke`, `burn`, `close`,
 `init_account` and `mint_to`.
 
-<img src={'../img/high_level.png'} alt={'high level design'} style={{borderRadius: '0px'}}/>
+<img src={'../img/high_level.png'} alt={'high level design'} style={{borderRadius: '0px'}} width="700" />
 
 ## Action Context
 
@@ -33,7 +33,7 @@ pub struct ActionCtx {
 }
 ```
 
-<img src={'../img/policy_account.png'} alt={'policy engine'} style={{borderRadius: '0px'}}/>
+<img src={'../img/policy_account.png'} alt={'policy engine'} style={{borderRadius: '0px'}} width="700" />
 
 ## Onchain Policy Engine
 
@@ -52,13 +52,15 @@ OCP utilises the JSON Rules Engine package, for more information [please see the
 | Metadata URI Filter | `{ "field": "metadata/uri", "operator": "string_has_substring", "value": "IPFS"}` |
 | Single Transfer Destination | `{ "field": "to", "operator": "string_equals", "value": ["1111111111111111111111111111111"]}` |
 
-:::note Transfer Logic
+:::note A Complex Transfer Logic Example
 
 Here's a full example of how a creator can leverage OCP to personalize the transferability. The logic works like this:
 
 - When the `action` is not `transfer`, pass
 - When the `action` is `transfer`, then one cannot transfer if the `metadata/name` contains a keyword `FROZEN`
 - When the `action` is `transfer`, then one cannot transfer to a specific address if the `metadata/name` doesn't contain `WINNER`.
+
+Example of the "Magic Mint"'s complex policy can be found on the [solana explorer link](https://explorer.solana.com/address/6hWFsAwxZLs4j2DCiV8QEYeufMCqv8zDK7PkNkjW5RVq/anchor-account).
 
 ```json
 {
