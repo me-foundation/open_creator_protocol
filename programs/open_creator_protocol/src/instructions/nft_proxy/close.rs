@@ -29,6 +29,7 @@ pub struct CloseCtx<'info> {
     metadata: UncheckedAccount<'info>,
     #[account(mut)]
     mint_state: Box<Account<'info, MintState>>,
+    #[account(mut)]
     from: Signer<'info>,
     #[account(
         mut, constraint = from_account.owner == from.key() @ OCPErrorCode::InvalidTokenAccount
