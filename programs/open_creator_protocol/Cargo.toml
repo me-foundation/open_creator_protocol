@@ -1,6 +1,6 @@
 [package]
 name = "open_creator_protocol"
-version = "0.2.5"
+version = "0.2.6"
 description = "Open Creator Protocol is an open protocol for creators to build utilities and policy engine for their tokens"
 edition = "2021"
 license = "Apache-2.0"
