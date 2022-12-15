@@ -30,6 +30,7 @@ export const closeStruct = new beet.BeetArgsStruct<{
  * @property [_writable_] mintState
  * @property [_writable_, **signer**] from
  * @property [_writable_] fromAccount
+ * @property [_writable_] destination
  * @property [] cmtProgram
  * @property [] instructions
  * @category Instructions
@@ -44,6 +45,7 @@ export type CloseInstructionAccounts = {
   mintState: web3.PublicKey
   from: web3.PublicKey
   fromAccount: web3.PublicKey
+  destination: web3.PublicKey
   tokenProgram?: web3.PublicKey
   cmtProgram: web3.PublicKey
   instructions: web3.PublicKey
@@ -101,6 +103,11 @@ export function createCloseInstruction(
     },
     {
       pubkey: accounts.fromAccount,
+      isWritable: true,
+      isSigner: false,
+    },
+    {
+      pubkey: accounts.destination,
       isWritable: true,
       isSigner: false,
     },
