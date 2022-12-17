@@ -32,7 +32,7 @@ For solana programs using cpi, here's an example of doing the transfer.
 
 ```toml
 [dependencies]
-open_creator_protocol = { version = "0.2.5", features = ["cpi"] }
+open_creator_protocol = { version = "0.2.8", features = ["cpi"] }
 ```
 
 ```rust
