@@ -8,7 +8,7 @@ use anchor_lang::solana_program::sysvar;
 use anchor_spl::token::Mint;
 use anchor_spl::token::Token;
 use anchor_spl::token::TokenAccount;
-use community_managed_token::instruction::create_close_account_instruction;
+use community_managed_token::instruction::create_close_account_with_destination_instruction;
 
 #[derive(Accounts)]
 pub struct CloseCtx<'info> {
@@ -35,6 +35,9 @@ pub struct CloseCtx<'info> {
         mut, constraint = from_account.owner == from.key() @ OCPErrorCode::InvalidTokenAccount
     )]
     from_account: Box<Account<'info, TokenAccount>>,
+    /// CHECK: authority should specify where the rent goes
+    #[account(mut)]
+    destination: UncheckedAccount<'info>,
     token_program: Program<'info, Token>,
     /// CHECK: checked in cpi
     #[account(address = community_managed_token::id())]
@@ -71,7 +74,12 @@ pub fn handler<'info>(ctx: Context<'_, '_, '_, 'info, CloseCtx<'info>>) -> Resul
     ctx.accounts.policy.matches(&action_ctx)?;
 
     invoke_signed(
-        &create_close_account_instruction(&ctx.accounts.mint.key(), &ctx.accounts.from.key(), &ctx.accounts.policy.key())?,
+        &create_close_account_with_destination_instruction(
+            &ctx.accounts.mint.key(),
+            &ctx.accounts.from.key(),
+            &ctx.accounts.destination.key(),
+            &ctx.accounts.policy.key(),
+        )?,
         &[
             ctx.accounts.from_account.to_account_info(),
             ctx.accounts.from.to_account_info(),
@@ -80,6 +88,7 @@ pub fn handler<'info>(ctx: Context<'_, '_, '_, 'info, CloseCtx<'info>>) -> Resul
             ctx.accounts.freeze_authority.to_account_info(),
             ctx.accounts.token_program.to_account_info(),
             ctx.accounts.cmt_program.to_account_info(),
+            ctx.accounts.destination.to_account_info(),
         ],
         &[&ctx.accounts.policy.signer_seeds()],
     )?;

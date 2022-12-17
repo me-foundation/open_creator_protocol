@@ -340,6 +340,7 @@ describe("policy", () => {
         fromAccount: aliceAta,
         cmtProgram: CMT_PROGRAM,
         instructions: SYSVAR_INSTRUCTIONS_PUBKEY,
+        destination: alice.publicKey,
       });
       await process_tx(conn, [computeBudgetIx, closeIx], [alice]);
       try {
