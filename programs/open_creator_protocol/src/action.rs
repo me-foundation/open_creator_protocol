@@ -28,7 +28,7 @@ pub struct ActionCtx {
 
 impl ActionCtx {
     fn parse_memo(&mut self, ix: Instruction) {
-        if ix.program_id.to_string() != "MemoSq4gqABAXKb96qnH8TysNcWxMyWCqXgDLGmfcHr" {
+        if ix.program_id != spl_memo::id() {
             return;
         }
         if ix.accounts.is_empty() {
