@@ -6,6 +6,7 @@ use anchor_lang::solana_program::program::invoke_signed;
 use anchor_lang::solana_program::program_option::COption;
 use anchor_lang::solana_program::sysvar;
 use anchor_spl::associated_token::AssociatedToken;
+use anchor_spl::metadata::MetadataAccount;
 use anchor_spl::token::Mint;
 use anchor_spl::token::Token;
 use community_managed_token::instruction::create_initialize_account_instruction;
@@ -23,8 +24,12 @@ pub struct InitAccountCtx<'info> {
         constraint = policy.get_freeze_authority(policy.key()) == freeze_authority.key() @ OCPErrorCode::InvalidPolicyMintAssociation,
     )]
     mint: Box<Account<'info, Mint>>,
-    /// CHECK: going to check in action ctx
-    metadata: UncheckedAccount<'info>,
+    #[account(
+        seeds = [b"metadata", anchor_spl::metadata::Metadata::id().as_ref(), mint.key().as_ref()],
+        seeds::program = anchor_spl::metadata::Metadata::id(),
+        bump,
+    )]
+    metadata: Box<Account<'info, MetadataAccount>>,
     #[account(mut)]
     mint_state: Box<Account<'info, MintState>>,
     #[account(mut)]
@@ -56,7 +61,7 @@ impl From<&mut InitAccountCtx<'_>> for ActionCtx {
             from: Some(ctx.from.key().to_string()),
             to: None,
             mint: ctx.mint.key().to_string(),
-            metadata: Some(to_metadata_ctx(&ctx.mint.key(), &ctx.metadata).expect("invalid metadata")),
+            metadata: Some(ctx.metadata.clone().into()),
             mint_account: Some(ctx.mint.clone().into()),
             mint_state: ctx.mint_state.clone().into_inner().into(),
         };

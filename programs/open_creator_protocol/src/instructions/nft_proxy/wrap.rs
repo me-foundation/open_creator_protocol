@@ -4,7 +4,8 @@ use crate::id;
 use crate::state::*;
 use anchor_lang::prelude::*;
 use anchor_lang::solana_program::sysvar;
-use anchor_spl::token::{set_authority, spl_token};
+use anchor_spl::metadata::MetadataAccount;
+use anchor_spl::token::set_authority;
 use anchor_spl::token::{Mint, Token};
 use solana_program::program_option::COption;
 
@@ -24,8 +25,12 @@ pub struct WrapCtx<'info> {
         constraint = mint.mint_authority == COption::Some(mint_authority.key()) @ OCPErrorCode::InvalidMint,
     )]
     mint: Box<Account<'info, Mint>>,
-    /// CHECK: going to check in action ctx
-    metadata: UncheckedAccount<'info>,
+    #[account(
+        seeds = [b"metadata", anchor_spl::metadata::Metadata::id().as_ref(), mint.key().as_ref()],
+        seeds::program = anchor_spl::metadata::Metadata::id(),
+        bump,
+    )]
+    metadata: Box<Account<'info, MetadataAccount>>,
     #[account(
         init,
         payer = from,
@@ -58,7 +63,7 @@ impl From<&mut WrapCtx<'_>> for ActionCtx {
             from: Some(ctx.from.key().to_string()),
             to: None,
             mint: ctx.mint.key().to_string(),
-            metadata: Some(to_metadata_ctx(&ctx.mint.key(), &ctx.metadata).expect("invalid metadata")),
+            metadata: Some(ctx.metadata.clone().into()),
             mint_account: None,
             mint_state: ctx.mint_state.clone().into_inner().into(),
         };
@@ -88,7 +93,7 @@ pub fn handler<'info>(ctx: Context<'_, '_, '_, 'info, WrapCtx<'info>>) -> Result
                 account_or_mint: ctx.accounts.mint.to_account_info(),
             },
         ),
-        spl_token::instruction::AuthorityType::FreezeAccount,
+        anchor_spl::token::spl_token::instruction::AuthorityType::FreezeAccount,
         Some(policy.get_freeze_authority(policy.key())),
     )?;
 
@@ -100,7 +105,7 @@ pub fn handler<'info>(ctx: Context<'_, '_, '_, 'info, WrapCtx<'info>>) -> Result
                 account_or_mint: ctx.accounts.mint.to_account_info(),
             },
         ),
-        spl_token::instruction::AuthorityType::MintTokens,
+        anchor_spl::token::spl_token::instruction::AuthorityType::MintTokens,
         Some(policy.get_freeze_authority(policy.key())),
     )?;
 
