@@ -184,6 +184,44 @@ describe("policy", () => {
     });
   });
 
+  describe("Can lock and unlock without approving a delegate", () => {
+    it("happy path", async () => {
+      const [tokenMint, aliceAta] = await createTestMintAndWrap(
+        conn,
+        new anchor.Wallet(alice),
+        DEVNET_POLICY_ALL
+      );
+      assert.isNotEmpty(tokenMint.toBase58());
+      assert.isNotEmpty(aliceAta.toBase58());
+
+      const lockIx = createLockInstruction({
+        policy: DEVNET_POLICY_ALL,
+        mint: tokenMint,
+        metadata: findMetadataPda(tokenMint),
+        mintState: findMintStatePk(tokenMint),
+        from: alice.publicKey,
+        fromAccount: aliceAta,
+        cmtProgram: CMT_PROGRAM,
+        instructions: SYSVAR_INSTRUCTIONS_PUBKEY,
+        to: bob.publicKey,
+      });
+
+      await process_tx(conn, [computeBudgetIx, lockIx], [alice]);
+
+      const unlockIx = createUnlockInstruction({
+        policy: DEVNET_POLICY_ALL,
+        mint: tokenMint,
+        metadata: findMetadataPda(tokenMint),
+        mintState: findMintStatePk(tokenMint),
+        from: bob.publicKey,
+        cmtProgram: CMT_PROGRAM,
+        instructions: SYSVAR_INSTRUCTIONS_PUBKEY,
+      });
+
+      await process_tx(conn, [computeBudgetIx, unlockIx], [bob]);
+    });
+  });
+
   describe("Can approve a delegate", () => {
     it("happy path", async () => {
       const [tokenMint, aliceAta] = await createTestMintAndWrap(

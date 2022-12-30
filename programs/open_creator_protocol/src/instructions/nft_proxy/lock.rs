@@ -6,7 +6,6 @@ use anchor_lang::solana_program::sysvar;
 use anchor_spl::metadata::MetadataAccount;
 use anchor_spl::token::Mint;
 use anchor_spl::token::TokenAccount;
-use solana_program::program_option::COption;
 
 #[derive(Accounts)]
 pub struct LockCtx<'info> {
@@ -29,7 +28,6 @@ pub struct LockCtx<'info> {
     from: Signer<'info>,
     #[account(
         constraint = from_account.owner == from.key() && from_account.amount == 1 @ OCPErrorCode::InvalidTokenAccount,
-        constraint = from_account.delegate == COption::Some(to.key()) @ OCPErrorCode::InvalidTokenAccount,
     )]
     from_account: Box<Account<'info, TokenAccount>>,
     /// CHECK: Account is not read from
