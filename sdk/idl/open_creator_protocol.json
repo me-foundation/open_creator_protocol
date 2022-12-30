@@ -1,5 +1,5 @@
 {
-  "version": "0.2.9",
+  "version": "0.3.0",
   "name": "open_creator_protocol",
   "instructions": [
     {
@@ -967,7 +967,7 @@
   "metadata": {
     "address": "ocp4vWUzA2z2XMYJ3QhM9vWdyoyoQwAFJhRdVTbvo9E",
     "origin": "anchor",
-    "binaryVersion": "0.25.0",
-    "libVersion": "0.25.0"
+    "binaryVersion": "0.26.0",
+    "libVersion": "^0.26.0"
   }
 }

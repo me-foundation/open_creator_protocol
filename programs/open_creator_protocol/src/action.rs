@@ -1,15 +1,14 @@
-use crate::{errors::OCPErrorCode, state::MintState};
+use crate::state::MintState;
 use anchor_lang::prelude::*;
-use anchor_spl::token::{Mint, TokenAccount};
-use mpl_token_metadata::{
-    pda::find_metadata_account,
-    state::{Metadata, TokenMetadataAccount},
+use anchor_spl::{
+    metadata::MetadataAccount,
+    token::{Mint, TokenAccount},
 };
 use serde::{Deserialize, Serialize};
 use solana_program::{
     instruction::Instruction, program_option::COption, serialize_utils::read_u16, sysvar::instructions::load_instruction_at_checked,
 };
-use std::cmp::{max, min};
+use std::cmp::max;
 
 #[derive(Default, Serialize)]
 pub struct ActionCtx {
@@ -76,17 +75,15 @@ pub struct MetadataCtx {
     pub seller_fee_basis_points: u16,
 }
 
-pub fn to_metadata_ctx(mint: &Pubkey, metadata: &AccountInfo) -> Result<MetadataCtx> {
-    if find_metadata_account(mint).0 != metadata.key() {
-        return Err(OCPErrorCode::InvalidMetadata.into());
+impl From<Box<Account<'_, MetadataAccount>>> for MetadataCtx {
+    fn from(metadata: Box<Account<'_, MetadataAccount>>) -> Self {
+        Self {
+            name: metadata.data.name.clone(),
+            symbol: metadata.data.symbol.clone(),
+            uri: metadata.data.uri.clone(),
+            seller_fee_basis_points: metadata.data.seller_fee_basis_points,
+        }
     }
-    let parsed_metadata = Metadata::from_account_info(metadata)?;
-    Ok(MetadataCtx {
-        name: parsed_metadata.data.name,
-        uri: parsed_metadata.data.uri,
-        symbol: parsed_metadata.data.symbol,
-        seller_fee_basis_points: parsed_metadata.data.seller_fee_basis_points,
-    })
 }
 
 #[derive(Default, Serialize, Deserialize)]
@@ -173,7 +170,7 @@ impl From<MintState> for MintStateCtx {
             last_transferred_at: mint_state.last_transferred_at,
             transferred_count: mint_state.transferred_count,
 
-            derived_cooldown: min(max(0, now - mint_state.last_approved_at), max(0, now - mint_state.last_transferred_at)),
+            derived_cooldown: (now - mint_state.last_approved_at).clamp(0, max(0, now - mint_state.last_transferred_at)),
             derived_datetime: now.into(),
         }
     }

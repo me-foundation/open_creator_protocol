@@ -3,6 +3,7 @@ use crate::errors::OCPErrorCode;
 use crate::state::*;
 use anchor_lang::prelude::*;
 use anchor_lang::solana_program::sysvar;
+use anchor_spl::metadata::MetadataAccount;
 use anchor_spl::token::Mint;
 use anchor_spl::token::TokenAccount;
 use solana_program::program_option::COption;
@@ -17,8 +18,12 @@ pub struct LockCtx<'info> {
         constraint = mint_state.policy == policy.key() @ OCPErrorCode::InvalidPolicyMintAssociation,
     )]
     mint: Box<Account<'info, Mint>>,
-    /// CHECK: going to check in action ctx
-    metadata: UncheckedAccount<'info>,
+    #[account(
+        seeds = [b"metadata", anchor_spl::metadata::Metadata::id().as_ref(), mint.key().as_ref()],
+        seeds::program = anchor_spl::metadata::Metadata::id(),
+        bump,
+    )]
+    metadata: Box<Account<'info, MetadataAccount>>,
     #[account(mut)]
     mint_state: Box<Account<'info, MintState>>,
     from: Signer<'info>,
@@ -48,7 +53,7 @@ impl From<&mut LockCtx<'_>> for ActionCtx {
             from: Some(ctx.from.key().to_string()),
             to: Some(ctx.to.key().to_string()),
             mint: ctx.mint.key().to_string(),
-            metadata: Some(to_metadata_ctx(&ctx.mint.key(), &ctx.metadata).expect("invalid metadata")),
+            metadata: Some(ctx.metadata.clone().into()),
             mint_account: Some(ctx.mint.clone().into()),
             mint_state: ctx.mint_state.clone().into_inner().into(),
         };
