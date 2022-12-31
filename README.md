@@ -30,4 +30,4 @@ View our live [documentation](https://magiceden-oss.github.io/open_creator_proto
 
 
 ## Licenses
-- Apache 2.0
+Apache 2.0
