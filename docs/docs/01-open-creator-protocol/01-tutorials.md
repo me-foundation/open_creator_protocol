@@ -134,11 +134,32 @@ run token gated content, and prove token ownerships exactly like the normal Norm
 OCP provides an upstream authority to interact with `spl-managed-token` that wraps the token interfaces.
 
 And if creators want to migrate from OCP to other standards, the seamless way of doing that is to call
-one of the migration entrypoints in OCP. Example of how to run the migration with `update_authority` of
-the metadata can be found in this [PR](https://github.com/magiceden-oss/open_creator_protocol/pull/49).
+one of the migration entrypoints in OCP.
 
 ```js
-TODO
+const ix = createMigrateToMplInstruction({
+  policy: CLI_POLICY_PUBKEY,
+  freezeAuthority: findFreezeAuthorityPk(CLI_POLICY_PUBKEY),
+  mint: CLI_MINT,
+  metadata: findMetadataPda(CLI_MINT),
+  mintState: findMintStatePk(CLI_MINT),
+  from: CLI_UPDATE_AUTHORITY,
+  fromAccount: tokenAccount,
+  cmtProgram: CMT_PROGRAM,
+  instructions: SYSVAR_INSTRUCTIONS_PUBKEY,
+  edition: findMasterEditionV2Pda(CLI_MINT),
+  metadataProgram: TokenMetadataProgram.publicKey,
+});
+await process_tx(conn, [ix], [CLI_UPDATE_AUTHORITY]);
+```
+
+```bash
+CLI_COMMAND=migrate_to_mpl \
+CLI_POLICY_PUBKEY=TODO \
+CLI_MINT=TODO \
+CLI_UPDATE_AUTHORITY=./metadata_update_authority_keypair.json \
+CLI_RPC=https://api.devnet.solana.com \
+  ts-node sdk/src/cli.ts
 ```
 
 ## How to run OCP locally (for development)

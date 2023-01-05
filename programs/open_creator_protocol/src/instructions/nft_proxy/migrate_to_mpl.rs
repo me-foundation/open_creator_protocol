@@ -31,6 +31,7 @@ pub struct MigrateToMplCtx<'info> {
     mint: Box<Account<'info, Mint>>,
     /// CHECK: going to check in action ctx
     #[account(
+        mut,
         seeds = [b"metadata", anchor_spl::metadata::Metadata::id().as_ref(), mint.key().as_ref()],
         seeds::program = anchor_spl::metadata::Metadata::id(),
         bump,
