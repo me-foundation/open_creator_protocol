@@ -4,6 +4,7 @@ use crate::id;
 use crate::state::*;
 use anchor_lang::prelude::*;
 use anchor_lang::solana_program::sysvar;
+use anchor_spl::metadata::MetadataAccount;
 use anchor_spl::token::{Mint, Token, TokenAccount};
 use community_managed_token::instruction::create_migrate_authority_instruction;
 use solana_program::program::invoke;
@@ -29,8 +30,12 @@ pub struct MigrateToMplCtx<'info> {
     )]
     mint: Box<Account<'info, Mint>>,
     /// CHECK: going to check in action ctx
-    #[account(mut)]
-    metadata: UncheckedAccount<'info>,
+    #[account(
+        seeds = [b"metadata", anchor_spl::metadata::Metadata::id().as_ref(), mint.key().as_ref()],
+        seeds::program = anchor_spl::metadata::Metadata::id(),
+        bump,
+    )]
+    metadata: Box<Account<'info, MetadataAccount>>,
     #[account(
         mut,
         close = from,
@@ -61,7 +66,7 @@ pub struct MigrateToMplCtx<'info> {
     #[account(address = sysvar::instructions::id())]
     instructions: UncheckedAccount<'info>,
     /// CHECK: This is not dangerous because the ID is checked with mpl_token_metadata::id()
-    #[account(address = mpl_token_metadata::id())]
+    #[account(address = anchor_spl::metadata::Metadata::id())]
     metadata_program: UncheckedAccount<'info>,
 }
 
@@ -76,7 +81,7 @@ impl From<&mut MigrateToMplCtx<'_>> for ActionCtx {
             from: Some(ctx.from.key().to_string()),
             to: None,
             mint: ctx.mint.key().to_string(),
-            metadata: Some(to_metadata_ctx(&ctx.mint.key(), &ctx.metadata).expect("invalid metadata")),
+            metadata: Some(ctx.metadata.clone().into()),
             mint_account: None,
             mint_state: ctx.mint_state.clone().into_inner().into(),
         };
