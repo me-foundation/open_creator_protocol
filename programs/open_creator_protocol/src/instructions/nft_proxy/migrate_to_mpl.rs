@@ -34,6 +34,7 @@ pub struct MigrateToMplCtx<'info> {
         mut,
         seeds = [b"metadata", anchor_spl::metadata::Metadata::id().as_ref(), mint.key().as_ref()],
         seeds::program = anchor_spl::metadata::Metadata::id(),
+        constraint = metadata.update_authority == from.key() @ OCPErrorCode::InvalidMetadataUpdateAuthority,
         bump,
     )]
     metadata: Box<Account<'info, MetadataAccount>>,
@@ -96,12 +97,6 @@ impl From<&mut MigrateToMplCtx<'_>> for ActionCtx {
 pub fn handler<'info>(ctx: Context<'_, '_, '_, 'info, MigrateToMplCtx<'info>>) -> Result<()> {
     let action_ctx: ActionCtx = ctx.accounts.into();
     ctx.accounts.policy.matches(&action_ctx)?;
-
-    // We need to verify that the metadata account's update authority is the same as the from account
-    // Also, we already verified the mint -> metadata derivation via the to_metadata_ctx function
-    if action_ctx.metadata.expect("metadata account should be available").update_authority != ctx.accounts.from.key().to_string() {
-        return Err(OCPErrorCode::InvalidMetadataUpdateAuthority.into());
-    }
 
     invoke_signed(
         &create_migrate_authority_instruction(
