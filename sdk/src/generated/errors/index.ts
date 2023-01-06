@@ -328,6 +328,32 @@ createErrorFromCodeLookup.set(0x177d, () => new NotImplementedError())
 createErrorFromNameLookup.set('NotImplemented', () => new NotImplementedError())
 
 /**
+ * InvalidMetadataUpdateAuthority: 'Invalid metadata update_authority'
+ *
+ * @category Errors
+ * @category generated
+ */
+export class InvalidMetadataUpdateAuthorityError extends Error {
+  readonly code: number = 0x177e
+  readonly name: string = 'InvalidMetadataUpdateAuthority'
+  constructor() {
+    super('Invalid metadata update_authority')
+    if (typeof Error.captureStackTrace === 'function') {
+      Error.captureStackTrace(this, InvalidMetadataUpdateAuthorityError)
+    }
+  }
+}
+
+createErrorFromCodeLookup.set(
+  0x177e,
+  () => new InvalidMetadataUpdateAuthorityError()
+)
+createErrorFromNameLookup.set(
+  'InvalidMetadataUpdateAuthority',
+  () => new InvalidMetadataUpdateAuthorityError()
+)
+
+/**
  * Attempts to resolve a custom program error from the provided error code.
  * @category Errors
  * @category generated

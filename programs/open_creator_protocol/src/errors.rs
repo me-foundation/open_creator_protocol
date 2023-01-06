@@ -30,4 +30,6 @@ pub enum OCPErrorCode {
     NumericalOverflow,
     #[msg("Not Implemented")]
     NotImplemented,
+    #[msg("Invalid metadata update_authority")]
+    InvalidMetadataUpdateAuthority,
 }
