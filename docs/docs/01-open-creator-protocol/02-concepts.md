@@ -130,6 +130,9 @@ export const findMintStatePk = (mint: PublicKey) => {
     PROGRAM_ID
   )[0];
 };
+
+const mintStatePk = findMintStatePk(mint);
+const mintStateAcc = await conn.getAccountInfo(mintStatePk): // returns null | AccountInfo<Buffer>, and then you can decide if it's OCP going forward.
 ```
 
 ## Dynamic Royalties
