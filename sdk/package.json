@@ -1,6 +1,6 @@
 {
   "name": "@magiceden-oss/open_creator_protocol",
-  "version": "0.3.2",
+  "version": "0.3.3",
   "description": "SDK for open_creator_protocol",
   "scripts": {
     "build": "tsc"
