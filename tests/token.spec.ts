@@ -1,4 +1,5 @@
 import { findMasterEditionV2Pda, findMetadataPda, TokenMetadataProgram } from "@metaplex-foundation/js";
+import { MasterEditionV2 } from "@metaplex-foundation/mpl-token-metadata";
 import * as anchor from "@project-serum/anchor";
 import {
   ASSOCIATED_TOKEN_PROGRAM_ID,
@@ -583,6 +584,9 @@ describe("policy", () => {
       const aliceAtaAcc = await getAccount(conn, tokenAta);
       assert.equal(aliceAtaAcc.amount.toString(), "1");
       assert.equal(aliceAtaAcc.isFrozen, false);
+
+      const editionAcc = await MasterEditionV2.fromAccountAddress(conn, findMasterEditionV2Pda(tokenMint));
+      assert.equal(editionAcc.maxSupply.toString(), "0");
     });
     it("invalid 'from' as the update authority", async () => {
       const [tokenMint, tokenAta] = await createTestMintAndWrap(

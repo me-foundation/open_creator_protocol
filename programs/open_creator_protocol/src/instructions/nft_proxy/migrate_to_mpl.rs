@@ -135,7 +135,7 @@ pub fn handler<'info>(ctx: Context<'_, '_, '_, 'info, MigrateToMplCtx<'info>>) -
             ctx.accounts.from.key(),
             ctx.accounts.metadata.key(),
             ctx.accounts.from.key(),
-            None,
+            Some(0),
         ),
         &[
             ctx.accounts.edition.to_account_info(),
