@@ -21,7 +21,7 @@ anchor-lang = { version = "<1", features = ["init-if-needed"] }
 anchor-spl = { version = "<1", features = ["metadata"] }
 community-managed-token = { version = "^0.2.0", features = ["no-entrypoint"] }
 json-rules-engine-fork = "0.9.7"
-mpl-token-metadata = { version = "^1.9.0", features = ["no-entrypoint"] }
+mpl-token-metadata = { version = "<2", features = ["no-entrypoint"] }
 serde = { version = "1.0", features = ["derive"] }
 serde_json = "1.0.88"
 solana-program = "~1.14.0"
