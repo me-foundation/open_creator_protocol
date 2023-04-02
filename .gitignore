@@ -4,6 +4,5 @@ target
 .DS_Store
 .vscode
 /scripts
-Cargo.lock
 keypair.json
 yarn.lock
