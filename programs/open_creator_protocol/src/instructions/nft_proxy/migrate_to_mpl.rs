@@ -70,6 +70,8 @@ pub struct MigrateToMplCtx<'info> {
     /// CHECK: This is not dangerous because the ID is checked with mpl_token_metadata::id()
     #[account(address = anchor_spl::metadata::Metadata::id())]
     metadata_program: UncheckedAccount<'info>,
+    #[account(mut)]
+    payer: Signer<'info>,
 }
 
 impl From<&mut MigrateToMplCtx<'_>> for ActionCtx {
@@ -79,7 +81,7 @@ impl From<&mut MigrateToMplCtx<'_>> for ActionCtx {
             program_ids: vec![],
             last_memo_data: None,
             last_memo_signer: None,
-            payer: None,
+            payer: Some(ctx.payer.key().to_string()),
             from: Some(ctx.from.key().to_string()),
             to: None,
             mint: ctx.mint.key().to_string(),
@@ -134,7 +136,7 @@ pub fn handler<'info>(ctx: Context<'_, '_, '_, 'info, MigrateToMplCtx<'info>>) -
             ctx.accounts.from.key(),
             ctx.accounts.from.key(),
             ctx.accounts.metadata.key(),
-            ctx.accounts.from.key(),
+            ctx.accounts.payer.key(),
             Some(0),
         ),
         &[
@@ -142,6 +144,7 @@ pub fn handler<'info>(ctx: Context<'_, '_, '_, 'info, MigrateToMplCtx<'info>>) -
             ctx.accounts.mint.to_account_info(),
             ctx.accounts.from.to_account_info(),
             ctx.accounts.metadata.to_account_info(),
+            ctx.accounts.payer.to_account_info(),
             ctx.accounts.token_program.to_account_info(),
             ctx.accounts.system_program.to_account_info(),
             ctx.accounts.metadata_program.to_account_info(),

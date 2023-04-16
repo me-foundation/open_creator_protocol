@@ -567,6 +567,7 @@ describe("policy", () => {
         instructions: SYSVAR_INSTRUCTIONS_PUBKEY,
         edition: findMasterEditionV2Pda(tokenMint),
         metadataProgram: TokenMetadataProgram.publicKey,
+        payer: alice.publicKey,
       });
       await process_tx(conn, [computeBudgetIx, ix], [alice]);
 
@@ -579,13 +580,62 @@ describe("policy", () => {
       const mint = await getMint(conn, tokenMint);
       assert.equal(mint.supply.toString(), "1");
 
-      const mintState = await conn.getAccountInfo(findMintStatePk(tokenMint))
+      const mintState = await conn.getAccountInfo(findMintStatePk(tokenMint));
       assert.isNull(mintState);
       const aliceAtaAcc = await getAccount(conn, tokenAta);
       assert.equal(aliceAtaAcc.amount.toString(), "1");
       assert.equal(aliceAtaAcc.isFrozen, false);
 
-      const editionAcc = await MasterEditionV2.fromAccountAddress(conn, findMasterEditionV2Pda(tokenMint));
+      const editionAcc = await MasterEditionV2.fromAccountAddress(
+        conn,
+        findMasterEditionV2Pda(tokenMint)
+      );
+      assert.equal(editionAcc.maxSupply.toString(), "0");
+    });
+    it("Can handle paying from a different account", async () => {
+      const [tokenMint, tokenAta] = await createTestMintAndWrap(
+        conn,
+        new anchor.Wallet(bob),
+        DEVNET_POLICY_ALL
+      );
+      assert.isNotEmpty(tokenMint.toBase58());
+      assert.isNotEmpty(tokenAta.toBase58());
+
+      const ix = createMigrateToMplInstruction({
+        policy: DEVNET_POLICY_ALL,
+        freezeAuthority: findFreezeAuthorityPk(DEVNET_POLICY_ALL),
+        mint: tokenMint,
+        metadata: findMetadataPda(tokenMint),
+        mintState: findMintStatePk(tokenMint),
+        from: bob.publicKey,
+        fromAccount: tokenAta,
+        cmtProgram: CMT_PROGRAM,
+        instructions: SYSVAR_INSTRUCTIONS_PUBKEY,
+        edition: findMasterEditionV2Pda(tokenMint),
+        metadataProgram: TokenMetadataProgram.publicKey,
+        payer: alice.publicKey,
+      });
+      await process_tx(conn, [computeBudgetIx, ix], [bob, alice]);
+
+      try {
+        await MintState.fromAccountAddress(conn, tokenMint);
+        assert.fail("should have thrown");
+      } catch (e: any) {
+        assert.include(e.message, "Expected");
+      }
+      const mint = await getMint(conn, tokenMint);
+      assert.equal(mint.supply.toString(), "1");
+
+      const mintState = await conn.getAccountInfo(findMintStatePk(tokenMint));
+      assert.isNull(mintState);
+      const aliceAtaAcc = await getAccount(conn, tokenAta);
+      assert.equal(aliceAtaAcc.amount.toString(), "1");
+      assert.equal(aliceAtaAcc.isFrozen, false);
+
+      const editionAcc = await MasterEditionV2.fromAccountAddress(
+        conn,
+        findMasterEditionV2Pda(tokenMint)
+      );
       assert.equal(editionAcc.maxSupply.toString(), "0");
     });
     it("invalid 'from' as the update authority", async () => {
@@ -609,6 +659,7 @@ describe("policy", () => {
         instructions: SYSVAR_INSTRUCTIONS_PUBKEY,
         edition: findMasterEditionV2Pda(tokenMint),
         metadataProgram: TokenMetadataProgram.publicKey,
+        payer: alice.publicKey,
       });
 
       try {

@@ -34,6 +34,7 @@ export const migrateToMplStruct = new beet.BeetArgsStruct<{
  * @property [] cmtProgram
  * @property [] instructions
  * @property [] metadataProgram
+ * @property [_writable_, **signer**] payer
  * @category Instructions
  * @category MigrateToMpl
  * @category generated
@@ -52,6 +53,7 @@ export type MigrateToMplInstructionAccounts = {
   cmtProgram: web3.PublicKey
   instructions: web3.PublicKey
   metadataProgram: web3.PublicKey
+  payer: web3.PublicKey
 }
 
 export const migrateToMplInstructionDiscriminator = [
@@ -138,6 +140,11 @@ export function createMigrateToMplInstruction(
       pubkey: accounts.metadataProgram,
       isWritable: false,
       isSigner: false,
+    },
+    {
+      pubkey: accounts.payer,
+      isWritable: true,
+      isSigner: true,
     },
   ]
 
