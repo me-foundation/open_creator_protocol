@@ -91,7 +91,6 @@ export const process_tx = async (
   tx.partialSign(...signers);
   try {
     const sig = await conn.sendRawTransaction(tx.serialize());
-    console.log({ sig });
     await conn.confirmTransaction(sig);
     return sig;
   } catch (e) {

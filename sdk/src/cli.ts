@@ -116,6 +116,7 @@ async function migrate_to_mpl() {
     instructions: SYSVAR_INSTRUCTIONS_PUBKEY,
     edition: findMasterEditionV2Pda(CLI_MINT),
     metadataProgram: TokenMetadataProgram.publicKey,
+    payer: CLI_UPDATE_AUTHORITY.publicKey,
   });
   await process_tx(conn, [ix], [CLI_UPDATE_AUTHORITY]);
   console.log("migrated to mpl, mint: ", CLI_MINT.toBase58());

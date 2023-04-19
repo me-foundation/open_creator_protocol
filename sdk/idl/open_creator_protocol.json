@@ -720,6 +720,11 @@
           "name": "metadataProgram",
           "isMut": false,
           "isSigner": false
+        },
+        {
+          "name": "payer",
+          "isMut": true,
+          "isSigner": true
         }
       ],
       "args": []
