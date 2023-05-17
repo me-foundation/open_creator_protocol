@@ -23,7 +23,7 @@ Open Creator Protocol (OCP) is an open protocol for creators to build utilities 
 
 ## Documentation
 
-View our live [documentation](https://magiceden-oss.github.io/open_creator_protocol/).
+View our live [documentation](https://magicdao-oss.github.io/open_creator_protocol/).
 
 ## Security
 [Audit by Halborn](./docs/static/OCP_Security_Audit_Report_Halborn_Final.pdf)
