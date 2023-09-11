@@ -11,6 +11,7 @@ import {
 } from "./generated";
 import {
   CMT_PROGRAM,
+  computeBudgetIx,
   findFreezeAuthorityPk,
   findMintStatePk,
   findPolicyPk,
@@ -118,7 +119,7 @@ async function migrate_to_mpl() {
     metadataProgram: TokenMetadataProgram.publicKey,
     payer: CLI_UPDATE_AUTHORITY.publicKey,
   });
-  await process_tx(conn, [ix], [CLI_UPDATE_AUTHORITY]);
+  await process_tx(conn, [computeBudgetIx, ix], [CLI_UPDATE_AUTHORITY]);
   console.log("migrated to mpl, mint: ", CLI_MINT.toBase58());
 }
 
