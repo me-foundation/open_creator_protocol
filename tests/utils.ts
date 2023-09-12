@@ -4,7 +4,7 @@ import {
   walletAdapterIdentity,
 } from "@metaplex-foundation/js";
 import {
-  createCreateMetadataAccountV2Instruction,
+  createCreateMetadataAccountV3Instruction,
   DataV2,
 } from "@metaplex-foundation/mpl-token-metadata";
 import * as anchor from "@project-serum/anchor";
@@ -172,7 +172,7 @@ const createNewMintTransaction = async (
       freezeAuthority, //Freeze Authority
       TOKEN_PROGRAM_ID
     ),
-    createCreateMetadataAccountV2Instruction(
+    createCreateMetadataAccountV3Instruction(
       {
         metadata: metadataPDA,
         mint: mintKeypair.publicKey,
@@ -181,9 +181,10 @@ const createNewMintTransaction = async (
         updateAuthority: mintAuthority,
       },
       {
-        createMetadataAccountArgsV2: {
+        createMetadataAccountArgsV3: {
           data: ON_CHAIN_METADATA,
           isMutable: true,
+          collectionDetails: null,
         },
       }
     )
@@ -214,9 +215,13 @@ export const createPolicyFixture = async (conn: Connection, payer: Keypair) => {
         {
           and: [
             {
-                field: "program_ids",
-                operator: "string_does_not_contain_any",
-                value: ["aaaa111111111111111111111111", "bbbb111111111111111111111111", "cccc111111111111111111111111"],
+              field: "program_ids",
+              operator: "string_does_not_contain_any",
+              value: [
+                "aaaa111111111111111111111111",
+                "bbbb111111111111111111111111",
+                "cccc111111111111111111111111",
+              ],
             },
             {
               or: [
