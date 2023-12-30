@@ -163,7 +163,7 @@ mod tests {
             };
             let metadat_roaylty_bp = 500;
             assert_eq!(price_linear.get_royalty_bp(0, metadat_roaylty_bp).unwrap(), 500);
-            assert_eq!(price_linear.get_royalty_bp(1 * LAMPORTS_PER_SOL, metadat_roaylty_bp).unwrap(), 500);
+            assert_eq!(price_linear.get_royalty_bp(LAMPORTS_PER_SOL, metadat_roaylty_bp).unwrap(), 500);
             assert_eq!(price_linear.get_royalty_bp(2 * LAMPORTS_PER_SOL, metadat_roaylty_bp).unwrap(), 375);
             assert_eq!(price_linear.get_royalty_bp(3 * LAMPORTS_PER_SOL, metadat_roaylty_bp).unwrap(), 250);
             assert_eq!(price_linear.get_royalty_bp(100 * LAMPORTS_PER_SOL, metadat_roaylty_bp).unwrap(), 250);

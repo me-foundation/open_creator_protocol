@@ -230,7 +230,7 @@ mod tests {
             .replace(
                 "PLACEHOLDER",
                 &(0..10)
-                    .map(|_| format!("\"{}\"", Pubkey::new_unique().to_string()))
+                    .map(|_| format!("\"{}\"", Pubkey::new_unique()))
                     .collect::<Vec<String>>()
                     .join(","),
             ),
@@ -245,7 +245,7 @@ mod tests {
             .replace(
                 "PLACEHOLDER",
                 &(0..18)
-                    .map(|_| format!("\"{}\"", Pubkey::new_unique().to_string()))
+                    .map(|_| format!("\"{}\"", Pubkey::new_unique()))
                     .collect::<Vec<String>>()
                     .join(","),
             ),
@@ -260,7 +260,7 @@ mod tests {
             .replace(
                 "PLACEHOLDER",
                 &(0..100)
-                    .map(|_| format!("\"{}\"", Pubkey::new_unique().to_string()))
+                    .map(|_| format!("\"{}\"", Pubkey::new_unique()))
                     .collect::<Vec<String>>()
                     .join(","),
             ),

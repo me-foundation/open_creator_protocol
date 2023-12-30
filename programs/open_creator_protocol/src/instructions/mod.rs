@@ -1,3 +1,5 @@
+#![allow(ambiguous_glob_reexports)]
+
 pub mod policy;
 pub use policy::init_policy::*;
 pub use policy::update_policy::*;
