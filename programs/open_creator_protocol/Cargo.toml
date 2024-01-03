@@ -1,6 +1,6 @@
 [package]
 name = "open_creator_protocol"
-version = "0.3.5"
+version = "0.4.0"
 description = "Open Creator Protocol is an open protocol for creators to build utilities and policy engine for their tokens"
 edition = "2021"
 license = "Apache-2.0"
@@ -19,7 +19,7 @@ test-bpf = []
 [dependencies]
 anchor-lang = { version = "0.29.0", features = ["init-if-needed"] }
 anchor-spl = { version = "0.29.0", features = ["metadata"] }
-community-managed-token = { version = "^0.2.0", features = ["no-entrypoint"] }
+community-managed-token = { version = "^0.2.1", features = ["no-entrypoint"] }
 json-rules-engine-fork = "0.9.7"
 mpl-token-metadata = { version = "3.3.0" }
 serde = { version = "1.0", features = ["derive"] }
