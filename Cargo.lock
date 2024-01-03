@@ -672,9 +672,9 @@ dependencies = [
 
 [[package]]
 name = "community-managed-token"
-version = "0.2.1"
+version = "0.3.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "f9d694c3456f952e9b324c184d7d82948a2eb8c2ec1680f94021ff670b4bee97"
+checksum = "b9f5dfe386934856cf243d6ec95619f1e4f38ed5d8610586a3ebca81452ed38f"
 dependencies = [
  "borsh 0.9.3",
  "shank",
@@ -1446,7 +1446,7 @@ checksum = "624a8340c38c1b80fd549087862da4ba43e08858af025b236e509b6649fc13d5"
 
 [[package]]
 name = "open_creator_protocol"
-version = "0.3.6"
+version = "0.4.1"
 dependencies = [
  "anchor-lang",
  "anchor-spl",
