@@ -80,7 +80,7 @@ pub fn handler<'info>(ctx: Context<'_, '_, '_, 'info, WrapCtx<'info>>) -> Result
     ctx.accounts.policy.matches(&action_ctx)?;
 
     let mint_state = &mut ctx.accounts.mint_state;
-    mint_state.bump = [*ctx.bumps.get("mint_state").unwrap()];
+    mint_state.bump = [ctx.bumps.mint_state];
     mint_state.policy = policy.key();
     mint_state.mint = ctx.accounts.mint.key();
     mint_state.version = 0;

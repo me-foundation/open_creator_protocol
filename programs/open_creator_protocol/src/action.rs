@@ -78,10 +78,10 @@ pub struct MetadataCtx {
 impl From<Box<Account<'_, MetadataAccount>>> for MetadataCtx {
     fn from(metadata: Box<Account<'_, MetadataAccount>>) -> Self {
         Self {
-            name: metadata.data.name.clone(),
-            symbol: metadata.data.symbol.clone(),
-            uri: metadata.data.uri.clone(),
-            seller_fee_basis_points: metadata.data.seller_fee_basis_points,
+            name: metadata.name.clone(),
+            symbol: metadata.symbol.clone(),
+            uri: metadata.uri.clone(),
+            seller_fee_basis_points: metadata.seller_fee_basis_points,
             update_authority: metadata.update_authority.to_string(),
         }
     }
@@ -230,7 +230,7 @@ mod tests {
             .replace(
                 "PLACEHOLDER",
                 &(0..10)
-                    .map(|_| format!("\"{}\"", Pubkey::new_unique().to_string()))
+                    .map(|_| format!("\"{}\"", Pubkey::new_unique()))
                     .collect::<Vec<String>>()
                     .join(","),
             ),
@@ -245,7 +245,7 @@ mod tests {
             .replace(
                 "PLACEHOLDER",
                 &(0..18)
-                    .map(|_| format!("\"{}\"", Pubkey::new_unique().to_string()))
+                    .map(|_| format!("\"{}\"", Pubkey::new_unique()))
                     .collect::<Vec<String>>()
                     .join(","),
             ),
@@ -260,7 +260,7 @@ mod tests {
             .replace(
                 "PLACEHOLDER",
                 &(0..100)
-                    .map(|_| format!("\"{}\"", Pubkey::new_unique().to_string()))
+                    .map(|_| format!("\"{}\"", Pubkey::new_unique()))
                     .collect::<Vec<String>>()
                     .join(","),
             ),

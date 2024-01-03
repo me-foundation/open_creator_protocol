@@ -7,6 +7,8 @@ use anchor_lang::solana_program::sysvar;
 use anchor_spl::metadata::MetadataAccount;
 use anchor_spl::token::{Mint, Token, TokenAccount};
 use community_managed_token::instruction::create_migrate_authority_instruction;
+use mpl_token_metadata::instructions::CreateMasterEditionV3;
+use mpl_token_metadata::instructions::CreateMasterEditionV3InstructionArgs;
 use solana_program::program::invoke;
 use solana_program::program::invoke_signed;
 use solana_program::program_option::COption;
@@ -129,16 +131,18 @@ pub fn handler<'info>(ctx: Context<'_, '_, '_, 'info, MigrateToMplCtx<'info>>) -
     ))?;
 
     invoke(
-        &mpl_token_metadata::instruction::create_master_edition_v3(
-            mpl_token_metadata::id(),
-            ctx.accounts.edition.key(),
-            ctx.accounts.mint.key(),
-            ctx.accounts.from.key(),
-            ctx.accounts.from.key(),
-            ctx.accounts.metadata.key(),
-            ctx.accounts.payer.key(),
-            Some(0),
-        ),
+        &CreateMasterEditionV3 {
+            edition: ctx.accounts.edition.key(),
+            mint: ctx.accounts.mint.key(),
+            update_authority: ctx.accounts.from.key(),
+            mint_authority: ctx.accounts.from.key(),
+            metadata: ctx.accounts.metadata.key(),
+            payer: ctx.accounts.payer.key(),
+            token_program: ctx.accounts.token_program.key(),
+            system_program: ctx.accounts.system_program.key(),
+            rent: None,
+        }
+        .instruction(CreateMasterEditionV3InstructionArgs { max_supply: Some(0) }),
         &[
             ctx.accounts.edition.to_account_info(),
             ctx.accounts.mint.to_account_info(),

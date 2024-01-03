@@ -28,7 +28,7 @@ pub struct InitPolicyCtx<'info> {
 pub fn handler(ctx: Context<InitPolicyCtx>, arg: InitPolicyArg) -> Result<()> {
     let policy = &mut ctx.accounts.policy;
     policy.version = 0;
-    policy.bump = [*ctx.bumps.get("policy").unwrap()];
+    policy.bump = [ctx.bumps.policy];
     policy.uuid = ctx.accounts.uuid.key();
     policy.authority = ctx.accounts.authority.key();
     policy.json_rule = arg.json_rule;

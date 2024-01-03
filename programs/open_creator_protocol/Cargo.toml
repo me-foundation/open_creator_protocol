@@ -17,12 +17,12 @@ default = []
 test-bpf = []
 
 [dependencies]
-anchor-lang = { version = "<1", features = ["init-if-needed"] }
-anchor-spl = { version = "<1", features = ["metadata"] }
+anchor-lang = { version = "0.29.0", features = ["init-if-needed"] }
+anchor-spl = { version = "0.29.0", features = ["metadata"] }
 community-managed-token = { version = "^0.2.0", features = ["no-entrypoint"] }
 json-rules-engine-fork = "0.9.7"
-mpl-token-metadata = { version = "<2", features = ["no-entrypoint"] }
+mpl-token-metadata = { version = "3.3.0" }
 serde = { version = "1.0", features = ["derive"] }
 serde_json = "1.0.88"
-solana-program = "~1.14.0"
-spl-memo = { version = "^3.0.1", features = ["no-entrypoint"] }
+solana-program = "~1.16.0"
+spl-memo = { version = "^4.0.0", features = ["no-entrypoint"] }
