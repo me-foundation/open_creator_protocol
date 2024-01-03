@@ -1480,7 +1480,7 @@ dependencies = [
  "serde",
  "serde_json",
  "solana-program",
- "spl-memo 3.0.1",
+ "spl-memo 4.0.0",
 ]
 
 [[package]]

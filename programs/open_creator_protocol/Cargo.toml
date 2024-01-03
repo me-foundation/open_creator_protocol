@@ -25,4 +25,4 @@ mpl-token-metadata = { version = "3.3.0" }
 serde = { version = "1.0", features = ["derive"] }
 serde_json = "1.0.88"
 solana-program = "~1.16.0"
-spl-memo = { version = "^3.0.1", features = ["no-entrypoint"] }
+spl-memo = { version = "^4.0.0", features = ["no-entrypoint"] }
