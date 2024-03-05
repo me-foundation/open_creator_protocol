@@ -1,6 +1,6 @@
 [package]
 name = "open_creator_protocol"
-version = "0.4.1"
+version = "0.4.2"
 description = "Open Creator Protocol is an open protocol for creators to build utilities and policy engine for their tokens"
 edition = "2021"
 license = "Apache-2.0"
@@ -24,5 +24,5 @@ json-rules-engine-fork = "0.9.7"
 mpl-token-metadata = { version = "3.2.3" }
 serde = { version = "1.0", features = ["derive"] }
 serde_json = "1.0.88"
-solana-program = "~1.16.0"
+solana-program = "1.17.6"
 spl-memo = { version = "^4.0.0", features = ["no-entrypoint"] }
